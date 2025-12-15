@@ -1,186 +1,312 @@
 library(shiny)
+library(DT)
+library(dplyr)
+
+# Read the data
+ebm_data <- read.csv("data/EBM Framework Spreadsheet 3-Nov-2025.csv", stringsAsFactors = FALSE)
 
 ui <- fluidPage(
   tags$head(
     # Load the responsive image maps library
     tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jQuery-rwdImageMaps/1.6/jquery.rwdImageMaps.min.js"),
-    tags$script(HTML("
-      $(document).ready(function() {
-        $('img[usemap]').rwdImageMaps();
-      });
-    ")),
     tags$style(HTML("
       .centered-image {
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width: 40%;  /* Adjust this percentage to make it smaller/larger */
-        max-width: 1280px;  /* Original size as maximum */
+        width: 40%;
+        max-width: 1280px;
         height: auto;
+      }
+      .back-button {
+        margin: 20px auto;
+        display: block;
+        width: 200px;
       }
     "))
   ),
 
-  tags$img(
-    src = "EBM.png",
-    usemap = "#puzzle-map",
-    width = "1280",#"1626",  # Keep original width for coordinate reference
-    class = "centered-image"
-  ),
-
-
-
-  tags$map(
-    name = "puzzle-map",
-    tags$area(
-      shape = "circle",
-      coords = "633,627,243",
-      href = "./EBM",
-      target = "_blank",
-      alt = "EBM Framework"
-    ),
-
-
-    tags$area(
-      shape = "poly",
-      coords = "224,624,370,622,382,550,406,498,454,438,526,394,606,368,636,370,632,220,504,242,382,302,292,408,242,516,228,572",
-      href = "./ecological",
-      target = "_blank",
-      alt = "Ecological"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "62,618,137,338,259,411,212,619",
-      href = "./ecological/habitat",
-      target = "_blank",
-      alt = "Habitat"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "147,329,345,128,424,256,272,406",
-      href = "./ecological/biodiversity",
-      target = "_blank",
-      alt = "Biodiversity"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "360,120,434,247,638,204,632,46",
-      href = "./ecological/productivity",
-      target = "_blank",
-      alt = "Productivity"
-    ),
-
-
-    tags$area(
-      shape = "poly",
-      coords = "648,224,648,372,724,384,776,412,828,458,868,528,886,604,886,624,1036,622,1018,508,966,402,906,332,788,252",
-      href = "./economic",
-      target = "_blank",
-      alt = "Economic"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "647,47,648,207,846,263,927,118",
-      href = "./economic/efficiency",
-      target = "_blank",
-      alt = "Economic Efficiency"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "938,125,859,271,993,413,1139,332",
-      href = "./economic/equity",
-      target = "_blank",
-      alt = "Economic Equity"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "1141,346,1000,427,1049,620,1219,620",
-      href = "./economic/sustainability",
-      target = "_blank",
-      alt = "Economic Sustainability"
-    ),
-
-
-    tags$area(
-      shape = "poly",
-      coords = "888,636,1030,634,1018,742,966,850,868,952,746,1010,638,1028,644,886,730,864,794,822,836,778,866,732,882,676",
-      href = "./governance",
-      target = "_blank",
-      alt = "Governance"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "650,1048,649,1206,924,1128,844,991",
-      href = "./governance/legal",
-      target = "_blank",
-      alt = "Legal Obligations & Other Commitments"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "858,976,936,1124,1135,924,989,836",
-      href = "./governance/structure",
-      target = "_blank",
-      alt = "Governance Structure & Processes"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "1005,824,1143,910,1216,639,1056,637",
-      href = "./governance/outcomes",
-      target = "_blank",
-      alt = "Governance Outcomes"
-    ),
-
-
-    tags$area(
-      shape = "poly",
-      coords = "227,632,372,630,394,727,485,835,559,870,636,880,637,1031,500,1008,376,940,283,825,237,720",
-      href = "./social",
-      target = "_blank",
-      alt = "Social & Cultural"
-    ),
-
-    tags$area(
-      shape = "poly",
-      coords = "212,633,244,780,101,844,62,631",
-      href = "./social/communities",
-      target = "_blank",
-      alt = "Sustainable Communities"
-    ),
-    tags$area(
-      shape = "poly",
-      coords = "250,793,339,920,229,1039,105,850",
-      href = "./social/health",
-      target = "_blank",
-      alt = "Health & Well-being"
-    ),
-    tags$area(
-      shape = "poly",
-      coords = "349,932,483,1014,424,1160,241,1043",
-      href = "./social/activities",
-      target = "_blank",
-      alt = "Ethical & Just Activities"
-    ),
-    tags$area(
-      shape = "poly",
-      coords = "497,1016,434,1168,633,1203,639,1041",
-      href = "./social/culture",
-      target = "_blank",
-      alt = "culture"
-    ),
-
-
-  )
+  # Show/hide image based on state
+  uiOutput("main_content")
 )
 
-server <- function(input, output, session) {}
+server <- function(input, output, session) {
+
+  # Reactive value to track current view
+  current_view <- reactiveVal("map")
+  current_filter <- reactiveVal(NULL)
+
+  # Main content output
+  output$main_content <- renderUI({
+    if (current_view() == "map") {
+      tagList(
+        tags$img(
+          src = "EBM.png",
+          usemap = "#puzzle-map",
+          width = "1280",
+          class = "centered-image"
+        ),
+        tags$map(
+          name = "puzzle-map",
+          tags$area(
+            shape = "circle",
+            coords = "633,627,243",
+            href = "#",
+            alt = "EBM Framework",
+            onclick = "Shiny.setInputValue('area_clicked', 'EBM Framework', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "224,624,370,622,382,550,406,498,454,438,526,394,606,368,636,370,632,220,504,242,382,302,292,408,242,516,228,572",
+            href = "#",
+            alt = "Ecological",
+            onclick = "Shiny.setInputValue('area_clicked', 'Ecological', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "62,618,137,338,259,411,212,619",
+            href = "#",
+            alt = "Habitat",
+            onclick = "Shiny.setInputValue('area_clicked', 'Habitat', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "147,329,345,128,424,256,272,406",
+            href = "#",
+            alt = "Biodiversity",
+            onclick = "Shiny.setInputValue('area_clicked', 'Biodiversity', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "360,120,434,247,638,204,632,46",
+            href = "#",
+            alt = "Productivity",
+            onclick = "Shiny.setInputValue('area_clicked', 'Productivity', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "648,224,648,372,724,384,776,412,828,458,868,528,886,604,886,624,1036,622,1018,508,966,402,906,332,788,252",
+            href = "#",
+            alt = "Economic",
+            onclick = "Shiny.setInputValue('area_clicked', 'Economic', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "647,47,648,207,846,263,927,118",
+            href = "#",
+            alt = "Economic Efficiency",
+            onclick = "Shiny.setInputValue('area_clicked', 'Economic Efficiency', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "938,125,859,271,993,413,1139,332",
+            href = "#",
+            alt = "Economic Equity",
+            onclick = "Shiny.setInputValue('area_clicked', 'Economic Equity', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "1141,346,1000,427,1049,620,1219,620",
+            href = "#",
+            alt = "Economic Sustainability",
+            onclick = "Shiny.setInputValue('area_clicked', 'Economic Sustainability', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "888,636,1030,634,1018,742,966,850,868,952,746,1010,638,1028,644,886,730,864,794,822,836,778,866,732,882,676",
+            href = "#",
+            alt = "Governance",
+            onclick = "Shiny.setInputValue('area_clicked', 'Governance', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "650,1048,649,1206,924,1128,844,991",
+            href = "#",
+            alt = "Legal Obligations & Other Commitments",
+            onclick = "Shiny.setInputValue('area_clicked', 'Legal Obligations and Other Commitments', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "858,976,936,1124,1135,924,989,836",
+            href = "#",
+            alt = "Governance Structure & Processes",
+            onclick = "Shiny.setInputValue('area_clicked', 'Governance Structures and Processes', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "1005,824,1143,910,1216,639,1056,637",
+            href = "#",
+            alt = "Governance Outcomes",
+            onclick = "Shiny.setInputValue('area_clicked', 'Governance Outcomes', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "227,632,372,630,394,727,485,835,559,870,636,880,637,1031,500,1008,376,940,283,825,237,720",
+            href = "#",
+            alt = "Social & Cultural",
+            onclick = "Shiny.setInputValue('area_clicked', 'Social & Cultural', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "212,633,244,780,101,844,62,631",
+            href = "#",
+            alt = "Sustainable Communities",
+            onclick = "Shiny.setInputValue('area_clicked', 'Sustainable Communities', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "250,793,339,920,229,1039,105,850",
+            href = "#",
+            alt = "Health & Well-being",
+            onclick = "Shiny.setInputValue('area_clicked', 'Health and Well-being', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "349,932,483,1014,424,1160,241,1043",
+            href = "#",
+            alt = "Ethical & Just Activities",
+            onclick = "Shiny.setInputValue('area_clicked', 'Ethical and Just activities', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "497,1016,434,1168,633,1203,639,1041",
+            href = "#",
+            alt = "culture",
+            onclick = "Shiny.setInputValue('area_clicked', 'culture', {priority: 'event'}); return false;"
+          )
+        ),
+        tags$script(HTML("
+          $(document).ready(function() {
+            $('img[usemap]').rwdImageMaps();
+          });
+        "))
+      )
+    } else {
+      tagList(
+        h3(paste("Viewing:", current_filter())),
+        actionButton("back_button", "Back to Map", class = "back-button btn-primary"),
+        br(),
+        DTOutput("data_table")
+      )
+    }
+  })
+
+  # Handle area clicks
+  observeEvent(input$area_clicked, {
+    current_filter(input$area_clicked)
+    current_view("table")
+  })
+
+  # Handle back button
+  observeEvent(input$back_button, {
+    current_view("map")
+  })
+
+  # Render filtered data table
+  # Render filtered data table
+  output$data_table <- renderDT({
+    req(current_filter())
+
+    filter_value <- current_filter()
+
+    # Filter data based on the clicked area
+    filtered_data <- if (filter_value == "EBM Framework") {
+      ebm_data
+    } else if (filter_value %in% c("Ecological", "Economic", "Governance", "Social & Cultural")) {
+      ebm_data %>% filter(Main_Objective == filter_value)
+    } else {
+      # For Level_1 filters, try exact match first, then partial match
+      exact_match <- ebm_data %>% filter(Level_1 == filter_value)
+      if (nrow(exact_match) > 0) {
+        exact_match
+      } else {
+        # Try partial matching for cases like "culture" -> "Culture"
+        ebm_data %>% filter(grepl(filter_value, Level_1, ignore.case = TRUE))
+      }
+    }
+
+    # Create the datatable
+    dt <- datatable(
+      filtered_data,
+      options = list(
+        pageLength = 25,
+        scrollX = TRUE,
+        autoWidth = FALSE,
+        columnDefs = list(
+          list(width = '10%', targets = 0),  # Pillar
+          list(width = '15%', targets = 1),  # Main_Objective
+          list(width = '35%', targets = 2),  # Main_Objectives_text
+          list(width = '40%', targets = 3)   # Level_1 (and other columns)
+        ),
+        dom = 'Bfrtip',
+        buttons = c('copy', 'csv', 'excel')
+      ),
+      rownames = FALSE,
+      class = 'cell-border stripe',
+      extensions = 'Buttons'
+    )
+
+    # Apply row spanning using JavaScript callback
+    dt <- dt %>%
+      formatStyle(
+        columns = colnames(filtered_data),
+        fontSize = '14px'
+      )
+
+    # Add callback to merge duplicate cells for ALL columns
+    num_cols <- ncol(filtered_data)
+
+    dt$x$options$drawCallback <- JS(
+      paste0("function(settings) {
+      var api = this.api();
+      var rows = api.rows({page: 'current'}).nodes();
+
+      // Process each column from left to right
+      for (var col = 0; col < ", num_cols, "; col++) {
+        var last = null;
+        var lastValues = [];  // Store values of previous columns for this group
+
+        api.column(col, {page: 'current'}).data().each(function(group, i) {
+          // Build a combined key with all previous column values
+          var combinedKey = '';
+          for (var prevCol = 0; prevCol < col; prevCol++) {
+            combinedKey += api.column(prevCol, {page: 'current'}).data()[i] + '|||';
+          }
+          combinedKey += group;
+
+          if (last !== combinedKey) {
+            var count = 1;
+
+            // Count consecutive same values with same previous column values
+            for (var j = i + 1; j < api.column(col, {page: 'current'}).data().length; j++) {
+              var nextCombinedKey = '';
+              for (var prevCol = 0; prevCol < col; prevCol++) {
+                nextCombinedKey += api.column(prevCol, {page: 'current'}).data()[j] + '|||';
+              }
+              nextCombinedKey += api.column(col, {page: 'current'}).data()[j];
+
+              if (nextCombinedKey === combinedKey) {
+                count++;
+              } else {
+                break;
+              }
+            }
+
+            if (count > 1) {
+              $(rows).eq(i).find('td:eq(' + col + ')').attr('rowspan', count).addClass('merged-cell');
+              for (var k = 1; k < count; k++) {
+                $(rows).eq(i + k).find('td:eq(' + col + ')').remove();
+              }
+            }
+            last = combinedKey;
+          }
+        });
+      }
+    }")
+    )
+
+    dt
+  })
+}
 
 shinyApp(ui, server)

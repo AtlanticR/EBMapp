@@ -1,0 +1,12 @@
+name: EBMapp
+title: EBMapp
+username: dfo-mar-mpas
+account: dfo-mar-mpas
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16316601
+bundleId: 11325833
+url: https://dfo-mar-mpas.shinyapps.io/EBMapp/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
