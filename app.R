@@ -1,46 +1,164 @@
 library(shiny)
 library(DT)
 library(dplyr)
+library(shinydashboard)
 
 # Read the data
 ebm_data <- read.csv("data/EBM Framework Spreadsheet 3-Nov-2025.csv", stringsAsFactors = FALSE) |>
   mutate(Main_Objective = trimws(Main_Objective),
          Pillar = trimws(Pillar))
 
-ui <- fluidPage(
-  tags$head(
-    # Load the responsive image maps library
-    tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jQuery-rwdImageMaps/1.6/jquery.rwdImageMaps.min.js"),
-    tags$style(HTML("
-      .centered-image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 40%;
-        max-width: 1280px;
-        height: auto;
-      }
-      .back-button {
-        margin: 20px auto;
-        display: block;
-        width: 200px;
-      }
-    "))
+ui <- dashboardPage(
+  dashboardHeader(title = "EBM App"),
+
+  dashboardSidebar(width=350,
+    sidebarMenu(id = "sidebar",
+                menuItem("Explore the EBM",
+                         tabName = "home",
+                         icon = icon("magnifying-glass")),
+                menuItem("Ways to Use the EBM Framework",
+                         startExpanded=TRUE,
+                         icon = icon("tools"),
+                         menuSubItem("Using EBM the framework",
+                                     tabName = "useEBM",
+                                     icon = icon("leanpub")),
+                         menuSubItem("Checklist of objectives",
+                                     tabName = "checklist",
+                                     icon = icon("square-check")),
+                         menuSubItem("Evaluating policies and management approaches",
+                                     tabName = "policies",
+                                     icon = icon("magnifying-glass")),
+                         menuSubItem("Scenario comparison",
+                                     tabName = "scenario",
+                                     icon = icon("code-compare")),
+                         menuSubItem("Management report card",
+                                     tabName = "report",
+                                     icon = icon("list")),
+                         menuSubItem("Cumulative effects, risk assessment and tradeoffs",
+                                     tabName = "cumulative",
+                                     icon = icon("arrows-up-to-line"))
+                )
+    )
   ),
 
-  # Show/hide image based on state
-  uiOutput("main_content")
+  dashboardBody(
+    tags$head(
+      tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jQuery-rwdImageMaps/1.6/jquery.rwdImageMaps.min.js"),
+      tags$style(HTML("
+        .centered-image {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 70%;
+          max-width: 1280px;
+          height: auto;
+        }
+        .back-button {
+          margin: 20px 0;
+        }
+      "))
+    ),
+
+    tabItems(
+      # Home Tab with Image Map
+      tabItem(tabName = "home",
+              fluidRow(
+                box(width = 12, title = "Welcome to the Ecosystem-Based Management Framework Exploration Tool", status = "primary", solidHeader = TRUE,
+                    p("This interactive tool helps you explore and apply the Ecosystem-Based Management (EBM) framework."),
+                    p("Fisheries and Oceans Canada (DFO) has a mandate to apply an ecosystem approach to fisheries and oceans management decisions. An ecosystem approach includes ecological, economic, social, and cultural and governance objectives, which are required in many of DFO’s decision-making processes.",
+                      br(),
+                      "The EBM Framework will support DFO decision-making across sectors by providing a broad range of objectives and indicators within a consistent, structured framework to support transparent, evidence-based decision-making.
+The purpose of the Maritimes EBM Framework is to support a more holistic approach to decision-making.",
+                      br(),
+                      " The Regional EBM framework uses a hierarchical structure which includes:",
+                      br(),
+                      "1.	Pillars (inner circle in figure)",
+                      br(),
+                      "2.	Main Objectives (outer circle in figure)",
+                      br(),
+                      "3.	Sub-Objectives",
+                      br(),
+                      "4.	Indicators (to measure objectives)
+"),
+                    p(strong("Click on any section of the framework below to view detailed information or explore the menu to the left for additional tools and resources."))
+                )
+              ),
+              fluidRow(
+                box(width = 12, title = "Interactive EBM Framework", status = "info", solidHeader = TRUE,
+                    uiOutput("home_map_content")
+                )
+              )
+      ),
+
+      tabItem(tabName = "useEBM",
+              fluidRow(
+                box(width = 12, title = "Using EBM the framework", status = "primary", solidHeader = TRUE,
+                    p("Five broad areas of use have been envisioned for the EBM Framework (below). These are premised on DFO’s objective/outcomes based approach to management, and provide the candidate objectives to be used in different decision-making contexts. "),
+                    img(src = "EBMuses.png",
+                        width = "100%")
+
+                )
+              )
+      ),
+      tabItem(tabName = "checklist",
+              fluidRow(
+                box(width = 12, title = "Checklist of objectives", status = "primary", solidHeader = TRUE,
+                    p("This is the first step in any use of the EBM Framework
+Question: what objectives are relevant to my management plan/decision/project development etc?",
+                      br(),
+                      "1.	Review objectives in each of the 4 Pillars",
+                      br(),
+                      "2.	Suggestion to start with Level 1 Objectives and use lower level objectives to inform intent of the objectives",
+                      br(),
+                      "3.	In some case, Level Two or lower level objectives may be more useful",
+                      br(),
+                      "4.	Assess which objectives are relevant to your needs")
+                )
+              )
+      ),
+      tabItem(tabName = "policies",
+              fluidRow(
+                box(width = 12, title = "Evaluating policies and management approaches", status = "primary", solidHeader = TRUE,
+                    p("TBD")
+                )
+              )
+      ),
+      tabItem(tabName = "scenario",
+              fluidRow(
+                box(width = 12, title = "Scenario comparison", status = "primary", solidHeader = TRUE,
+                    p("TBD")
+                )
+              )
+      ),
+      tabItem(tabName = "report",
+              fluidRow(
+                box(width = 12, title = "Management report card", status = "primary", solidHeader = TRUE,
+                    p("TBD")
+                )
+              )
+      ),
+      tabItem(tabName = "cumulative",
+              fluidRow(
+                box(width = 12, title = "Cumulative effects, risk assessment and tradeoffs", status = "primary", solidHeader = TRUE,
+                    p("TBD")
+                )
+              )
+      )
+
+
+    )
+  )
 )
 
 server <- function(input, output, session) {
 
-  # Reactive value to track current view
-  current_view <- reactiveVal("map")
-  current_filter <- reactiveVal(NULL)
+  # Reactive value to track current view in home page map
+  home_view <- reactiveVal("map")
+  home_filter <- reactiveVal(NULL)
 
-  # Main content output
-  output$main_content <- renderUI({
-    if (current_view() == "map") {
+  # Home page map content
+  output$home_map_content <- renderUI({
+    if (home_view() == "map") {
       tagList(
         tags$img(
           src = "EBM.png",
@@ -56,7 +174,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "EBM Framework",
             title = "EBM Framework - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'EBM Framework', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'EBM Framework', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -64,7 +182,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Ecological",
             title = "Ecological - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Ecological', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Ecological', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -72,7 +190,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Habitat",
             title = "Habitat - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Habitat', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Habitat', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -80,7 +198,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Biodiversity",
             title = "Biodiversity - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Biodiversity', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Biodiversity', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -88,7 +206,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Productivity",
             title = "Productivity - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Productivity', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Productivity', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -96,7 +214,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Economic",
             title = "Economic - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Economic', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -104,7 +222,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Economic Efficiency",
             title = "Economic Efficiency - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Economic Efficiency', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Efficiency', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -112,7 +230,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Economic Equity",
             title = "Economic Equity - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Economic Equity', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Equity', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -120,7 +238,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Economic Sustainability",
             title = "Economic Sustainability - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Economic Sustainability', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Sustainability', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -128,7 +246,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Governance",
             title = "Governance - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Governance', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Governance', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -136,7 +254,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Legal Obligations & Other Commitments",
             title = "Legal Obligations & Other Commitments - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Legal Obligations and other commitments', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Legal Obligations and other commitments', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -144,7 +262,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Governance Structure & Processes",
             title = "Governance Structure & Processes - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Governance Structures and Processes', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Governance Structures and Processes', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -152,7 +270,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Governance Outcomes",
             title = "Governance Outcomes - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Governance Outcomes', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Governance Outcomes', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -160,7 +278,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Social & Cultural",
             title = "Social & Cultural - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Social & Cultural', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Social & Cultural', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -168,7 +286,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Sustainable Communities",
             title = "Sustainable Communities - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Sustainable Communities', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Sustainable Communities', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -176,7 +294,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Health & Well-being",
             title = "Health & Well-being - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Health and Well-being', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Health and Well-being', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -184,7 +302,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "Ethical & Just Activities",
             title = "Ethical & Just Activities - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'Ethical and Just Activities', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Ethical and Just Activities', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -192,7 +310,7 @@ server <- function(input, output, session) {
             href = "#",
             alt = "culture",
             title = "Culture - Click for details",
-            onclick = "Shiny.setInputValue('area_clicked', 'culture', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('home_area_clicked', 'culture', {priority: 'event'}); return false;"
           )
         ),
         tags$script(HTML("
@@ -203,30 +321,30 @@ server <- function(input, output, session) {
       )
     } else {
       tagList(
-        h3(paste("Viewing:", current_filter())),
-        actionButton("back_button", "Back to Home", class = "back-button btn-primary"),
-        br(),
-        DTOutput("data_table")
+        actionButton("home_back_button", "Back to Infographic", class = "btn-primary back-button"),
+        box(width = 12, title = paste("Viewing:", home_filter()), status = "info", solidHeader = TRUE,
+            DTOutput("home_data_table")
+        )
       )
     }
   })
 
-  # Handle area clicks
-  observeEvent(input$area_clicked, {
-    current_filter(input$area_clicked)
-    current_view("table")
+  # Handle home page area clicks
+  observeEvent(input$home_area_clicked, {
+    home_filter(input$home_area_clicked)
+    home_view("table")
   })
 
-  # Handle back button
-  observeEvent(input$back_button, {
-    current_view("map")
+  # Handle home page back button
+  observeEvent(input$home_back_button, {
+    home_view("map")
   })
 
-  # Render filtered data table
-  output$data_table <- renderDT({
-    req(current_filter())
+  # Render filtered data table on home page
+  output$home_data_table <- renderDT({
+    req(home_filter())
 
-    filter_value <- current_filter()
+    filter_value <- home_filter()
 
     pillar_search <- ""
     objective_search <- ""
@@ -238,19 +356,8 @@ server <- function(input, output, session) {
     }
 
     # Create display version with blanked repeats
-    data_display <- ebm_data
     cols_to_merge <- c("Pillar", "Main_Objective", "Main_Objectives_text",
                        "Level_1", "Level_2", "Level_3")
-
-    for (col in cols_to_merge) {
-      for (i in 2:nrow(data_display)) {
-        if (!is.na(data_display[i, col]) &&
-            !is.na(data_display[i-1, col]) &&
-            data_display[i, col] == data_display[i-1, col]) {
-          data_display[i, col] <- ""
-        }
-      }
-    }
 
     datatable(
       ebm_data,
@@ -262,15 +369,12 @@ server <- function(input, output, session) {
         searchCols = list(
           list(search = pillar_search),
           list(search = objective_search),
-          NULL,
-          NULL,
-          NULL,
-          NULL
+          NULL, NULL, NULL, NULL
         ),
         ordering = FALSE,
         columnDefs = list(
           list(
-            targets = which(names(ebm_data) %in% cols_to_merge) - 1,  # 0-based for JS
+            targets = which(names(ebm_data) %in% cols_to_merge) - 1,
             render = JS(
               "function(data, type, row, meta) {",
               "  if (type === 'display') {",
@@ -290,8 +394,6 @@ server <- function(input, output, session) {
       rownames = FALSE
     )
   })
-
-
 }
 
 shinyApp(ui, server)
