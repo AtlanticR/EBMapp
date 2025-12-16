@@ -3,7 +3,9 @@ library(DT)
 library(dplyr)
 
 # Read the data
-ebm_data <- read.csv("data/EBM Framework Spreadsheet 3-Nov-2025.csv", stringsAsFactors = FALSE)
+ebm_data <- read.csv("data/EBM Framework Spreadsheet 3-Nov-2025.csv", stringsAsFactors = FALSE) |>
+  mutate(Main_Objective = trimws(Main_Objective),
+         Pillar = trimws(Pillar))
 
 ui <- fluidPage(
   tags$head(
@@ -123,7 +125,7 @@ server <- function(input, output, session) {
             coords = "650,1048,649,1206,924,1128,844,991",
             href = "#",
             alt = "Legal Obligations & Other Commitments",
-            onclick = "Shiny.setInputValue('area_clicked', 'Legal Obligations and Other Commitments', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('area_clicked', 'Legal Obligations and other commitments', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -165,7 +167,7 @@ server <- function(input, output, session) {
             coords = "349,932,483,1014,424,1160,241,1043",
             href = "#",
             alt = "Ethical & Just Activities",
-            onclick = "Shiny.setInputValue('area_clicked', 'Ethical and Just activities', {priority: 'event'}); return false;"
+            onclick = "Shiny.setInputValue('area_clicked', 'Ethical and Just Activities', {priority: 'event'}); return false;"
           ),
           tags$area(
             shape = "poly",
@@ -203,110 +205,42 @@ server <- function(input, output, session) {
   })
 
   # Render filtered data table
-  # Render filtered data table
   output$data_table <- renderDT({
     req(current_filter())
 
     filter_value <- current_filter()
 
-    # Filter data based on the clicked area
-    filtered_data <- if (filter_value == "EBM Framework") {
-      ebm_data
-    } else if (filter_value %in% c("Ecological", "Economic", "Governance", "Social & Cultural")) {
-      ebm_data %>% filter(Main_Objective == filter_value)
-    } else {
-      # For Level_1 filters, try exact match first, then partial match
-      exact_match <- ebm_data %>% filter(Level_1 == filter_value)
-      if (nrow(exact_match) > 0) {
-        exact_match
-      } else {
-        # Try partial matching for cases like "culture" -> "Culture"
-        ebm_data %>% filter(grepl(filter_value, Level_1, ignore.case = TRUE))
-      }
+    # Determine which column to filter (adjust indices to match your data structure)
+    pillar_search <- ""
+    objective_search <- ""
+
+    if (filter_value %in% c("Ecological", "Economic", "Governance", "Social & Cultural")) {
+      pillar_search <- filter_value
+    } else if (filter_value != "EBM Framework") {
+      objective_search <- filter_value
     }
 
-    # Create the datatable
-    dt <- datatable(
-      filtered_data,
+    datatable(
+      ebm_data,
       options = list(
         pageLength = 25,
         scrollX = TRUE,
-        autoWidth = FALSE,
-        columnDefs = list(
-          list(width = '10%', targets = 0),  # Pillar
-          list(width = '15%', targets = 1),  # Main_Objective
-          list(width = '35%', targets = 2),  # Main_Objectives_text
-          list(width = '40%', targets = 3)   # Level_1 (and other columns)
-        ),
-        dom = 'Bfrtip',
-        buttons = c('copy', 'csv', 'excel')
+        autoWidth = TRUE,
+        searchCols = list(
+          list(search = pillar_search),
+          list(search = objective_search),
+          NULL,
+          NULL,
+          NULL,
+          NULL
+        )
       ),
-      rownames = FALSE,
-      class = 'cell-border stripe',
-      extensions = 'Buttons'
+      filter = "top",
+      rownames = FALSE
     )
-
-    # Apply row spanning using JavaScript callback
-    dt <- dt %>%
-      formatStyle(
-        columns = colnames(filtered_data),
-        fontSize = '14px'
-      )
-
-    # Add callback to merge duplicate cells for ALL columns
-    num_cols <- ncol(filtered_data)
-
-    dt$x$options$drawCallback <- JS(
-      paste0("function(settings) {
-      var api = this.api();
-      var rows = api.rows({page: 'current'}).nodes();
-
-      // Process each column from left to right
-      for (var col = 0; col < ", num_cols, "; col++) {
-        var last = null;
-        var lastValues = [];  // Store values of previous columns for this group
-
-        api.column(col, {page: 'current'}).data().each(function(group, i) {
-          // Build a combined key with all previous column values
-          var combinedKey = '';
-          for (var prevCol = 0; prevCol < col; prevCol++) {
-            combinedKey += api.column(prevCol, {page: 'current'}).data()[i] + '|||';
-          }
-          combinedKey += group;
-
-          if (last !== combinedKey) {
-            var count = 1;
-
-            // Count consecutive same values with same previous column values
-            for (var j = i + 1; j < api.column(col, {page: 'current'}).data().length; j++) {
-              var nextCombinedKey = '';
-              for (var prevCol = 0; prevCol < col; prevCol++) {
-                nextCombinedKey += api.column(prevCol, {page: 'current'}).data()[j] + '|||';
-              }
-              nextCombinedKey += api.column(col, {page: 'current'}).data()[j];
-
-              if (nextCombinedKey === combinedKey) {
-                count++;
-              } else {
-                break;
-              }
-            }
-
-            if (count > 1) {
-              $(rows).eq(i).find('td:eq(' + col + ')').attr('rowspan', count).addClass('merged-cell');
-              for (var k = 1; k < count; k++) {
-                $(rows).eq(i + k).find('td:eq(' + col + ')').remove();
-              }
-            }
-            last = combinedKey;
-          }
-        });
-      }
-    }")
-    )
-
-    dt
   })
+
+
 }
 
 shinyApp(ui, server)
