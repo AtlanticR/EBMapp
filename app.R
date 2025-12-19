@@ -125,16 +125,54 @@ build_hierarchy_ui <- function(data, pillars, main_objs, detail) {
   tagList(items)
 }
 
+# ---- Global scoring helpers for Step 2 ----
+
+# USE 2, Q1: qualitative alignment scale (Table 2)
+policy_alignment_levels <- c(
+  "X Not relevant / not applicable",
+  "0 No mention",
+  "1 Implicit content mention",
+  "2 Explicit content mention",
+  "3 Content & context alignment"
+)
+
+# USE 2, Q2: data/information adequacy scale (Table 4)
+info_adequacy_levels <- c(
+  "X Not relevant / not applicable",
+  "0 ZERO – No data or information",
+  "1 Weak – some, inconsistent in time/space",
+  "2 Moderate – some, reasonable time/space coverage",
+  "3 Strong – good long‑term info/time/space coverage"
+)
+
+# USE 4 & 5: management performance / target‑based 0–2 scale
+perf_levels <- c(
+  "0 Not met",
+  "1 Met",
+  "2 Exceeded"
+)
+
+# USE 5 impact Likert
+cumu_impact_levels <- c("X Not applicable", "0 No impact", "1 Low", "2 Moderate", "3 High")
+
+
 # Template constructors used by Step 2
 make_objective_table <- function(so) {
   # Ensure stable base columns
   base <- so |>
-    select(Pillar, Main_Objective, Level_1, Level_2, Level_3, Level_4) |>
-    mutate(
-      Objective_Label = apply(select(., Main_Objective, Level_1, Level_2, Level_3, Level_4), 1, function(r) {
-        paste(na.omit(r), collapse = " / ")
-      })
-    )
+    dplyr::select(Pillar, Main_Objective, Level_1, Level_2, Level_3, Level_4)
+
+  # Build label from non‑NA levels for each row
+  label_mat <- base |>
+    dplyr::select(Main_Objective, Level_1, Level_2, Level_3, Level_4) |>
+    as.data.frame()
+
+  base$Objective_Label <- apply(
+    label_mat,
+    1,
+    function(r) paste(stats::na.omit(r), collapse = " / ")
+  )
+
   base
 }
 
@@ -165,6 +203,7 @@ ui <- dashboardPage(
     useShinyjs(),
     tags$head(
       tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jQuery-rwdImageMaps/1.6/jquery.rwdImageMaps.min.js"),
+      tags$script(src = "dataTables.cellEdit.js"),
       tags$style(HTML("
         .centered-image {
           display: block; margin-left: auto; margin-right: auto;
@@ -285,40 +324,53 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
       # Step 2: assessment
       tabItem(tabName = "assessment",
               fluidRow(
-                box(width = 12, title = "STEP 2: Assessment & Comparison", status = "primary", solidHeader = TRUE,
-                    "Use the selected objectives from Step 1 to assess.")
-              ),
-              conditionalPanel(
-                condition = "output.objectives_selected == false",
-                fluidRow(
-                  box(width = 12, status = "warning", solidHeader = TRUE,
-                      div(style = "background-color:#fff3cd; padding:15px; border-radius:5px;",
-                          h4(icon("exclamation-triangle"), "No Objectives Selected"),
-                          p("Please complete Step 1 first."),
-                          actionButton("goto_step1_from_step2", "Go to Step 1", class = "btn-warning")
+                box(width = 12, title = "Choose Assessment Type (EBM USE 2–5)", status = "info", solidHeader = TRUE,
+                    fluidRow(
+                      column(
+                        4,
+                        div(
+                          class = "assessment-type-box", id = "assessment_type_policy",
+                          onclick = "Shiny.setInputValue('assessment_type', 'policy', {priority: 'event'});",
+                          h4(icon("file-text"), "Policy / Advice / Scenario (USE 2 & 3)"),
+                          tags$ul(
+                            tags$li("USE 2 – Q1: Evaluate alignment of policy / management approach with EBM objectives."),
+                            tags$li("USE 2 – Q2: Evaluate whether advice provision has sufficient data/information."),
+                            tags$li("USE 3: Compare scenarios or options against EBM objectives.")
+                          ),
+                          p(tags$b("Scoring options:")),
+                          tags$ul(
+                            tags$li("Table 2 style – qualitative content/context alignment (X / 0–3)."),
+                            tags$li("Table 4 style – data/information adequacy (X / 0–3).")
+                          )
+                        )
+                      ),
+                      column(
+                        4,
+                        div(
+                          class = "assessment-type-box", id = "assessment_type_performance",
+                          onclick = "Shiny.setInputValue('assessment_type', 'performance', {priority: 'event'});",
+                          h4(icon("chart-line"), "Management Report Card (USE 4)"),
+                          tags$ul(
+                            tags$li("USE 4: Are we achieving our management objectives?"),
+                            tags$li("Score using operational indicators per objective."),
+                            tags$li("0 = not met; 1 = met; 2 = exceeded (Table 4‑like scale).")
+                          )
+                        )
+                      ),
+                      column(
+                        4,
+                        div(
+                          class = "assessment-type-box", id = "assessment_type_cumulative",
+                          onclick = "Shiny.setInputValue('assessment_type', 'cumulative', {priority: 'event'});",
+                          h4(icon("layer-group"), "Cumulative Effects / Trade‑offs (USE 5)"),
+                          tags$ul(
+                            tags$li("USE 5: Assess cumulative effects / risks / trade‑offs across activities."),
+                            tags$li("Blue columns = activities; final tally columns can be added as needed.")
+                          ),
+                          p("Impacts scored per activity (e.g., 0–3; NA / X where appropriate).")
+                        )
                       )
-                  )
-                )
-              ),
-              conditionalPanel(
-                condition = "output.objectives_selected == true",
-                fluidRow(
-                  box(width = 12, title = "Choose Assessment Type", status = "info", solidHeader = TRUE,
-                      fluidRow(
-                        column(4, div(class = "assessment-type-box", id = "assessment_type_policy",
-                                      onclick = "Shiny.setInputValue('assessment_type', 'policy', {priority: 'event'});",
-                                      h4(icon("file-text"), "Policy / Scenario"), p("Qualitative or Likert (0–4). Multiple scenarios supported.")
-                        )),
-                        column(4, div(class = "assessment-type-box", id = "assessment_type_performance",
-                                      onclick = "Shiny.setInputValue('assessment_type', 'performance', {priority: 'event'});",
-                                      h4(icon("chart-line"), "Management Performance"), p("0=Not met; 1=Met; 2=Exceeded.")
-                        )),
-                        column(4, div(class = "assessment-type-box", id = "assessment_type_cumulative",
-                                      onclick = "Shiny.setInputValue('assessment_type', 'cumulative', {priority: 'event'});",
-                                      h4(icon("layer-group"), "Cumulative Effects"), p("0–3 impact per activity; sum = cumulative.")
-                        ))
-                      )
-                  )
+                    )
                 ),
                 uiOutput("assessment_interface")
               )
@@ -761,32 +813,109 @@ server <- function(input, output, session) {
 
   policy_ui <- function() {
     so <- selected_objectives(); req(so)
+
     tagList(
       fluidRow(
-        box(width = 12, title = "Policy / Scenario Assessment", status = "success", solidHeader = TRUE,
-            fluidRow(
-              column(4, numericInput("num_scenarios", "Number of policies/scenarios:", value = 2, min = 1, max = 10, step = 1)),
-              column(4, radioButtons("policy_method", "Scoring method:",
-                                     choices = c("Qualitative (Content & Context / Content / Implicit / No mention / NA)" = "qual",
-                                                 "Likert 0–4 (data/information adequacy)" = "likert"),
-                                     selected = "qual")),
-              column(4, actionButton("policy_make_template", "Create/Reset Template", class = "btn-primary"))
+        box(
+          width = 12,
+          title = "Policy / Advice / Scenario Assessment (EBM USE 2 & 3)",
+          status = "success",
+          solidHeader = TRUE,
+          fluidRow(
+            column(
+              4,
+              numericInput(
+                "num_scenarios",
+                "Number of policies / advice sources / scenarios:",
+                value = 1, min = 1, max = 10, step = 1
+              )
             ),
-            hr(),
-            DTOutput("policy_editor"),
-            br(),
-            fluidRow(
-              column(3, downloadButton("policy_download_excel", "Download Template/Results (Excel)", class = "btn-success btn-block")),
-              column(3, downloadButton("policy_download_csv", "Download (CSV)", class = "btn-info btn-block")),
-              column(6, fileInput("policy_upload", "Upload completed (CSV/XLSX)", accept = c(".csv",".xlsx")))
+            column(
+              4,
+              radioButtons(
+                "policy_method",
+                "Scoring method:",
+                choices = c(
+                  "Policy language alignment (X / 0–3)" = "qual",
+                  "Data/information adequacy (X / 0–3)" = "likert"
+                ),
+                selected = "qual"
+              )
+            ),
+            column(
+              4,
+              actionButton(
+                "policy_make_template",
+                "Create / Reset Template",
+                class = "btn-primary"
+              )
             )
+          ),
+          tags$hr(),
+          tags$strong("How to use (maps to EBM USE 2 & 3):"),
+          tags$ol(
+            tags$li("Complete STEP 1 to select the relevant objectives and level of detail."),
+            tags$li("Decide whether you are evaluating:",
+                    tags$ul(
+                      tags$li("USE 2, Q1 – Policy or management approach language against objectives (Table 2)."),
+                      tags$li("USE 2, Q2 – Adequacy of data/information supporting advice (Table 4)."),
+                      tags$li("USE 3 – Impacts / performance of alternative scenarios against objectives.")
+                    )
+            ),
+            tags$li("Choose the scoring method above (Table 2 or Table 4 style)."),
+            tags$li("Set the number of columns (policies / advice sources / scenarios)."),
+            tags$li("Click 'Create / Reset Template'."),
+            tags$li("In the template:"),
+            tags$ul(
+              tags$li("Grey columns (left) = EBM objectives from STEP 1."),
+              tags$li("Pink column = policy statement / data description / scenario narrative."),
+              tags$li("Blue columns = scores for each policy / advice source / scenario."),
+              tags$li("White column = rationale / explanation for each score.")
+            )
+          ),
+          DTOutput("policy_editor"),
+          br(),
+          fluidRow(
+            column(
+              3,
+              downloadButton(
+                "policy_download_excel",
+                "Download Template / Results (Excel)",
+                class = "btn-success btn-block"
+              )
+            ),
+            column(
+              3,
+              downloadButton(
+                "policy_download_csv",
+                "Download (CSV)",
+                class = "btn-info btn-block"
+              )
+            ),
+            column(
+              6,
+              fileInput(
+                "policy_upload",
+                "Upload completed (CSV / XLSX)",
+                accept = c(".csv", ".xlsx")
+              )
+            )
+          )
         )
       ),
       fluidRow(
-        box(width = 12, title = "Summary & Plots", status = "info", solidHeader = TRUE,
-            uiOutput("policy_summary_ui"),
-            plotOutput("policy_bar_per_scenario", height = "300px"),
-            plotOutput("policy_heat_per_objective", height = "380px")
+        box(
+          width = 12,
+          title = "Summary & Plots",
+          status = "info",
+          solidHeader = TRUE,
+          uiOutput("policy_summary_ui"),
+          tags$hr(),
+          tags$strong("Per‑scenario summary (bars)"),
+          plotOutput("policy_bar_per_scenario", height = "300px"),
+          tags$hr(),
+          tags$strong("Objective × scenario summary (heatmap)"),
+          plotOutput("policy_heat_per_objective", height = "380px")
         )
       )
     )
@@ -795,34 +924,138 @@ server <- function(input, output, session) {
   observeEvent(input$policy_make_template, {
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so)
+
+    # Pink column – statement / evidence text (policy / advice / scenario description)
+    base[["Statement_or_Evidence"]] <- ""
+
     n <- input$num_scenarios %||% 1
     method <- input$policy_method %||% "qual"
+
     if (method == "qual") {
+      # Table 2 style – policy language alignment with objectives
       for (i in seq_len(n)) {
-        base[[paste0("S", i, "_align")]] <- ""
+        col_name <- paste0("Policy_", i, "_alignment")
+        base[[col_name]] <- factor(
+          NA_character_,
+          levels = policy_alignment_levels
+        )
       }
     } else {
+      # Table 4 style – data/information adequacy for advice provision
       for (i in seq_len(n)) {
-        base[[paste0("S", i, "_score")]] <- NA_real_
+        col_name <- paste0("Source_", i, "_data_adequacy")
+        base[[col_name]] <- factor(
+          NA_character_,
+          levels = info_adequacy_levels
+        )
       }
     }
+
+    # White column – rationale for scores
+    base[["Rationale"]] <- ""
+
     policy_tbl(base)
-    showNotification("Template created. You can edit the table.", type = "message", duration = 3)
+    showNotification(
+      "Template created. Fill in Statement/Evidence, then assign scores and rationale.",
+      type = "message", duration = 5
+    )
   })
 
   output$policy_editor <- renderDT({
     df <- policy_tbl()
-    if (is.null(df)) return(datatable(data.frame(Note = "Click 'Create/Reset Template' to begin."), rownames = FALSE))
-    lock_cols <- which(names(df) %in% c("Pillar","Main_Objective","Level_1","Level_2","Level_3","Level_4","Objective_Label")) - 1
-    dt <- datatable(df, editable = list(target = "cell", disable = list(columns = lock_cols)),
-                    options = list(scrollX = TRUE, pageLength = 10), rownames = FALSE)
+    if (is.null(df)) {
+      return(
+        datatable(
+          data.frame(Note = "Click 'Create / Reset Template' to begin."),
+          rownames = FALSE
+        )
+      )
+    }
+
+    # 0-based indices of non-editable columns
+    lock_cols <- which(names(df) %in%
+                         c("Pillar", "Main_Objective", "Level_1",
+                           "Level_2", "Level_3", "Level_4", "Objective_Label")) - 1
+
+    # 0-based indices of scoring columns
+    align_cols    <- grep("alignment$",    names(df)) - 1
+    adequacy_cols <- grep("data_adequacy$", names(df)) - 1
+
+    dt <- datatable(
+      df,
+      rownames   = FALSE,
+      editable   = "cell",  # required for Shiny to send cell edit info
+      options    = list(scrollX = TRUE, pageLength = 10),
+      callback   = JS(sprintf("
+      // Use the custom cellEdit plugin
+      table.MakeCellsEditable({
+        'inputCss': 'form-control input-sm',
+        'columns': %s,  // all columns except locked
+        'getEditor': function(oldValue, cell, colIdx) {
+          var alignCols    = [%s];
+          var adequacyCols = [%s];
+
+          var levelsAlign    = %s;
+          var levelsAdequacy = %s;
+
+          // Alignment columns (USE 2 Q1)
+          if (alignCols.indexOf(colIdx) > -1) {
+            var sel = $('<select></select>');
+            for (var i = 0; i < levelsAlign.length; i++) {
+              $('<option>').val(levelsAlign[i]).text(levelsAlign[i]).appendTo(sel);
+            }
+            sel.val(oldValue);
+            return sel;
+          }
+
+          // Data adequacy columns (USE 2 Q2)
+          if (adequacyCols.indexOf(colIdx) > -1) {
+            var sel = $('<select></select>');
+            for (var j = 0; j < levelsAdequacy.length; j++) {
+              $('<option>').val(levelsAdequacy[j]).text(levelsAdequacy[j]).appendTo(sel);
+            }
+            sel.val(oldValue);
+            return sel;
+          }
+
+          // Default: text input
+          var input = $('<input type=\"text\"/>').val(oldValue);
+          return input;
+        },
+        'onUpdate': function(cell, rowIdx, colIdx, oldValue, newValue) {
+          // Send edit to Shiny (mimic DT edit structure)
+          Shiny.setInputValue(
+            'policy_editor_cell_edit',
+            {
+              row:  rowIdx + 1,
+              col:  colIdx + 1,
+              value: newValue
+            },
+            {priority: 'event'}
+          );
+        }
+      });
+    ",
+                              # editable columns = all except lock_cols
+                              jsonlite::toJSON(setdiff(seq_len(ncol(df)) - 1, lock_cols), auto_unbox = TRUE),
+                              paste(align_cols, collapse = ","),
+                              paste(adequacy_cols, collapse = ","),
+                              jsonlite::toJSON(policy_alignment_levels, auto_unbox = TRUE),
+                              jsonlite::toJSON(info_adequacy_levels, auto_unbox = TRUE)
+      ))
+    )
+
     dt
   })
 
   observeEvent(input$policy_editor_cell_edit, {
     info <- input$policy_editor_cell_edit
     df <- policy_tbl(); req(df)
-    i <- info$row; j <- info$col; v <- info$value
+
+    i <- info$row
+    j <- info$col
+    v <- info$value
+
     df[i, j] <- v
     policy_tbl(df)
   })
@@ -857,96 +1090,101 @@ server <- function(input, output, session) {
   )
 
   output$policy_summary_ui <- renderUI({
-    df <- policy_tbl(); if (is.null(df)) return(NULL)
-    score_cols <- grep("^S\\d+_score$", names(df), value = TRUE)
-    align_cols <- grep("^S\\d+_align$", names(df), value = TRUE)
-    if (length(score_cols)) {
-      scores <- unlist(lapply(score_cols, function(cn) suppressWarnings(as.numeric(df[[cn]]))))
-      scores <- scores[!is.na(scores)]
-      if (!length(scores)) return(p("No numeric scores yet."))
-      tagList(
-        h4("Likert Summary"),
-        p("Objective–scenario cells scored: ", length(scores)),
-        p("Average score: ", round(mean(scores), 2))
-      )
-    } else if (length(align_cols)) {
-      aligns <- unlist(lapply(align_cols, function(cn) df[[cn]]))
-      aligns <- aligns[!is.na(aligns) & aligns != ""]
-      tagList(
-        h4("Qualitative Summary"),
-        p("Total filled (non-empty): ", length(aligns))
-      )
-    } else {
-      p("No scenario columns. Create/Reset a template.")
+    df <- policy_tbl()
+    if (is.null(df)) return(NULL)
+
+    score_cols  <- grep("alignment$|data_adequacy$", names(df), value = TRUE)
+    if (!length(score_cols)) {
+      return(p("No scoring columns yet. Click 'Create / Reset Template' to begin."))
     }
+
+    # Map factor labels to numeric 0–3 where possible
+    to_num <- function(x) {
+      x <- as.character(x)
+      vals <- suppressWarnings(as.numeric(substr(x, 1, 1))) # first char '0','1','2','3' or 'X'
+      vals[substr(x, 1, 1) == "X"] <- NA_real_
+      vals
+    }
+
+    scores <- unlist(lapply(score_cols, function(cn) to_num(df[[cn]])))
+    scores <- scores[!is.na(scores)]
+
+    if (!length(scores)) {
+      return(p("No numeric scores yet (all X / NA)."))
+    }
+
+    tagList(
+      h4("Summary"),
+      p("Objective × column cells with numeric scores (0–3): ", length(scores)),
+      p("Average score: ", round(mean(scores), 2)),
+      p("Min / Max: ", paste0(min(scores), " / ", max(scores)))
+    )
   })
 
   output$policy_bar_per_scenario <- renderPlot({
     df <- policy_tbl(); if (is.null(df)) return(NULL)
-    score_cols <- grep("^S\\d+_score$", names(df), value = TRUE)
-    align_cols <- grep("^S\\d+_align$", names(df), value = TRUE)
 
-    if (length(score_cols)) {
-      tall <- df |>
-        pivot_longer(all_of(score_cols), names_to = "Scenario", values_to = "Score") |>
-        mutate(Score = suppressWarnings(as.numeric(Score))) |>
-        filter(!is.na(Score))
-      if (nrow(tall) == 0) return(NULL)
-      ggplot(tall, aes(x = Scenario, y = Score, fill = Scenario)) +
-        stat_summary(fun = mean, geom = "bar", width = 0.7) +
-        labs(title = "Average score per scenario (0–4)", x = "Scenario", y = "Avg score") +
-        theme_minimal() + theme(legend.position = "none")
-    } else if (length(align_cols)) {
-      tall <- df |>
-        pivot_longer(all_of(align_cols), names_to = "Scenario", values_to = "Align") |>
-        filter(!is.na(Align), Align != "")
-      if (nrow(tall) == 0) return(NULL)
-      ggplot(tall, aes(x = Scenario, fill = Align)) +
-        geom_bar(position = "stack") +
-        labs(title = "Qualitative alignment counts by scenario", x = "Scenario", y = "Count") +
-        theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    score_cols <- grep("alignment$|data_adequacy$", names(df), value = TRUE)
+    if (!length(score_cols)) return(NULL)
+
+    to_num <- function(x) {
+      x <- as.character(x)
+      vals <- suppressWarnings(as.numeric(substr(x, 1, 1)))
+      vals[substr(x, 1, 1) == "X"] <- NA_real_
+      vals
     }
+
+    tall <- df |>
+      pivot_longer(all_of(score_cols), names_to = "Scenario", values_to = "ScoreLabel") |>
+      mutate(Score = to_num(ScoreLabel)) |>
+      filter(!is.na(Score))
+
+    if (nrow(tall) == 0) return(NULL)
+
+    ggplot(tall, aes(x = Scenario, y = Score, fill = Scenario)) +
+      stat_summary(fun = mean, geom = "bar", width = 0.7) +
+      labs(
+        title = "Average score per column (0–3)",
+        x = "Policy / Advice source / Scenario column",
+        y = "Average score"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))
   })
 
   output$policy_heat_per_objective <- renderPlot({
     df <- policy_tbl(); if (is.null(df)) return(NULL)
-    score_cols <- grep("^S\\d+_score$", names(df), value = TRUE)
-    align_cols <- grep("^S\\d+_align$", names(df), value = TRUE)
 
-    if (length(score_cols)) {
-      tall <- df |>
-        mutate(Objective = Objective_Label) |>
-        pivot_longer(all_of(score_cols), names_to = "Scenario", values_to = "Score") |>
-        mutate(Score = suppressWarnings(as.numeric(Score))) |>
-        filter(!is.na(Score))
-      if (nrow(tall) == 0) return(NULL)
-      ggplot(tall, aes(x = Scenario, y = Objective, fill = Score)) +
-        geom_tile(color = "#ddd") +
-        scale_fill_gradient(low = "#f0f9ff", high = "#084081", na.value = "#eee") +
-        labs(title = "Objective × Scenario heatmap (Likert score)", x = "Scenario", y = "Objective") +
-        theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    } else if (length(align_cols)) {
-      map_val <- function(x) {
-        dplyr::case_when(
-          x == "Content & Context" ~ 3,
-          x == "Content" ~ 2,
-          x == "Implicit" ~ 1,
-          x == "No mention" ~ 0,
-          TRUE ~ NA_real_
-        )
-      }
-      tall <- df |>
-        mutate(Objective = Objective_Label) |>
-        pivot_longer(all_of(align_cols), names_to = "Scenario", values_to = "Align") |>
-        mutate(Score = map_val(Align)) |>
-        filter(!is.na(Score))
-      if (nrow(tall) == 0) return(NULL)
-      ggplot(tall, aes(x = Scenario, y = Objective, fill = Score)) +
-        geom_tile(color = "#ddd") +
-        scale_fill_gradient(low = "#f0fff0", high = "#006d2c", na.value = "#eee") +
-        labs(title = "Objective × Scenario heatmap (qualitative mapped to numeric)", x = "Scenario", y = "Objective") +
-        theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    score_cols <- grep("alignment$|data_adequacy$", names(df), value = TRUE)
+    if (!length(score_cols)) return(NULL)
+
+    to_num <- function(x) {
+      x <- as.character(x)
+      vals <- suppressWarnings(as.numeric(substr(x, 1, 1)))
+      vals[substr(x, 1, 1) == "X"] <- NA_real_
+      vals
     }
+
+    tall <- df |>
+      mutate(Objective = Objective_Label) |>
+      pivot_longer(all_of(score_cols), names_to = "Scenario", values_to = "ScoreLabel") |>
+      mutate(Score = to_num(ScoreLabel))
+
+    if (all(is.na(tall$Score))) return(NULL)
+
+    ggplot(tall, aes(x = Scenario, y = Objective, fill = Score)) +
+      geom_tile(color = "#ddd") +
+      scale_fill_gradient(
+        low = "#f0f9ff", high = "#084081", na.value = "#eee",
+        name = "Score (0–3)"
+      ) +
+      labs(
+        title = "Objective × column heatmap (0–3; X treated as NA)",
+        x = "Policy / Advice source / Scenario column",
+        y = "Objective"
+      ) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
   })
 
   # ========== PERFORMANCE ==========
@@ -954,25 +1192,52 @@ server <- function(input, output, session) {
 
   performance_ui <- function() {
     so <- selected_objectives(); req(so)
+
     tagList(
       fluidRow(
-        box(width = 12, title = "Management Performance (Report Card)", status = "success", solidHeader = TRUE,
-            actionButton("perf_make_template", "Create/Reset Template", class = "btn-primary"),
-            hr(),
-            DTOutput("perf_editor"),
-            br(),
-            fluidRow(
-              column(3, downloadButton("perf_download_excel", "Download (Excel)", class = "btn-success btn-block")),
-              column(3, downloadButton("perf_download_csv", "Download (CSV)", class = "btn-info btn-block")),
-              column(6, fileInput("perf_upload", "Upload completed (CSV/XLSX)", accept = c(".csv",".xlsx")))
+        box(
+          width = 12,
+          title = "Management Performance Report Card (EBM USE 4)",
+          status = "success",
+          solidHeader = TRUE,
+          actionButton("perf_make_template", "Create / Reset Template", class = "btn-primary"),
+          tags$hr(),
+          tags$strong("How to use (USE 4 – Management report card):"),
+          tags$ol(
+            tags$li("If not already done, complete STEP 1 to identify relevant objectives and level of detail."),
+            tags$li("For each lowest‑level objective, select operational indicators."),
+            tags$li("Define a target for each indicator and a scoring scheme (e.g., 0 = not met; 1 = met; 2 = exceeded)."),
+            tags$li("Click 'Create / Reset Template' to generate the scoring sheet."),
+            tags$li("In the template:"),
+            tags$ul(
+              tags$li("Grey columns (left) = objectives."),
+              tags$li("Use 'Score' (0/1/2) to enter whether the indicator meets target."),
+              tags$li("Use 'Indicator' to name the indicator and 'Target' to record the threshold."),
+              tags$li("Use 'Rationale' to explain the score (data used, reasoning, etc.).")
             )
+          ),
+          DTOutput("perf_editor"),
+          br(),
+          fluidRow(
+            column(3, downloadButton("perf_download_excel", "Download (Excel)", class = "btn-success btn-block")),
+            column(3, downloadButton("perf_download_csv", "Download (CSV)", class = "btn-info btn-block")),
+            column(6, fileInput("perf_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
+          )
         )
       ),
       fluidRow(
-        box(width = 12, title = "Summary & Plot", status = "info", solidHeader = TRUE,
-            uiOutput("perf_summary_ui"),
-            plotOutput("perf_bar_objective", height = "320px"),
-            plotOutput("perf_bar_pillar", height = "300px")
+        box(
+          width = 12,
+          title = "Summary & Plots",
+          status = "info",
+          solidHeader = TRUE,
+          uiOutput("perf_summary_ui"),
+          tags$hr(),
+          tags$strong("Performance per objective"),
+          plotOutput("perf_bar_objective", height = "320px"),
+          tags$hr(),
+          tags$strong("Average performance by pillar"),
+          plotOutput("perf_bar_pillar", height = "300px")
         )
       )
     )
@@ -981,17 +1246,82 @@ server <- function(input, output, session) {
   observeEvent(input$perf_make_template, {
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so)
-    base[["Score"]] <- NA_real_  # 0/1/2
+
+    base[["Indicator"]] <- ""
+    base[["Target"]]    <- ""
+    base[["Score"]]     <- NA_real_  # 0, 1, 2
+    base[["Rationale"]] <- ""
+
     perf_tbl(base)
-    showNotification("Template created.", type = "message")
+    showNotification(
+      "Template created. Define indicators, targets, scores (0–2) and rationale.",
+      type = "message"
+    )
   })
 
   output$perf_editor <- renderDT({
     df <- perf_tbl()
-    if (is.null(df)) return(datatable(data.frame(Note = "Click 'Create/Reset Template' to begin."), rownames = FALSE))
-    lock_cols <- which(names(df) %in% c("Pillar","Main_Objective","Level_1","Level_2","Level_3","Level_4","Objective_Label")) - 1
-    datatable(df, editable = list(target = "cell", disable = list(columns = lock_cols)),
-              options = list(scrollX = TRUE, pageLength = 10), rownames = FALSE)
+    if (is.null(df)) {
+      return(
+        datatable(
+          data.frame(Note = "Click 'Create / Reset Template' to begin."),
+          rownames = FALSE
+        )
+      )
+    }
+
+    lock_cols <- which(names(df) %in%
+                         c("Pillar", "Main_Objective", "Level_1",
+                           "Level_2", "Level_3", "Level_4",
+                           "Objective_Label")) - 1
+
+    score_col <- which(names(df) == "Score") - 1  # 0-based
+
+    dt <- datatable(
+      df,
+      rownames = FALSE,
+      editable = "cell",
+      options = list(scrollX = TRUE, pageLength = 10),
+      callback = JS(sprintf("
+      table.MakeCellsEditable({
+        'inputCss': 'form-control input-sm',
+        'columns': %s,
+        'getEditor': function(oldValue, cell, colIdx) {
+          var scoreCol = %s;
+          var levelsScore = %s;
+
+          if (colIdx === scoreCol) {
+            var sel = $('<select></select>');
+            for (var i = 0; i < levelsScore.length; i++) {
+              $('<option>').val(levelsScore[i]).text(levelsScore[i]).appendTo(sel);
+            }
+            sel.val(oldValue);
+            return sel;
+          }
+
+          var input = $('<input type=\"text\"/>').val(oldValue);
+          return input;
+        },
+        'onUpdate': function(cell, rowIdx, colIdx, oldValue, newValue) {
+          Shiny.setInputValue(
+            'perf_editor_cell_edit',
+            {
+              row:  rowIdx + 1,
+              col:  colIdx + 1,
+              value: newValue
+            },
+            {priority: 'event'}
+          );
+        }
+      });
+    ",
+                            jsonlite::toJSON(setdiff(seq_len(ncol(df)) - 1, lock_cols), auto_unbox = TRUE),
+                            score_col,
+                            jsonlite::toJSON(perf_levels, auto_unbox = TRUE)
+      ))
+    )
+
+    dt
   })
 
   observeEvent(input$perf_editor_cell_edit, {
@@ -1062,26 +1392,57 @@ server <- function(input, output, session) {
 
   cumulative_ui <- function() {
     so <- selected_objectives(); req(so)
+
     tagList(
       fluidRow(
-        box(width = 12, title = "Cumulative Effects", status = "success", solidHeader = TRUE,
-            numericInput("num_activities", "Number of activities:", value = 3, min = 2, max = 10, step = 1),
-            actionButton("cumu_make_template", "Create/Reset Template", class = "btn-primary"),
-            hr(),
-            DTOutput("cumu_editor"),
-            br(),
-            fluidRow(
-              column(3, downloadButton("cumu_download_excel", "Download (Excel)", class = "btn-success btn-block")),
-              column(3, downloadButton("cumu_download_csv", "Download (CSV)", class = "btn-info btn-block")),
-              column(6, fileInput("cumu_upload", "Upload completed (CSV/XLSX)", accept = c(".csv",".xlsx")))
+        box(
+          width = 12,
+          title = "Cumulative Effects / Risk & Trade‑offs (EBM USE 5)",
+          status = "success",
+          solidHeader = TRUE,
+          numericInput(
+            "num_activities",
+            "Number of activities:",
+            value = 3, min = 2, max = 10, step = 1
+          ),
+          actionButton("cumu_make_template", "Create / Reset Template", class = "btn-primary"),
+          tags$hr(),
+          tags$strong("How to use (USE 5 – Cumulative effects, risk, trade‑offs):"),
+          tags$ol(
+            tags$li("Establish common objectives across the activities, ideally across all four pillars (use STEP 1 to guide)."),
+            tags$li("For each common objective, select operational indicators (may differ by activity)."),
+            tags$li("Define a target and scoring scheme for each indicator (e.g., 0 = not met; 1 = met; 2 = exceeded, or 0–3 impact)."),
+            tags$li("Set the number of activities and click 'Create / Reset Template'."),
+            tags$li("In the template:"),
+            tags$ul(
+              tags$li("Grey columns (left) = objectives."),
+              tags$li("Indicator / Target describe how you measure impact for each objective–activity."),
+              tags$li("Blue columns (A1, A2, ...) = scores / impacts for each activity."),
+              tags$li("Optional: add your own total / risk / trade‑off columns in Excel if needed.")
             )
+          ),
+          DTOutput("cumu_editor"),
+          br(),
+          fluidRow(
+            column(3, downloadButton("cumu_download_excel", "Download (Excel)", class = "btn-success btn-block")),
+            column(3, downloadButton("cumu_download_csv", "Download (CSV)", class = "btn-info btn-block")),
+            column(6, fileInput("cumu_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
+          )
         )
       ),
       fluidRow(
-        box(width = 12, title = "Summary & Plots", status = "info", solidHeader = TRUE,
-            uiOutput("cumu_summary_ui"),
-            plotOutput("cumu_bar_per_activity", height = "300px"),
-            plotOutput("cumu_heat_objective_activity", height = "380px")
+        box(
+          width = 12,
+          title = "Summary & Plots",
+          status = "info",
+          solidHeader = TRUE,
+          uiOutput("cumu_summary_ui"),
+          tags$hr(),
+          tags$strong("Average impact per activity"),
+          plotOutput("cumu_bar_per_activity", height = "300px"),
+          tags$hr(),
+          tags$strong("Objective × activity heatmap"),
+          plotOutput("cumu_heat_objective_activity", height = "380px")
         )
       )
     )
@@ -1090,18 +1451,84 @@ server <- function(input, output, session) {
   observeEvent(input$cumu_make_template, {
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so)
+
+    base[["Indicator"]] <- ""
+    base[["Target"]]    <- ""
+
     n <- input$num_activities %||% 3
-    for (i in seq_len(n)) base[[paste0("A", i, "_impact")]] <- NA_real_
+    for (i in seq_len(n)) {
+      base[[paste0("A", i, "_impact")]] <- NA_real_  # e.g., 0–3
+    }
+
     cumu_tbl(base)
-    showNotification("Template created.", type = "message")
+    showNotification(
+      "Template created. Add indicators, targets and impacts (0–3 or your chosen scale) per activity.",
+      type = "message"
+    )
   })
 
   output$cumu_editor <- renderDT({
     df <- cumu_tbl()
-    if (is.null(df)) return(datatable(data.frame(Note = "Click 'Create/Reset Template' to begin."), rownames = FALSE))
-    lock_cols <- which(names(df) %in% c("Pillar","Main_Objective","Level_1","Level_2","Level_3","Level_4","Objective_Label")) - 1
-    datatable(df, editable = list(target = "cell", disable = list(columns = lock_cols)),
-              options = list(scrollX = TRUE, pageLength = 10), rownames = FALSE)
+    if (is.null(df)) {
+      return(
+        datatable(
+          data.frame(Note = "Click 'Create / Reset Template' to begin."),
+          rownames = FALSE
+        )
+      )
+    }
+
+    lock_cols <- which(names(df) %in%
+                         c("Pillar", "Main_Objective", "Level_1",
+                           "Level_2", "Level_3", "Level_4",
+                           "Objective_Label")) - 1
+
+    impact_cols <- grep("^A\\d+_impact$", names(df)) - 1  # 0-based
+
+    dt <- datatable(
+      df,
+      rownames = FALSE,
+      editable = "cell",
+      options = list(scrollX = TRUE, pageLength = 10),
+      callback = JS(sprintf("
+      var impactCols = [%s];
+      var levelsImpact = %s;
+
+      table.MakeCellsEditable({
+        'inputCss': 'form-control input-sm',
+        'columns': %s,
+        'getEditor': function(oldValue, cell, colIdx) {
+          if (impactCols.indexOf(colIdx) > -1) {
+            var sel = $('<select></select>');
+            for (var i = 0; i < levelsImpact.length; i++) {
+              $('<option>').val(levelsImpact[i]).text(levelsImpact[i]).appendTo(sel);
+            }
+            sel.val(oldValue);
+            return sel;
+          }
+          var input = $('<input type=\"text\"/>').val(oldValue);
+          return input;
+        },
+        'onUpdate': function(cell, rowIdx, colIdx, oldValue, newValue) {
+          Shiny.setInputValue(
+            'cumu_editor_cell_edit',
+            {
+              row:  rowIdx + 1,
+              col:  colIdx + 1,
+              value: newValue
+            },
+            {priority: 'event'}
+          );
+        }
+      });
+    ",
+                            paste(impact_cols, collapse = ","),
+                            jsonlite::toJSON(cumu_impact_levels, auto_unbox = TRUE),
+                            jsonlite::toJSON(setdiff(seq_len(ncol(df)) - 1, lock_cols), auto_unbox = TRUE)
+      ))
+    )
+
+    dt
   })
 
   observeEvent(input$cumu_editor_cell_edit, {
