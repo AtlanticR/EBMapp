@@ -81,7 +81,7 @@ use_explanations[[2]] <- function() {
     )
     ,
 
-    tags$h4("Qualitative Scoring"),
+    tags$h4("Policy Language Alignment Scoring"),
 
     tags$table(
       style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
@@ -104,7 +104,7 @@ use_explanations[[2]] <- function() {
                 tags$td("Content & Context alignment - the phrase/terms used in the unit of analysis explicitly matches the intended content as well as the context of the EBM framework objectives", style = "border: 1px solid #ccc; padding: 4px;"))
       )
     ),
-    tags$h4("Quantitative Scoring"),
+    tags$h4("Data/Information Adequacy Scoring"),
     tags$table(
       style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
       tags$thead(
@@ -210,7 +210,7 @@ use_explanations[[3]] <- function() {
     )
     ,
 
-    tags$h4("Qualitative Scoring"),
+    tags$h4("Policy Language Alignment Scoring"),
 
     tags$table(
       style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
@@ -233,7 +233,7 @@ use_explanations[[3]] <- function() {
                 tags$td("Content & Context alignment - the phrase/terms used in the unit of analysis explicitly matches the intended content as well as the context of the EBM framework objectives", style = "border: 1px solid #ccc; padding: 4px;"))
       )
     ),
-    tags$h4("Quantitative Scoring"),
+    tags$h4("Data/Information Adequacy Scoring"),
     tags$table(
       style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
       tags$thead(
@@ -1787,7 +1787,7 @@ server <- function(input, output, session) {
     } else {
       # Existing qualitative + quantitative tables
       tagList(
-        tags$h4("Qualitative Scoring"),
+        tags$h4("Policy Language Alignment Scoring"),
         # paste your qualitative table code here
         tags$table(
           style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
@@ -1806,7 +1806,7 @@ server <- function(input, output, session) {
           )
         ),
         tags$br(),
-        tags$h4("Quantitative/Data Scoring"),
+        tags$h4("Data/Information Scoring"),
         # paste your quantitative table code here
         tags$table(
           style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
