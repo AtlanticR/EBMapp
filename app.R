@@ -1715,14 +1715,14 @@ server <- function(input, output, session) {
           class = "btn-info btn-block"
         )
       ),
-      column(
-        6,
-        fileInput(
-          "policy_upload",
-          "Upload completed (CSV / XLSX)",
-          accept = c(".csv", ".xlsx")
-        )
-      )
+      # column(
+      #   6,
+      #   fileInput(
+      #     "policy_upload",
+      #     "Upload completed (CSV / XLSX)",
+      #     accept = c(".csv", ".xlsx")
+      #   )
+      # )
     )
   })
 
@@ -1947,19 +1947,19 @@ server <- function(input, output, session) {
     policy_tbl(df)
   })
 
-  observeEvent(input$policy_upload, {
-    ext <- tools::file_ext(input$policy_upload$name)
-    df <- tryCatch({
-      if (ext == "csv") read.csv(input$policy_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
-      else read.xlsx(input$policy_upload$datapath, sheet = 1, check.names = FALSE)
-    }, error = function(e) NULL)
-    if (is.null(df)) {
-      showNotification("Could not read file. Check columns.", type = "warning")
-    } else {
-      policy_tbl(df)
-      showNotification("Uploaded.", type = "message")
-    }
-  })
+  # observeEvent(input$policy_upload, {
+  #   ext <- tools::file_ext(input$policy_upload$name)
+  #   df <- tryCatch({
+  #     if (ext == "csv") read.csv(input$policy_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
+  #     else read.xlsx(input$policy_upload$datapath, sheet = 1, check.names = FALSE)
+  #   }, error = function(e) NULL)
+  #   if (is.null(df)) {
+  #     showNotification("Could not read file. Check columns.", type = "warning")
+  #   } else {
+  #     policy_tbl(df)
+  #     showNotification("Uploaded.", type = "message")
+  #   }
+  # })
 
   output$policy_download_excel <- downloadHandler(
     filename = function() paste0("Policy_Assessment_", Sys.Date(), ".xlsx"),
@@ -2132,8 +2132,8 @@ server <- function(input, output, session) {
     req(show_dl())
     fluidRow(
       column(3, downloadButton("perf_download_excel", "Download (Excel)", class = "btn-success btn-block")),
-      column(3, downloadButton("perf_download_csv", "Download (CSV)", class = "btn-info btn-block")),
-      column(6, fileInput("perf_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
+      column(3, downloadButton("perf_download_csv", "Download (CSV)", class = "btn-info btn-block"))
+      #column(6, fileInput("perf_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
     )
   })
 
@@ -2274,14 +2274,14 @@ server <- function(input, output, session) {
     policy_tbl(df)
   })
 
-  observeEvent(input$perf_upload, {
-    ext <- tools::file_ext(input$perf_upload$name)
-    df <- tryCatch({
-      if (ext == "csv") read.csv(input$perf_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
-      else read.xlsx(input$perf_upload$datapath, 1, check.names = FALSE)
-    }, error = function(e) NULL)
-    if (is.null(df)) showNotification("Could not read file.", type = "warning") else { perf_tbl(df); showNotification("Uploaded.", type = "message") }
-  })
+  # observeEvent(input$perf_upload, {
+  #   ext <- tools::file_ext(input$perf_upload$name)
+  #   df <- tryCatch({
+  #     if (ext == "csv") read.csv(input$perf_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
+  #     else read.xlsx(input$perf_upload$datapath, 1, check.names = FALSE)
+  #   }, error = function(e) NULL)
+  #   if (is.null(df)) showNotification("Could not read file.", type = "warning") else { perf_tbl(df); showNotification("Uploaded.", type = "message") }
+  # })
 
   output$perf_download_excel <- downloadHandler(
     filename = function() paste0("Performance_", Sys.Date(), ".xlsx"),
@@ -2343,8 +2343,8 @@ server <- function(input, output, session) {
     req(show_dl_cum())
     fluidRow(
       column(3, downloadButton("cumu_download_excel", "Download (Excel)", class = "btn-success btn-block")),
-      column(3, downloadButton("cumu_download_csv", "Download (CSV)", class = "btn-info btn-block")),
-      column(6, fileInput("cumu_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
+      column(3, downloadButton("cumu_download_csv", "Download (CSV)", class = "btn-info btn-block"))
+      #column(6, fileInput("cumu_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
     )
 
   })
@@ -2503,14 +2503,14 @@ df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
     cumu_tbl(df)
   })
 
-  observeEvent(input$cumu_upload, {
-    ext <- tools::file_ext(input$cumu_upload$name)
-    df <- tryCatch({
-      if (ext == "csv") read.csv(input$cumu_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
-      else read.xlsx(input$cumu_upload$datapath, 1, check.names = FALSE)
-    }, error = function(e) NULL)
-    if (is.null(df)) showNotification("Could not read file.", type = "warning") else { cumu_tbl(df); showNotification("Uploaded.", type = "message") }
-  })
+  # observeEvent(input$cumu_upload, {
+  #   ext <- tools::file_ext(input$cumu_upload$name)
+  #   df <- tryCatch({
+  #     if (ext == "csv") read.csv(input$cumu_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
+  #     else read.xlsx(input$cumu_upload$datapath, 1, check.names = FALSE)
+  #   }, error = function(e) NULL)
+  #   if (is.null(df)) showNotification("Could not read file.", type = "warning") else { cumu_tbl(df); showNotification("Uploaded.", type = "message") }
+  # })
 
   output$cumu_download_excel <- downloadHandler(
     filename = function() paste0("Cumulative_", Sys.Date(), ".xlsx"),
