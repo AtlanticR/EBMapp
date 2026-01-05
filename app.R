@@ -1716,7 +1716,16 @@ server <- function(input, output, session) {
             strong(
               "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
             )
-          )),
+          ),
+          br(),
+          p(
+            style = "background-color: #ffc107; padding: 4px 6px;",
+            strong(
+              "Make sure you double click to edit the table. A single click in a column will not work."
+            )
+          )
+
+          ),
           DTOutput("policy_editor"),
           br(),
           uiOutput("policy_template_ui")
@@ -2126,7 +2135,16 @@ server <- function(input, output, session) {
               strong(
                 "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
-            )),
+            ),
+            br(),
+            p(
+              style = "background-color: #ffc107; padding: 4px 6px;",
+              strong(
+                "Make sure you double click to edit the table. A single click in a column will not work."
+              )
+            )
+
+            ),
           tags$hr(),
           DTOutput("perf_editor"),
           br(),
@@ -2404,7 +2422,16 @@ server <- function(input, output, session) {
               strong(
                 "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
-            )),
+            ),
+
+            br(),
+            p(
+              style = "background-color: #ffc107; padding: 4px 6px;",
+              strong(
+                "Make sure you double click to edit the table. A single click in a column will not work."
+              )
+            )
+            ),
           tags$hr(),
           DTOutput("cumu_editor"),
           br(),
