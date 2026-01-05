@@ -619,7 +619,7 @@ ui <- dashboardPage(
   dashboardHeader(title = "EBM App"),
   dashboardSidebar(
     width = 350,
-    tags$head(   # 🔴 add here
+    tags$head(
       tags$style(HTML("
       li a[data-value='EBM_in_action'] {
         border: 4px solid green !important;
@@ -638,18 +638,20 @@ ui <- dashboardPage(
         #condition = "input.sidebar == 'EBM_in_action'",
       hr(),
       #h4("EBM Framework Workflow", style = "padding-left: 15px; color: #fff;"),
+      div(class = "indent-step",
       menuItem("STEP 1: Select Objectives",
               tabName = "select_objectives",
               icon = icon("square-check"),
               badgeLabel = "Start Here",
-              badgeColor = "green")),
+              badgeColor = "green"))),
       conditionalPanel(
         condition = "input.sidebar == 'select_objectives' || input.sidebar == 'assessment'",
+        div(class = "indent-step",
       menuItem("STEP 2: Assessment & Comparison",
               tabName = "assessment",
               icon = icon("clipboard-list"),
               badgeLabel = "Optional",
-              badgeColor = "blue")
+              badgeColor = "blue"))
     )
 
     )
@@ -664,6 +666,33 @@ ui <- dashboardPage(
         }
       });
     ")),
+     tags$head(
+         tags$style(HTML("
+     /* indent STEP 1 */
+     a[data-value='select_objectives'] {
+       padding-left: 35px !important;
+     }
+
+     /* indent STEP 2 */
+     a[data-value='assessment'] {
+       padding-left: 35px !important;
+     }
+   "))),
+    tags$head(
+      tags$style(HTML("
+    /* pin References to bottom of the page */
+    .sidebar-menu a[data-value='references'] {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      width: 230px;  /* default sidebar width */
+      z-index: 1030;
+    }
+  "))
+    ),
+
+
+
     tags$head(
       tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jQuery-rwdImageMaps/1.6/jquery.rwdImageMaps.min.js"),
       tags$script(src = "dataTables.cellEdit.js"),
