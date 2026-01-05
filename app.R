@@ -1675,18 +1675,18 @@ server <- function(input, output, session) {
                 selected = 'qual'
               )
             ),
-            conditionalPanel(
-              condition = "input.assessment_type == 'policy'",
-            column(
-              4,
-                numericInput(
-                  "num_scenarios",
-                  "Step B. Select Number of policies / advice sources / scenarios:",
-                  value = 1, min = 1, max = 1, step = 1
-                )
-            )
-
-            ),
+            # conditionalPanel(
+            #   condition = "input.assessment_type == 'policy'",
+            # column(
+            #   4,
+            #     numericInput(
+            #       "num_scenarios",
+            #       "Step B. Select Number of policies / advice sources / scenarios:",
+            #       value = 1, min = 1, max = 1, step = 1
+            #     )
+            # )
+            #
+            # ),
             conditionalPanel(
               condition = "input.assessment_type == 'scenarios'",
               column(
@@ -1694,7 +1694,7 @@ server <- function(input, output, session) {
                 numericInput(
                   "num_scenarios",
                   "Step B. Select Number of policies / advice sources / scenarios:",
-                  value = 1, min = 1, max = 10, step = 1
+                  value = 2, min = 2, max = 10, step = 1
                 )
               )
 
@@ -1703,7 +1703,7 @@ server <- function(input, output, session) {
               4,
               actionButton(
                 "policy_make_template",
-                "Step C: Create / Reset Template to begin",
+                ifelse(input$assessment_type == 'policy', "Step B: Create / Reset Template to begin", "Step C: Create / Reset Template to begin"),
                 class = "btn-primary",
                 style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
               )
@@ -1767,8 +1767,6 @@ server <- function(input, output, session) {
 
   observeEvent(list(input$policy_make_template, input$key_s, input$perf_make_template, input$cumu_make_template), {
     req(input$policy_make_template > 0 || input$perf_make_template > 0 || input$cumu_make_template > 0)
-
-    #browser()
 
     # Conditional scoring table
     scoring_ui <-
@@ -1860,7 +1858,14 @@ server <- function(input, output, session) {
     # Pink column – statement / evidence text (policy / advice / scenario description)
     #base[["Statement_or_Evidence"]] <- ""
 
-    n <- input$num_scenarios %||% 1
+    #browser()
+
+    if (input$assessment_type == "policy") {
+      n <- 1
+    } else {
+      n <- input$num_scenarios %||% 1
+
+    }
     method <- input$policy_method %||% "qual"
 
     for (i in seq_len(n)) {
@@ -1901,13 +1906,12 @@ server <- function(input, output, session) {
     # )
   })
 
-# KYLO
   output$policy_editor <- renderDT({
     df <- policy_tbl()
     if (is.null(df)) {
       return(
         datatable(
-          data.frame(Note = "Complete Steps A, B, and C to begin."),
+          data.frame(Note = "Complete above steps to begin."),
           rownames = FALSE
         )
       )
@@ -1968,8 +1972,6 @@ server <- function(input, output, session) {
   observeEvent(input$policy_editor_cell_edit, {
     info <- input$policy_editor_cell_edit
     df <- policy_tbl(); req(df)
-
-    #browser()
 
     i <- info$row
     j <- info$col
@@ -2218,8 +2220,6 @@ server <- function(input, output, session) {
                            "Objective_Label")) - 1
 
     score_col <- which(names(df) == "Score") - 1  # 0-based
-
-    #browser()
 
     dt <- datatable(
       df,
@@ -2490,8 +2490,6 @@ server <- function(input, output, session) {
       )
     }
 
-    #browser()
-
     lock_cols <- which(names(df) %in%
                          c("Pillar", "Main_Objective", "Level_1",
                            "Level_2", "Level_3", "Level_4",
@@ -2503,7 +2501,6 @@ server <- function(input, output, session) {
     target_cols <- grep("Target", names(df)) - 1 # PINK
     indicator_cols <- grep("Indicator", names(df)) - 1 # PINK
     indicator_cols <- c(indicator_cols, target_cols)
-#browser()
 
 df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
 
