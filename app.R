@@ -2088,6 +2088,8 @@ server <- function(input, output, session) {
           status = "success",
           solidHeader = TRUE,
           actionButton("perf_make_template", "Create / Reset Template to begin", class = "btn-primary",  style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"),
+          br(),
+          br(),
           conditionalPanel(
             condition = "input.perf_make_template > 0",
             p(
