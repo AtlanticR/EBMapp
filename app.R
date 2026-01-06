@@ -2342,6 +2342,16 @@ server <- function(input, output, session) {
   }
 
   observeEvent(input$cumu_make_template, {
+
+    if (length(cumu_activity_names()) != input$num_activities || any(cumu_activity_names() == "")) {
+      showModal(modalDialog(
+        title = "Incomplete Activity Names",
+        "You must provide names for all activities.",
+        easyClose = TRUE,
+        footer = modalButton("OK")
+      ))
+
+    } else {
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so)
 
@@ -2358,10 +2368,8 @@ server <- function(input, output, session) {
 
 
     cumu_tbl(base)
-    # showNotification(
-    #   "Template created. Add indicators, targets and impacts (0–3 or your chosen scale) per activity.",
-    #   type = "message"
-    # )
+  }
+
   })
 
   output$cumu_editor <- renderDT({
