@@ -981,7 +981,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
       ),
 
       # Step 2: assessment
-      tabItem(tabName = "assessment",
+      tabItem(tabName = "assessment", # JAIM
               fluidRow(
                 box(width = 12, title = "Choose Assessment Type (EBM USE 2–5)", status = "info", solidHeader = TRUE,
                     p(
@@ -1932,6 +1932,7 @@ server <- function(input, output, session) {
     dt <- datatable(
       df,
       rownames = FALSE,
+      colnames = gsub("_", " ", names(df)),  # display only
       editable = list(
         target = "cell",
         disable = list(columns = lock_cols)
@@ -1962,10 +1963,6 @@ server <- function(input, output, session) {
         columns = c("Rationale"),
         backgroundColor = 'white'
       )
-
-
-    # ASK REMI
-
     dt
   })
 
@@ -2224,6 +2221,7 @@ server <- function(input, output, session) {
     dt <- datatable(
       df,
       rownames = FALSE,
+      colnames = gsub("_", " ", names(df)),  # display only
       editable = list(
         target = "cell",
         disable = list(columns = lock_cols)
@@ -2254,53 +2252,6 @@ server <- function(input, output, session) {
         columns = c("Rationale"),
         backgroundColor = 'white'
       )
-
-
-
-    # REMI
-    # dt <- datatable(
-    #   df,
-    #   rownames = FALSE,
-    #   editable = "cell",
-    #   options = list(scrollX = TRUE, pageLength = 10),
-    #   callback = JS(sprintf("
-    #   table.MakeCellsEditable({
-    #     'inputCss': 'form-control input-sm',
-    #     'columns': %s,
-    #     'getEditor': function(oldValue, cell, colIdx) {
-    #       var scoreCol = %s;
-    #       var levelsScore = %s;
-    #
-    #       if (colIdx === scoreCol) {
-    #         var sel = $('<select></select>');
-    #         for (var i = 0; i < levelsScore.length; i++) {
-    #           $('<option>').val(levelsScore[i]).text(levelsScore[i]).appendTo(sel);
-    #         }
-    #         sel.val(oldValue);
-    #         return sel;
-    #       }
-    #
-    #       var input = $('<input type=\"text\"/>').val(oldValue);
-    #       return input;
-    #     },
-    #     'onUpdate': function(cell, rowIdx, colIdx, oldValue, newValue) {
-    #       Shiny.setInputValue(
-    #         'perf_editor_cell_edit',
-    #         {
-    #           row:  rowIdx + 1,
-    #           col:  colIdx + 1,
-    #           value: newValue
-    #         },
-    #         {priority: 'event'}
-    #       );
-    #     }
-    #   });
-    # ",
-    #                         jsonlite::toJSON(setdiff(seq_len(ncol(df)) - 1, lock_cols), auto_unbox = TRUE),
-    #                         score_col,
-    #                         jsonlite::toJSON(perf_levels, auto_unbox = TRUE)
-    #   ))
-    # )
 
     dt
   })
@@ -2508,6 +2459,7 @@ df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
     dt <- datatable(
       df,
       rownames = FALSE,
+      colnames = gsub("_", " ", names(df)),  # display only
       editable = list(
         target = "cell",
         disable = list(columns = lock_cols)
