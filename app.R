@@ -993,7 +993,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                       column(
                         3,
                         div(
-                          class = "assessment-type-box", id = "assessment_type_policy",
+                          class = "assessment-type-box", id = "assessment_type_policy",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
                           onclick = "Shiny.setInputValue('assessment_type', 'policy', {priority: 'event'});",
                           h4(icon("file-text"), "Evaluating policies and management approaches (USE 2)"),
                           tags$ul(
@@ -1044,7 +1044,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                       column(
                         3,
                         div(
-                          class = "assessment-type-box", id = "assessment_type_scenarios",
+                          class = "assessment-type-box", id = "assessment_type_scenarios",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
                           onclick = "Shiny.setInputValue('assessment_type', 'scenarios', {priority: 'event'});",
                           h4(icon("copy"), "Scenario Comparison (USE 3)"),
                           tags$ul(
@@ -1095,7 +1095,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                       column(
                         3,
                         div(
-                          class = "assessment-type-box", id = "assessment_type_performance",
+                          class = "assessment-type-box", id = "assessment_type_performance",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
                           onclick = "Shiny.setInputValue('assessment_type', 'performance', {priority: 'event'});",
                           h4(icon("chart-line"), "Management Report Card (USE 4)"),
                           tags$ul(
@@ -1145,7 +1145,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                       column(
                         3,
                         div(
-                          class = "assessment-type-box", id = "assessment_type_cumulative",
+                          class = "assessment-type-box", id = "assessment_type_cumulative",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
                           onclick = "Shiny.setInputValue('assessment_type', 'cumulative', {priority: 'event'});",
                           h4(icon("layer-group"), "Cumulative Effects / Trade‑offs (USE 5)"),
                           tags$ul(
