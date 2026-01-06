@@ -829,7 +829,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
 
                   # Cropped image for Use 1
                   {
-                    scale <- 1.2 #JAIM
+                    scale <- 1.2
 
                     # Scaled coordinates for Use 1
                     x1 <- 39 * (1000 / 600)
@@ -973,7 +973,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
       ),
 
       # Step 2: assessment
-      tabItem(tabName = "assessment", # JAIM
+      tabItem(tabName = "assessment",
               fluidRow(
                 box(width = 12, title = "Choose Assessment Type (EBM USE 2–5)", status = "info", solidHeader = TRUE,
                     p(
@@ -1212,7 +1212,7 @@ server <- function(input, output, session) {
     )
   })
 
-  cumu_activity_names <- reactive({ # JAIM MAYBE
+  cumu_activity_names <- reactive({
     n <- input$num_activities
     req(n)
 
