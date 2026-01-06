@@ -1830,7 +1830,7 @@ server <- function(input, output, session) {
 
 
 
-
+ # JAIM
   observeEvent(input$policy_make_template, {
     # Creates policy_tbl, which is a filtered Pillar from step 1.
     so <- selected_objectives(); req(so) # Filtering the relevant Pillars
@@ -1882,79 +1882,93 @@ server <- function(input, output, session) {
 
   output$policy_editor <- renderDT({
     df <- policy_tbl()
-    if (is.null(df)) {
-      return(
-        datatable(
-          data.frame(Note = "Complete above steps to begin."),
-          rownames = FALSE
-        )
-      )
-    }
-
-    # 0-based indices of non-editable columns
-    lock_cols <- which(names(df) %in%
-                         c("Pillar", "Main_Objective", "Level_1",
-                           "Level_2", "Level_3", "Level_4", "Objective_Label")) - 1
-
-    # 0-based indices of scoring columns
-    align_cols    <- grep("alignment$",    names(df)) - 1
+    if (is.null(df)) return(datatable(data.frame(Note = "Complete above steps to begin.")))
 
     score_cols <- grep("Score", names(df)) - 1
+    align_cols    <- grep("alignment$",    names(df)) - 1
+    lock_cols  <- which(names(df) %in% c(
+      "Pillar","Main_Objective","Level_1","Level_2",
+      "Level_3","Level_4","Objective_Label"
+    )) - 1
 
-    adequacy_cols <- grep("data_adequacy$", names(df)) - 1
+    # only non-Score, non-locked columns are editable
+    editable_cols <- setdiff(seq_len(ncol(df)) - 1, c(lock_cols, score_cols))
 
-    dt <- datatable(
+    datatable(
       df,
       rownames = FALSE,
-      colnames = gsub("_", " ", names(df)),  # display only
+      colnames = gsub("_"," ", names(df)),
       editable = list(
         target = "cell",
-        disable = list(columns = lock_cols)
+        disable = list(columns = c(lock_cols, score_cols))  # 🔹 completely prevent native editing on Score
       ),
       options = list(
         scrollX = TRUE,
         pageLength = 10
+      ),
+      callback = JS(
+        "table.on('draw.dt', function(){",
+        "  table.rows().every(function(){",
+        "    var row = this.node();",
+        "    $('td', row).each(function(colIndex){",
+
+        # 🔹 disable clicks entirely on locked columns
+        paste0(
+          "if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
+          "  $(this).css('pointer-events','none');",
+          "}"
+        ),
+
+        # 🔹 Score dropdown on single click, stays until selection
+        paste0(
+          "if ([", paste(score_cols, collapse=","), "].includes(colIndex)) {",
+          "  $(this).off('click').on('click', function(){",
+          "    if($(this).find('select').length > 0) return;",
+          "    var val = $(this).text();",
+          "    var opts = ['X','0','1','2','3'];",
+          "    var sel = $('<select></select>').css({",
+          "      'color':'black',",
+          "      'background-color':'white',",
+          "      'width':'100%'",
+          "    });",
+          "    $.each(opts, function(i,v){ sel.append($('<option></option>').val(v).html(v)); });",
+          "    sel.val(val);",
+          "    $(this).html(sel);",
+          "    sel.focus();",
+          "    sel.on('change', function(){",
+          "      var newVal = $(this).val();",
+          "      $(this).parent().text(newVal);",
+          "      Shiny.setInputValue('policy_editor_cell_edit',",
+          "          {row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+          "    });",
+          "  });",
+          "}"
+        ),
+
+        "    });",
+        "  });",
+        "});"
       )
     ) %>%
-      # Light gray columns
       formatStyle(
-        columns = c("Pillar", "Main_Objective", "Level_1", "Level_2",
-                    "Level_3", "Level_4", "Objective_Label"),
-        backgroundColor = '#d3d3d3'
+        columns = c("Pillar","Main_Objective","Level_1","Level_2",
+                    "Level_3","Level_4","Objective_Label"),
+        backgroundColor='#d3d3d3'
       ) %>%
-      # Pink columns (alignment columns)
-      formatStyle(
-        columns = align_cols + 1,  # DT uses 1-based indexing
-        backgroundColor = '#ffc0cb'
-      ) %>%
-      # Blue columns
-      formatStyle(
-        columns = score_cols + 1,
-        backgroundColor = '#add8e6'
-      ) %>%
-      # Rationale column white
-      formatStyle(
-        columns = c("Rationale"),
-        backgroundColor = 'white'
-      )
-    dt
+      formatStyle(columns = align_cols+1, backgroundColor='#ffc0cb') %>%
+      formatStyle(columns = score_cols+1, backgroundColor='#add8e6') %>%
+      formatStyle(columns = c("Rationale"), backgroundColor='white')
   })
+
 
   observeEvent(input$policy_editor_cell_edit, {
     info <- input$policy_editor_cell_edit
     df <- policy_tbl(); req(df)
-
-    i <- info$row
-    j <- info$col
-    v <- info$value
-
-    if (is.factor(df[[j+1]])) {
-      df[[j+1]] <- as.character(df[[j+1]])
-    }
-
-
-    #df[i, j] <- v
-    df[[names(df)[j+1]]][i] <- v
+    i <- info$row; j <- info$col; v <- info$value
+    if (is.null(v)) return()
+    if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
+    if (is.numeric(df[[j+1]])) v <- as.numeric(v)
+    df[i, j+1] <- v
     policy_tbl(df)
   })
 
@@ -2142,77 +2156,91 @@ server <- function(input, output, session) {
     perf_tbl(base)
   })
 
+  observeEvent(input$perf_make_template, {
+    so <- selected_objectives(); req(so)
+    base <- make_objective_table(so)
+    base[["Indicator"]] <- ""
+    base[["Target"]]    <- ""
+    base[["Score"]]     <- NA_real_
+    base[["Rationale"]] <- ""
+    perf_tbl(base)
+  })
+
+  # JAIM 2
   output$perf_editor <- renderDT({
-    df <- perf_tbl()
-    if (is.null(df)) {
-      return(
-        datatable(
-          data.frame(Note = "Click 'Create / Reset Template' to begin."),
-          rownames = FALSE
-        )
-      )
-    }
+    df <- perf_tbl(); req(df)
 
-    lock_cols <- which(names(df) %in%
-                         c("Pillar", "Main_Objective", "Level_1",
-                           "Level_2", "Level_3", "Level_4",
-                           "Objective_Label")) - 1
+    lock_cols  <- which(names(df) %in% c(
+      "Pillar","Main_Objective","Level_1","Level_2",
+      "Level_3","Level_4","Objective_Label"
+    )) - 1
 
-    score_col <- which(names(df) == "Score") - 1  # 0-based
+    score_col  <- which(names(df) == "Score") - 1
+    editable_cols <- setdiff(seq_len(ncol(df)) - 1, c(lock_cols, score_col))
 
-    dt <- datatable(
+    datatable(
       df,
       rownames = FALSE,
-      colnames = gsub("_", " ", names(df)),  # display only
-      editable = list(
-        target = "cell",
-        disable = list(columns = lock_cols)
-      ),
-      options = list(
-        scrollX = TRUE,
-        pageLength = 10
+      colnames = gsub("_"," ", names(df)),
+      editable = list(target = "cell", disable = list(columns = lock_cols)),
+      options = list(scrollX = TRUE, pageLength = 10),
+      callback = JS(
+        "table.on('draw.dt', function(){",
+        "  table.rows().every(function(){",
+        "    var row = this.node();",
+        "    $('td', row).each(function(colIndex){",
+        paste0(
+          "if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
+          "  $(this).css('pointer-events','none');",
+          "}"
+        ),
+        paste0(
+          "if ([", score_col, "].includes(colIndex)) {",
+          "  $(this).off('click').on('click', function(){",
+          "    if($(this).find('select').length > 0) return;",
+          "    var val = $(this).text();",
+          "    var opts = [,'0','1','2'];", # ROXANNE
+          "    var sel = $('<select></select>').css({",
+          "      'color':'black', 'background-color':'white','width':'100%'",
+          "    });",
+          "    $.each(opts, function(i,v){ sel.append($('<option></option>').val(v).html(v)); });",
+          "    sel.val(val);",
+          "    $(this).html(sel); sel.focus();",
+          "    sel.on('change', function(){",
+          "      var newVal = $(this).val();",
+          "      $(this).parent().text(newVal);",
+          "      Shiny.setInputValue('perf_editor_cell_edit',",
+          "        {row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+          "    });",
+          "  });",
+          "}"
+        ),
+        "    });",
+        "  });",
+        "});"
       )
     ) %>%
-      # Light gray columns
       formatStyle(
-        columns = c("Pillar", "Main_Objective", "Level_1", "Level_2",
-                    "Level_3", "Level_4", "Objective_Label"),
-        backgroundColor = '#d3d3d3'
+        columns = c("Pillar","Main_Objective","Level_1","Level_2",
+                    "Level_3","Level_4","Objective_Label"),
+        backgroundColor='#d3d3d3'
       ) %>%
-      # Pink columns (alignment columns)
-      formatStyle(
-        columns = "Indicator",  # DT uses 1-based indexing
-        backgroundColor = '#ffc0cb'
-      ) %>%
-      # Blue columns
-      formatStyle(
-        columns = c("Target", "Score"),
-        backgroundColor = '#add8e6'
-      ) %>%
-      # Rationale column white
-      formatStyle(
-        columns = c("Rationale"),
-        backgroundColor = 'white'
-      )
-
-    dt
+      formatStyle(columns = "Indicator", backgroundColor='#ffc0cb') %>%
+      formatStyle(columns = c("Target","Score"), backgroundColor='#add8e6') %>%
+      formatStyle(columns = "Rationale", backgroundColor='white')
   })
 
   observeEvent(input$perf_editor_cell_edit, {
     info <- input$perf_editor_cell_edit
     df <- perf_tbl(); req(df)
-
-    i <- info$row
-    j <- info$col
-    v <- info$value
-
-    if (is.factor(df[[j+1]])) {
-      df[[j+1]] <- as.character(df[[j+1]])
-    }
-
-    df[[names(df)[j+1]]][i] <- v
-    policy_tbl(df)
+    i <- info$row; j <- info$col; v <- info$value
+    if (is.null(v)) return()
+    if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
+    if (is.numeric(df[[j+1]])) v <- as.numeric(v)
+    df[i, j+1] <- v
+    perf_tbl(df)
   })
+
 
   output$perf_download_excel <- downloadHandler(
     filename = function() paste0("Performance_", Sys.Date(), ".xlsx"),
@@ -2361,111 +2389,118 @@ server <- function(input, output, session) {
 
   })
 
+
   output$cumu_editor <- renderDT({
-    df <- cumu_tbl()
+    df <- cumu_tbl(); req(df)
     if (is.null(df)) {
-      return(
-        datatable(
-          data.frame(Note = "Complete step A and B to begin."),
-          rownames = FALSE
-        )
-      )
+      return(datatable(data.frame(Note = "Complete step A and B to begin."),
+                       rownames = FALSE))
     }
 
-    lock_cols <- which(names(df) %in%
-                         c("Pillar", "Main_Objective", "Level_1",
-                           "Level_2", "Level_3", "Level_4",
-                           "Objective_Label")) - 1
+    # Locked columns
+    lock_cols <- which(names(df) %in% c(
+      "Pillar","Main_Objective","Level_1","Level_2",
+      "Level_3","Level_4","Objective_Label"
+    )) - 1
 
+    # Dynamic renaming of activity columns
+    cols <- names(df)
+    activities <- cumu_activity_names()
+    names_of_interest <- names(df)
 
-cols <- names(df)
-activities <- cumu_activity_names()
+    for (i in seq_len(input$num_activities)) {
+      act <- activities[i]
+      names_of_interest <- unlist(lapply(names_of_interest, function(x) {
+        if (x == paste0("Indicator_", i)) x <- paste0(act, "_Indicator")
+        if (x == paste0("Target_", i)) x <- paste0(act, "_Target")
+        if (x == paste0("A", i, "_impact")) x <- paste0(act, "_Impact")
+        x
+      }))
+    }
+    names(df) <- names_of_interest
 
+    # Column indices
+    impact_cols    <- grep("Impact", names(df)) - 1  # Score columns
+    target_cols    <- grep("Target", names(df)) - 1   # Pink
+    indicator_cols <- grep("Indicator", names(df)) - 1
+    indicator_cols <- c(indicator_cols, target_cols)
+    df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
 
-names(df)[grepl("_\\d+", names(df))]
-
-
-names_of_interest <- names(df)
-
-for (i in seq_len(input$num_activities)) {
-  act <- activities[i]
-
-  # Patterns for this activity
-  indicator_pattern <- paste0("Indicator_", i)
-  target_pattern    <- paste0("Target_", i)
-  impact_pattern    <- paste0("A", i, "_impact")
-
-  # Rename dynamically
-  names_of_interest <- unlist(lapply(names_of_interest, function(x) {
-    if (x == indicator_pattern) x <- paste0(act, "_Indicator")
-    if (x == target_pattern)    x <- paste0(act, "_Target")
-    if (x == impact_pattern)    x <- paste0(act, "_Impact")
-    x
-  }))
-}
-
-names(df) <- names_of_interest
-
-
-impact_cols <- grep("Impact", names(df)) - 1  # 0-based # SCORE
-#impact_cols <- c(impact_cols,which(names(df) == "Tally"))
-
-target_cols <- grep("Target", names(df)) - 1 # PINK
-indicator_cols <- grep("Indicator", names(df)) - 1 # PINK
-indicator_cols <- c(indicator_cols, target_cols)
-
-df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
-
-    dt <- datatable(
+    # DT
+    datatable(
       df,
       rownames = FALSE,
-      colnames = gsub("_", " ", names(df)),  # display only
-      editable = list(
-        target = "cell",
-        disable = list(columns = lock_cols)
-      ),
-      options = list(
-        scrollX = TRUE,
-        pageLength = 10
+      colnames = gsub("_"," ", names(df)),
+      editable = list(target = "cell", disable = list(columns = lock_cols)),
+      options = list(scrollX = TRUE, pageLength = 10),
+      callback = JS(
+        "table.on('draw.dt', function(){",
+        "  table.rows().every(function(){",
+        "    var row = this.node();",
+        "    $('td', row).each(function(colIndex){",
+
+        # Lock pointer events for locked columns
+        paste0(
+          "if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
+          "  $(this).css('pointer-events','none');",
+          "}"
+        ),
+
+        # Score dropdown
+        paste0(
+          "if ([", paste(impact_cols, collapse=","), "].includes(colIndex)) {",
+          "  $(this).off('click').on('click', function(){",
+          "    if($(this).find('select').length > 0) return;",
+          "    var val = $(this).text();",
+          "    var opts = ['0','1','2'];",
+          "    var sel = $('<select></select>').css({",
+          "      'color':'black', 'background-color':'white','width':'100%'",
+          "    });",
+          "    $.each(opts, function(i,v){",
+          "      var label = v=='0' ? '0' : v=='1' ? '1' : '2';",
+          "      sel.append($('<option></option>').val(v).html(label));",
+          "    });",
+          "    sel.val(val); $(this).html(sel); sel.focus();",
+          "    sel.on('change', function(){",
+          "      var newVal = $(this).val();",
+          "      $(this).parent().text(newVal);",
+          "      Shiny.setInputValue('cumu_editor_cell_edit',",
+          "        {row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+          "    });",
+          "  });",
+          "}"
+        ),
+
+        "    });",
+        "  });",
+        "});"
       )
     ) %>%
-      # Light gray columns
       formatStyle(
-        columns = c("Pillar", "Main_Objective", "Level_1", "Level_2",
-                    "Level_3", "Level_4", "Objective_Label"),
-        backgroundColor = '#d3d3d3'
+        columns = c("Pillar","Main_Objective","Level_1","Level_2",
+                    "Level_3","Level_4","Objective_Label"),
+        backgroundColor='#d3d3d3'
       ) %>%
-      # Pink columns (alignment columns)
-      formatStyle(
-        columns = indicator_cols + 1,  # DT uses 1-based indexing
-        backgroundColor = '#ffc0cb'
-      ) %>%
-      # Blue columns
-      formatStyle(
-        columns = impact_cols+1,
-        backgroundColor = '#add8e6'
-      ) %>%
-      formatStyle(columns="Tally",
-                  backgroundColor = '#add8e6')
-
-    dt
+      formatStyle(columns = indicator_cols + 1, backgroundColor='#ffc0cb') %>%
+      formatStyle(columns = impact_cols + 1, backgroundColor='#add8e6') %>%
+      formatStyle(columns = "Tally", backgroundColor='#add8e6')
   })
 
   observeEvent(input$cumu_editor_cell_edit, {
     info <- input$cumu_editor_cell_edit
     df <- cumu_tbl(); req(df)
-
-    i <- info$row
-    j <- info$col
-    v <- info$value
-
-    if (is.factor(df[[j+1]])) {
-      df[[j+1]] <- as.character(df[[j+1]])
-    }
-
-    df[[names(df)[j+1]]][i] <- v
+    i <- info$row; j <- info$col; v <- info$value
+    if (is.null(v)) return()
+    if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
+    if (is.numeric(df[[j+1]])) v <- as.numeric(v)
+    df[i, j+1] <- v
     cumu_tbl(df)
   })
+
+
+
+
+
 
   output$cumu_download_excel <- downloadHandler(
     filename = function() paste0("Cumulative_", Sys.Date(), ".xlsx"),
