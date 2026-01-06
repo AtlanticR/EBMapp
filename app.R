@@ -2491,9 +2491,19 @@ server <- function(input, output, session) {
     df <- cumu_tbl(); req(df)
     i <- info$row; j <- info$col; v <- info$value
     if (is.null(v)) return()
+
+    # Update edited cell
     if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
     if (is.numeric(df[[j+1]])) v <- as.numeric(v)
     df[i, j+1] <- v
+
+    # Update Tally column as sum of Impact columns (keep blank if all empty)
+    impact_cols <- grep("impact", names(df))
+    #browser()
+    df$Tally <- apply(df[, impact_cols, drop = FALSE], 1, function(x) {
+      if (all(x == "" | is.na(x))) "" else sum(as.numeric(x), na.rm = TRUE)
+    })
+
     cumu_tbl(df)
   })
 
