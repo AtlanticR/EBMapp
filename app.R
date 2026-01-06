@@ -373,9 +373,11 @@ use_explanations[[5]] <- function() {
     tags$p("Question: what are cumulative effects of activities 1, 2, 3 etc., in area X?"),
 
     tags$hr(),
+    tags$p("First, enter the number of activities you are interested in and then name them. Once you name them and generate the template, a table will show up that looks like the following."),
     tags$p(
-      "For each row of the table, paste the associated indicators (or activites) with each objective. For each indicator, write the associated target. Score the indicator based on the scoring table below and write your rationale in the Rationale column"
+      "For each row of the table, paste the Indicator for each activity. For each indicator, write the associated target. Score the indicator based on the scoring table below. Lastly, Tally the scores in the Impact Columns and put that in the Tally column."
     ),
+    tags$br(),
 
     # Scrollable wide table
     div(
@@ -391,13 +393,13 @@ use_explanations[[5]] <- function() {
             tags$th("Level_3", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Level_4", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Indicator_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Target_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Impact_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Indicator_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Target_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Impact_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Rationale", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
+            tags$th("Fishing_Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
+            tags$th("Fishing_Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
+            tags$th("Fishing_Impact", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
+            tags$th("Contaminants_Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
+            tags$th("Contaminants_Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
+            tags$th("Contaminants_Impact", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
+            tags$th("Tally", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
           )
         ),
         tags$tbody(
@@ -1023,12 +1025,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                               )
                             )
                           },
-                          p(" "),
-                          # p(tags$b("Scoring options:")),
-                          # tags$ul(
-                          #   tags$li("Table 2 style – qualitative content/context alignment (X / 0–3)."),
-                          #   tags$li("Table 4 style – data/information adequacy (X / 0–3).")
-                          # )
+                          p(" ")
                         )
                       ),
                       column(
@@ -1072,14 +1069,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                               )
                             )
                           },
-                          p(" "),
-
-
-                          # p(tags$b("Scoring options:")),
-                          # tags$ul(
-                          #   tags$li("Table 2 style – qualitative content/context alignment (X / 0–3)."),
-                          #   tags$li("Table 4 style – data/information adequacy (X / 0–3).")
-                          # )
+                          p(" ")
                         )
                       ),
                       column(
@@ -1127,8 +1117,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                               )
                             )
                           },
-                          p(" "),
-                          #p(strong("Score using operational indicators per objective."))
+                          p(" ")
 
                         )
                       ),
