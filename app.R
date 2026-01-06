@@ -800,13 +800,6 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
   ")))
       ),
 
-      # ABOVE:
-      # Shiny.setInputValue(
-      #   'zone_click',
-      #   { id: z.id, x: xClick, y: yClick },
-      #   { priority: 'event' }
-      # );
-
       tabItem(tabName = "EBM_in_action",
               fluidRow(
                 box(
@@ -832,7 +825,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                   #actionButton("goto_step1", "Go to Step 1", class = "btn-primary"),
                   br(), br(),
 
-                  # 🔴 Cropped image for Use 1
+                  # Cropped image for Use 1
                   {
                     scale <- 1.2 #JAIM
 
@@ -848,10 +841,10 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                     hw <- (x2 - x1) / 2 * scale
                     hh <- (y2 - y1) / 2 * scale
 
-                    x1 <- cx - hw  # 🔴 scaled
-                    x2 <- cx + hw  # 🔴 scaled
-                    y1 <- cy - hh  # 🔴 scaled
-                    y2 <- cy + hh  # 🔴 scaled
+                    x1 <- cx - hw
+                    x2 <- cx + hw
+                    y1 <- cy - hh
+                    y2 <- cy + hh
 
                     crop_width <- x2 - x1
                     crop_height <- y2 - y1
@@ -927,9 +920,6 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
           )
         )
       ),
-
-
-
 
       # Step 1: full hierarchy checklist
       tabItem(tabName = "select_objectives",
@@ -1212,13 +1202,35 @@ server <- function(input, output, session) {
     updateCheckboxGroupInput(session, "pillar_filter", choices = pillars, selected = pillars)
   })
 
+  output$cumu_activity_names_ui <- renderUI({
+    n <- input$num_activities
+    req(n)
 
-  # observeEvent(input$zone_click, {
-  #   cat(
-  #     'x =', input$zone_click$x,
-  #     'y =', input$zone_click$y, '\n'
-  #   )
-  # })
+    tagList(
+      tags$h5("Step B: Name Your Activities"),
+      fluidRow(
+        lapply(seq_len(n), function(i) {
+          column(
+            4,
+            textInput(
+              inputId = paste0("cumu_activity_", i),
+              label = paste("Activity", i),
+              placeholder = paste("Enter name for Activity", i)
+            )
+          )
+        })
+      )
+    )
+  })
+
+  cumu_activity_names <- reactive({ # JAIM MAYBE
+    n <- input$num_activities
+    req(n)
+
+    sapply(seq_len(n), function(i) {
+      input[[paste0("cumu_activity_", i)]]
+    })
+  })
 
   observeEvent(input$zone_click, {
     showModal(
@@ -1675,18 +1687,6 @@ server <- function(input, output, session) {
                 selected = 'qual'
               )
             ),
-            # conditionalPanel(
-            #   condition = "input.assessment_type == 'policy'",
-            # column(
-            #   4,
-            #     numericInput(
-            #       "num_scenarios",
-            #       "Step B. Select Number of policies / advice sources / scenarios:",
-            #       value = 1, min = 1, max = 1, step = 1
-            #     )
-            # )
-            #
-            # ),
             conditionalPanel(
               condition = "input.assessment_type == 'scenarios'",
               column(
@@ -1752,15 +1752,7 @@ server <- function(input, output, session) {
           "Download (CSV)",
           class = "btn-info btn-block"
         )
-      ),
-      # column(
-      #   6,
-      #   fileInput(
-      #     "policy_upload",
-      #     "Upload completed (CSV / XLSX)",
-      #     accept = c(".csv", ".xlsx")
-      #   )
-      # )
+      )
     )
   })
 
@@ -1858,8 +1850,6 @@ server <- function(input, output, session) {
     # Pink column – statement / evidence text (policy / advice / scenario description)
     #base[["Statement_or_Evidence"]] <- ""
 
-    #browser()
-
     if (input$assessment_type == "policy") {
       n <- 1
     } else {
@@ -1895,15 +1885,10 @@ server <- function(input, output, session) {
         )
       }
     }
-    #base[["Score"]] <- ""
 
     # White column – rationale for scores
     base[["Rationale"]] <- ""
     policy_tbl(base)
-    # showNotification(
-    #   "Template created. Fill in Statement/Evidence, then assign scores and rationale.",
-    #   type = "message", duration = 5
-    # )
   })
 
   output$policy_editor <- renderDT({
@@ -1984,19 +1969,6 @@ server <- function(input, output, session) {
     policy_tbl(df)
   })
 
-  # observeEvent(input$policy_upload, {
-  #   ext <- tools::file_ext(input$policy_upload$name)
-  #   df <- tryCatch({
-  #     if (ext == "csv") read.csv(input$policy_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
-  #     else read.xlsx(input$policy_upload$datapath, sheet = 1, check.names = FALSE)
-  #   }, error = function(e) NULL)
-  #   if (is.null(df)) {
-  #     showNotification("Could not read file. Check columns.", type = "warning")
-  #   } else {
-  #     policy_tbl(df)
-  #     showNotification("Uploaded.", type = "message")
-  #   }
-  # })
 
   output$policy_download_excel <- downloadHandler(
     filename = function() paste0("Policy_Assessment_", Sys.Date(), ".xlsx"),
@@ -2150,21 +2122,6 @@ server <- function(input, output, session) {
           uiOutput("perf_download_ui")
         )
       )
-      # fluidRow(
-      #   box(
-      #     width = 12,
-      #     title = "Summary & Plots",
-      #     status = "info",
-      #     solidHeader = TRUE,
-      #     uiOutput("perf_summary_ui"),
-      #     tags$hr(),
-      #     tags$strong("Performance per objective"),
-      #     plotOutput("perf_bar_objective", height = "320px"),
-      #     tags$hr(),
-      #     tags$strong("Average performance by pillar"),
-      #     plotOutput("perf_bar_pillar", height = "300px")
-      #   )
-      # )
     )
   }
 
@@ -2194,10 +2151,6 @@ server <- function(input, output, session) {
     base[["Rationale"]] <- ""
 
     perf_tbl(base)
-    # showNotification(
-    #   "Template created. Define indicators, targets, scores (0–2) and rationale.",
-    #   type = "message"
-    # )
   })
 
   output$perf_editor <- renderDT({
@@ -2271,15 +2224,6 @@ server <- function(input, output, session) {
     df[[names(df)[j+1]]][i] <- v
     policy_tbl(df)
   })
-
-  # observeEvent(input$perf_upload, {
-  #   ext <- tools::file_ext(input$perf_upload$name)
-  #   df <- tryCatch({
-  #     if (ext == "csv") read.csv(input$perf_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
-  #     else read.xlsx(input$perf_upload$datapath, 1, check.names = FALSE)
-  #   }, error = function(e) NULL)
-  #   if (is.null(df)) showNotification("Could not read file.", type = "warning") else { perf_tbl(df); showNotification("Uploaded.", type = "message") }
-  # })
 
   output$perf_download_excel <- downloadHandler(
     filename = function() paste0("Performance_", Sys.Date(), ".xlsx"),
@@ -2359,13 +2303,18 @@ server <- function(input, output, session) {
           status = "success",
           solidHeader = TRUE,
           fluidRow(
-            column(6,
+            column(4,
           numericInput(
             "num_activities",
-            "Step A: Select Number of activities:",
-            value = 3, min = 2, max = 10, step = 1
+            "Step A: Select Number of Activities:",
+            value = 1, min = 1, max = 10, step = 1
           )),
-          column(6,actionButton("cumu_make_template", "Step B: Create / Reset Template", class = "btn-primary",  style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"))),
+          column(4,
+                 conditionalPanel(
+                   condition = "input.num_activities > 0",
+                   uiOutput("cumu_activity_names_ui")
+                 )),
+          column(4,actionButton("cumu_make_template", "Step C: Create / Reset Template", class = "btn-primary",  style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"))),
           conditionalPanel(
             condition = "input.cumu_make_template > 0",
             p(
@@ -2389,21 +2338,6 @@ server <- function(input, output, session) {
           uiOutput("cum_download_ui")
         )
       )
-      # fluidRow(
-      #   box(
-      #     width = 12,
-      #     title = "Summary & Plots",
-      #     status = "info",
-      #     solidHeader = TRUE,
-      #     uiOutput("cumu_summary_ui"),
-      #     tags$hr(),
-      #     tags$strong("Average impact per activity"),
-      #     plotOutput("cumu_bar_per_activity", height = "300px"),
-      #     tags$hr(),
-      #     tags$strong("Objective × activity heatmap"),
-      #     plotOutput("cumu_heat_objective_activity", height = "380px")
-      #   )
-      # )
     )
   }
 
@@ -2446,15 +2380,44 @@ server <- function(input, output, session) {
                            "Level_2", "Level_3", "Level_4",
                            "Objective_Label")) - 1
 
-    impact_cols <- grep("^A\\d+_impact$", names(df)) - 1  # 0-based # SCORE
-    #impact_cols <- c(impact_cols,which(names(df) == "Tally"))
 
-    target_cols <- grep("Target", names(df)) - 1 # PINK
-    indicator_cols <- grep("Indicator", names(df)) - 1 # PINK
-    indicator_cols <- c(indicator_cols, target_cols)
+cols <- names(df)
+activities <- cumu_activity_names()
+
+
+names(df)[grepl("_\\d+", names(df))]
+
+
+names_of_interest <- names(df)
+
+for (i in seq_len(input$num_activities)) {
+  act <- activities[i]
+
+  # Patterns for this activity
+  indicator_pattern <- paste0("Indicator_", i)
+  target_pattern    <- paste0("Target_", i)
+  impact_pattern    <- paste0("A", i, "_impact")
+
+  # Rename dynamically
+  names_of_interest <- unlist(lapply(names_of_interest, function(x) {
+    if (x == indicator_pattern) x <- paste0(act, "_Indicator")
+    if (x == target_pattern)    x <- paste0(act, "_Target")
+    if (x == impact_pattern)    x <- paste0(act, "_Impact")
+    x
+  }))
+}
+
+names(df) <- names_of_interest
+
+
+impact_cols <- grep("Impact", names(df)) - 1  # 0-based # SCORE
+#impact_cols <- c(impact_cols,which(names(df) == "Tally"))
+
+target_cols <- grep("Target", names(df)) - 1 # PINK
+indicator_cols <- grep("Indicator", names(df)) - 1 # PINK
+indicator_cols <- c(indicator_cols, target_cols)
 
 df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
-
 
     dt <- datatable(
       df,
@@ -2504,18 +2467,8 @@ df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
     }
 
     df[[names(df)[j+1]]][i] <- v
-    #policy_tbl(df)
     cumu_tbl(df)
   })
-
-  # observeEvent(input$cumu_upload, {
-  #   ext <- tools::file_ext(input$cumu_upload$name)
-  #   df <- tryCatch({
-  #     if (ext == "csv") read.csv(input$cumu_upload$datapath, stringsAsFactors = FALSE, check.names = FALSE)
-  #     else read.xlsx(input$cumu_upload$datapath, 1, check.names = FALSE)
-  #   }, error = function(e) NULL)
-  #   if (is.null(df)) showNotification("Could not read file.", type = "warning") else { cumu_tbl(df); showNotification("Uploaded.", type = "message") }
-  # })
 
   output$cumu_download_excel <- downloadHandler(
     filename = function() paste0("Cumulative_", Sys.Date(), ".xlsx"),
