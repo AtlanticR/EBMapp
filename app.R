@@ -921,32 +921,56 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
 
             tags$ul(
               tags$li(
-                "Eger, S. L., & Bundy, A. (2024). ",
-                tags$em(
-                  "Application of the Maritimes Ecosystem Based Management (EBM) Framework to an Oceans Act Marine Protected Area Case Study: St. Anns Bank Marine Protected Area."
+                "Bundy, A., Eger, S. L., Stephenson, R. L., Westhead, M. et al. (2025). ",
+                tags$a(
+                  href = "https://publications.gc.ca/collections/collection_2025/mpo-dfo/fs97-6/Fs97-6-3716-eng.pdf",
+                  target = "_blank",
+                  tags$em(
+                    "Fisheries and Oceans Canada's Maritimes Region ecosystem-based management framework for sustainable management."
+                  )
                 ),
                 " Fisheries and Oceans Canada, Bedford Institute of Oceanography."
               ),
-
+              tags$li(
+                "Eger, S. L., & Bundy, A. (2024). ",
+                tags$a(
+                  href = "https://publications.gc.ca/collections/collection_2024/mpo-dfo/Fs97-6-3558-eng.pdf",
+                  target = "_blank",
+                  tags$em(
+                    "Application of the Maritimes Ecosystem Based Management (EBM) Framework to an Oceans Act Marine Protected Area Case Study: St. Anns Bank Marine Protected Area."
+                  )
+                ),
+                " Fisheries and Oceans Canada, Bedford Institute of Oceanography."
+              ),
               tags$li(
                 "Silver, K. (2024). ",
-                tags$em(
-                  "Charting the Progress on Ecosystem-Based Management of Fisheries in NAFO Division 4X: Integrated Fisheries Management Plans through the Lens of the Maritimes Region EBM Framework."
+                tags$a(
+                  href = "https://dalspace.library.dal.ca/items/4be9fb12-f9a9-4ae0-9407-35a8e0891e82",
+                  target = "_blank",
+                  tags$em(
+                    "Charting the Progress on Ecosystem-Based Management of Fisheries in NAFO Division 4X: Integrated Fisheries Management Plans through the Lens of the Maritimes Region EBM Framework."
+                  )
                 )
               ),
-
               tags$li(
                 "Tam, J. C., Parlee, C. E., Campbell-Miller, J., Bellanger, M., Bentley, J., Pourfaraj, V., et al. (2024). ",
-                tags$em(
-                  "Expanding the scope and roles of social sciences and humanities to support integrated ecosystem assessments and ecosystem-based management."
+                tags$a(
+                  href = "https://academic.oup.com/icesjms/article/81/1/22/7337019",
+                  target = "_blank",
+                  tags$em(
+                    "Expanding the scope and roles of social sciences and humanities to support integrated ecosystem assessments and ecosystem-based management."
+                  )
                 ),
                 " ICES Journal of Marine Science, 81(1), 22–42."
               ),
-
               tags$li(
                 "Stephenson, R. L., Wiber, M., Paul, S., Angel, E., Benson, A., Charles, A., et al. (2019). ",
-                tags$em(
-                  "Integrating diverse objectives for sustainable fisheries in Canada."
+                tags$a(
+                  href = "https://cdnsciencepub.com/doi/10.1139/cjfas-2017-0345",
+                  target = "_blank",
+                  tags$em(
+                    "Integrating diverse objectives for sustainable fisheries in Canada."
+                  )
                 ),
                 " Canadian Journal of Fisheries and Aquatic Sciences, 76(3), 480–496."
               )
