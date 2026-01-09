@@ -730,8 +730,29 @@ ui <- dashboardPage(
       tabItem(tabName = "home",
               fluidRow(
                 box(width = 12, title = "Welcome to the Ecosystem-Based Management Framework Exploration Tool", status = "primary", solidHeader = TRUE,
-                    p("This interactive tool helps you explore and apply the Ecosystem-Based Management (EBM) framework."),
-                    p("Fisheries and Oceans Canada (DFO) has a mandate to apply an ecosystem approach to fisheries and oceans management decisions. An ecosystem approach includes ecological, economic, social, and cultural and governance objectives, which are required in many of DFO's decision-making processes.",
+                    p("This interactive tool helps you explore and apply the Ecosystem-Based Management (EBM) framework (",
+                      tags$a("Bundy et al. 2025",
+                             href = "https://publications.gc.ca/collections/collection_2025/mpo-dfo/fs97-6/Fs97-6-3716-eng.pdf",
+                             target = "_blank"),
+                      ")."),
+                    p("Fisheries and Oceans Canada (DFO) has a mandate to apply an ecosystem approach to fisheries and oceans management decisions. An ecosystem approach includes",
+
+          tags$a("ecological",
+                 href = "https://drive.google.com/file/d/1QpsQ7kIFCyTs-xCYHLCtXGhQV1rsNRwm/view?usp=drive_link",
+                 target = "_blank"),
+          ", ",
+          tags$a("economic",
+                 href = "https://drive.google.com/file/d/11Zin2bghEokKIJcqDlaEvzsSqQLaYyIx/view?usp=sharing",
+                 target = "_blank"),
+          ", ",
+          tags$a("social and cultural",
+                 href = "https://drive.google.com/file/d/1VLIWfn4lChM1Vzak8zcNgRWHyE0bnX3U/view?usp=sharing",
+                 target = "_blank"),
+          ", and",
+          tags$a("governance",
+                 href = "https://drive.google.com/file/d/1jmW5fo2Dp2thlyg43vgpLyY2nkqoXN5j/view?usp=sharing",
+                 target = "_blank"),
+                    "objectives, which are required in many of DFO's decision-making processes.",
                       br(),
                       "The EBM Framework will support DFO decision-making across sectors by providing a broad range of objectives and indicators within a consistent, structured framework to support transparent, evidence-based decision-making.
 The purpose of the Maritimes EBM Framework is to support a more holistic approach to decision-making.",
@@ -2690,7 +2711,13 @@ server <- function(input, output, session) {
           title = paste("Viewing:", home_filter()),
           status = "info",
           solidHeader = TRUE,
-          DTOutput("home_data_table")
+          DTOutput("home_data_table"),
+          br(),
+          fluidRow(
+            column(3, downloadButton("home_download_excel", "Download as Excel", class = "btn-success btn-block")),
+            column(3, downloadButton("home_download_csv", "Download as CSV", class = "btn-info btn-block")),
+            column(3, downloadButton("home_download_word", "Download as Word", class = "btn-primary btn-block"))
+          )
         )
       )
     }
@@ -2717,6 +2744,76 @@ server <- function(input, output, session) {
                              searchCols = list(list(search = pillar_search), list(search = objective_search))),
               rownames = FALSE)
   })
+
+  # Download handlers for home page table
+  home_filtered_data <- reactive({
+    req(home_filter())
+    filter_value <- home_filter()
+
+    if (filter_value == "EBM Framework") {
+      return(ebm_data)
+    } else if (filter_value %in% c("Ecological", "Economic", "Governance", "Social & Cultural")) {
+      return(ebm_data %>% filter(Pillar == filter_value))
+    } else {
+      return(ebm_data %>% filter(Main_Objective == filter_value))
+    }
+  })
+
+  output$home_download_csv <- downloadHandler(
+    filename = function() {
+      paste0("EBM_", gsub(" ", "_", home_filter()), "_", Sys.Date(), ".csv")
+    },
+    content = function(file) {
+      dat <- home_filtered_data()
+      write.csv(dat, file, row.names = FALSE)
+    }
+  )
+
+  output$home_download_excel <- downloadHandler(
+    filename = function() {
+      paste0("EBM_", gsub(" ", "_", home_filter()), "_", Sys.Date(), ".xlsx")
+    },
+    content = function(file) {
+      dat <- home_filtered_data()
+      wb <- createWorkbook()
+      addWorksheet(wb, "EBM Data")
+      writeData(wb, "EBM Data", dat)
+
+      # Styling
+      headerStyle <- createStyle(fontColour = "#ffffff", fgFill = "#4F81BD",
+                                 halign = "center", valign = "center",
+                                 textDecoration = "bold", border = "TopBottomLeftRight")
+      addStyle(wb, "EBM Data", headerStyle, rows = 1, cols = 1:ncol(dat), gridExpand = TRUE)
+
+      bodyStyle <- createStyle(border = "TopBottomLeftRight")
+      addStyle(wb, "EBM Data", bodyStyle, rows = 2:(nrow(dat) + 1), cols = 1:ncol(dat),
+               gridExpand = TRUE, stack = TRUE)
+      setColWidths(wb, "EBM Data", cols = 1:ncol(dat), widths = "auto")
+
+      saveWorkbook(wb, file, overwrite = TRUE)
+    }
+  )
+
+  output$home_download_word <- downloadHandler(
+    filename = function() {
+      paste0("EBM_", gsub(" ", "_", home_filter()), "_", Sys.Date(), ".docx")
+    },
+    content = function(file) {
+      dat <- home_filtered_data()
+      doc <- read_docx()
+      doc <- body_add_par(doc, paste("EBM Framework -", home_filter()), style = "heading 1")
+      doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
+      doc <- body_add_par(doc, "")
+
+      ft <- flextable(dat)
+      ft <- theme_booktabs(ft)
+      ft <- autofit(ft)
+      ft <- fontsize(ft, size = 9, part = "all")
+
+      doc <- body_add_flextable(doc, ft)
+      print(doc, target = file)
+    }
+  )
 }
 
 shinyApp(ui, server)
