@@ -618,7 +618,18 @@ make_objective_table <- function(so) {
 
 # UI
 ui <- dashboardPage(
-  dashboardHeader(title = "EBM App"),
+  dashboardHeader(title = "EBM App",
+                  tags$li(
+                    class = "dropdown",
+                    tags$a(
+                      href = "https://github.com/AtlanticR/EBMapp",
+                      target = "_blank",
+                      icon("github"),
+                      "GitHub",
+                      style = "padding-top: 15px; padding-bottom: 15px;"
+                    )
+                  )
+  ),
   dashboardSidebar(
     width = 350,
     tags$head(
