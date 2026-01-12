@@ -616,6 +616,23 @@ make_objective_table <- function(so) {
   base
 }
 
+# helper function to rename columns with scenario names
+rename_scenario_columns <- function(df, assessment_type, scenario_names_vec) {
+  if (assessment_type == "scenarios" && !is.null(scenario_names_vec) && length(scenario_names_vec) > 0) {
+    cols <- names(df)
+
+    for (i in seq_len(length(scenario_names_vec))) {
+      scenario <- scenario_names_vec[i]
+      cols <- gsub(paste0("Score_", i), paste0(scenario, "_Score"), cols)
+      cols <- gsub(paste0("Policy_", i, "_alignment"), paste0(scenario, "_Alignment"), cols)
+      cols <- gsub(paste0("Source_", i, "_data_adequacy"), paste0(scenario, "_Data_Adequacy"), cols)
+    }
+    names(df) <- cols
+  }
+  return(df)
+}
+
+
 # UI
 ui <- dashboardPage(
   dashboardHeader(title = "EBM App",
@@ -1289,6 +1306,35 @@ server <- function(input, output, session) {
     })
   })
 
+  scenario_names <- reactive({
+    n <- input$num_scenarios
+    req(n)
+
+    sapply(seq_len(n), function(i) {
+      input[[paste0("scenario_name_", i)]]
+    })
+  })
+
+  output$scenario_names_ui <- renderUI({
+    n <- input$num_scenarios
+    req(n)
+
+    tagList(
+      fluidRow(
+        lapply(seq_len(n), function(i) {
+          column(
+            if(n <= 3) 4 else if(n <= 6) 3 else 2,
+            textInput(
+              inputId = paste0("scenario_name_", i),
+              label = paste("Scenario", i),
+              placeholder = paste("Enter name for Scenario", i)
+            )
+          )
+        })
+      )
+    )
+  })
+
   observeEvent(input$zone_click, {
     showModal(
       modalDialog(
@@ -1754,34 +1800,43 @@ server <- function(input, output, session) {
                   value = 2, min = 2, max = 10, step = 1
                 )
               )
-
             ),
             column(
               4,
               actionButton(
                 "policy_make_template",
-                ifelse(input$assessment_type == 'policy', "Step B: Create / Reset Template to begin", "Step C: Create / Reset Template to begin"),
+                ifelse(input$assessment_type == 'policy', "Step B: Create / Reset Template to begin",
+                       ifelse(input$assessment_type == 'scenarios', "Step D: Create / Reset Template to begin", "Step B: Create / Reset Template to begin")),
                 class = "btn-primary",
                 style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
               )
             )
           ),
+          # Add scenario naming UI for scenarios only
           conditionalPanel(
-            condition = "input.policy_make_template > 0",
-          p(
-            style = "background-color: #fff3cd; padding: 4px 6px;",
-            strong(
-              "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+            condition = "input.assessment_type == 'scenarios' && input.num_scenarios > 0",
+            fluidRow(
+              column(12,
+                     tags$h5("Step C: Name Your Scenarios"),
+                     uiOutput("scenario_names_ui")
+              )
             )
           ),
-          br(),
-          p(
-            style = "background-color: #ffc107; padding: 4px 6px;",
-            strong(
-              "Make sure you double click to edit the table. A single click in a column will not work."
+          conditionalPanel(
+            condition = "input.policy_make_template > 0",
+            p(
+              style = "background-color: #fff3cd; padding: 4px 6px;",
+              strong(
+                "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+              )
+            ),
+            br(),
+            p(
+              style = "background-color: #ffc107; padding: 4px 6px;",
+              strong(
+                "Make sure you double click to edit the table. A single click in a column will not work."
+              )
             )
-          )
-
           ),
           DTOutput("policy_editor"),
           br(),
@@ -1912,7 +1967,21 @@ server <- function(input, output, session) {
     } else {
       n <- input$num_scenarios %||% 1
 
+      # Check if scenario names are complete for scenarios
+      if (input$assessment_type == "scenarios") {
+        names_provided <- scenario_names()
+        if (length(names_provided) != n || any(names_provided == "" | is.na(names_provided))) {
+          showModal(modalDialog(
+            title = "Incomplete Scenario Names",
+            "You must provide names for all scenarios before creating the template.",
+            easyClose = TRUE,
+            footer = modalButton("OK")
+          ))
+          return()
+        }
+      }
     }
+
     method <- input$policy_method %||% "qual"
 
     for (i in seq_len(n)) {
@@ -1952,8 +2021,11 @@ server <- function(input, output, session) {
     df <- policy_tbl()
     if (is.null(df)) return(datatable(data.frame(Note = "Complete above steps to begin.")))
 
+    # Rename columns if scenarios
+    df <- rename_scenario_columns(df, input$assessment_type, scenario_names())
+
     score_cols <- grep("Score", names(df)) - 1
-    align_cols    <- grep("alignment$",    names(df)) - 1
+    align_cols <- grep("alignment$|Alignment$|adequacy$|Adequacy$", names(df)) - 1
     lock_cols  <- which(names(df) %in% c(
       "Pillar","Main_Objective","Level_1","Level_2",
       "Level_3","Level_4","Objective_Label"
@@ -2045,14 +2117,24 @@ server <- function(input, output, session) {
     filename = function() paste0("Policy_Assessment_", Sys.Date(), ".xlsx"),
     content = function(file) {
       df <- policy_tbl(); req(df)
+
+      # Rename columns for scenarios before saving
+      df <- rename_scenario_columns(df, input$assessment_type, scenario_names())
+
       wb <- createWorkbook(); addWorksheet(wb, "Policy"); writeData(wb, "Policy", df)
       saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
+
   output$policy_download_csv <- downloadHandler(
     filename = function() paste0("Policy_Assessment_", Sys.Date(), ".csv"),
     content = function(file) {
-      df <- policy_tbl(); req(df); write.csv(df, file, row.names = FALSE)
+      df <- policy_tbl(); req(df)
+
+      # Rename columns for scenarios before saving
+      df <- rename_scenario_columns(df, input$assessment_type, scenario_names())
+
+      write.csv(df, file, row.names = FALSE)
     }
   )
 
