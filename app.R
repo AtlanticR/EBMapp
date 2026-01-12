@@ -700,6 +700,17 @@ ui <- dashboardPage(
       left: 0;
       width: 230px;  /* default sidebar width */
       z-index: 1030;
+      background-color: #ff8c00 !important;  /* Orange background */
+      color: white !important;               /* White text */
+      border-radius: 4px;                    /* Rounded corners */
+      padding: 10px !important;              /* Add some padding */
+      margin: 5px !important;                /* Add margin */
+      font-weight: bold;                     /* Bold text */
+    }
+
+    /* Optional: Add hover effect */
+    .sidebar-menu a[data-value='references']:hover {
+      background-color: #ff7700 !important;  /* Darker orange on hover */
     }
   "))
     ),
