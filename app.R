@@ -929,7 +929,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                     "Fisheries and Oceans Canada's Maritimes Region ecosystem-based management framework for sustainable management."
                   )
                 ),
-                " Fisheries and Oceans Canada, Bedford Institute of Oceanography."
+                " Can. Tech. Rep. Fish. Aquat. Sci. 3716: vii + 175 p."
               ),
               tags$li(
                 "Eger, S. L., & Bundy, A. (2024). ",
@@ -940,7 +940,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                     "Application of the Maritimes Ecosystem Based Management (EBM) Framework to an Oceans Act Marine Protected Area Case Study: St. Anns Bank Marine Protected Area."
                   )
                 ),
-                " Fisheries and Oceans Canada, Bedford Institute of Oceanography."
+                " Can. Tech. Rep. Fish. Aquat. Sci. 3558: vii + 47 p."
               ),
               tags$li(
                 "Silver, K. (2024). ",
@@ -950,7 +950,8 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                   tags$em(
                     "Charting the Progress on Ecosystem-Based Management of Fisheries in NAFO Division 4X: Integrated Fisheries Management Plans through the Lens of the Maritimes Region EBM Framework."
                   )
-                )
+                ),
+                "Dalhousie University"
               ),
               tags$li(
                 "Tam, J. C., Parlee, C. E., Campbell-Miller, J., Bellanger, M., Bentley, J., Pourfaraj, V., et al. (2024). ",
@@ -964,15 +965,15 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                 " ICES Journal of Marine Science, 81(1), 22–42."
               ),
               tags$li(
-                "Stephenson, R. L., Wiber, M., Paul, S., Angel, E., Benson, A., Charles, A., et al. (2019). ",
+                "Paul, S.D. and Stephenson, R.L. (2020). ",
                 tags$a(
-                  href = "https://cdnsciencepub.com/doi/10.1139/cjfas-2017-0345",
+                  href = "https://waves-vagues.dfo-mpo.gc.ca/Library/40857384.pdf",
                   target = "_blank",
                   tags$em(
-                    "Integrating diverse objectives for sustainable fisheries in Canada."
+                    "The Integration of Full-spectrum Ecosystem-based Management in Canadian Fisheries Management Plans. "
                   )
                 ),
-                " Canadian Journal of Fisheries and Aquatic Sciences, 76(3), 480–496."
+                " Can. Tech. Rep. Fish. Aquat. Sci. 3350: 18 + vi p."
               )
             )
           )
