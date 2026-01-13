@@ -373,9 +373,32 @@ use_explanations[[5]] <- function() {
     tags$p("Question: what are cumulative effects of activities 1, 2, 3 etc., in area X?"),
 
     tags$hr(),
-    tags$p("First, enter the number of activities you are interested in and then name them. Once you name them and generate the template, a table will show up that looks like the following."),
+
+    tags$h4("Two Scoring Strategies Available:"),
+
+    tags$p(tags$strong("Strategy 1: Indicator-Based Assessment (Quantified Impacts)")),
+    tags$ul(
+      tags$li("Suitable for detailed, quantitative cumulative effects analysis"),
+      tags$li("Score each activity-objective combination using indicators (0–2 scale)"),
+      tags$li("Specify targets for each indicator"),
+      tags$li("Document your tallying method in the 'Tallying_Method' column"),
+      tags$li("Calculate cumulative impact using your chosen approach (sum, average, maximum, custom threshold, or other method)"),
+      tags$li("Use an external worksheet if needed to determine the most appropriate tallying methodology for your context")
+    ),
+
+    tags$p(tags$strong("Strategy 2: Coarse Risk Assessment (Simplified Screening)")),
+    tags$ul(
+      tags$li("Suitable for rapid, screening-level risk assessments"),
+      tags$li("Quick risk-based scoring across activities (L/M/H scale)"),
+      tags$li("Automatically tallies counts of Low, Moderate, and High risk impacts"),
+      tags$li("Useful for identifying which activity-objective combinations warrant deeper analysis"),
+      tags$li("Ideal for early-stage decision-support and identifying priority concerns")
+    ),
+
+    tags$hr(),
     tags$p(
-      "For each row of the table, paste the Indicator for each activity. For each indicator, write the associated target. Score the indicator based on the scoring table below. Lastly, Tally the scores in the Impact Columns and put that in the Tally column."
+      "Choose your strategy at the start. For the Indicator-Based approach, you will need to determine and document your tallying method.
+      For the Risk-Based approach, tallies are calculated automatically."
     ),
     tags$br(),
 
@@ -1264,6 +1287,10 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
 
 server <- function(input, output, session) {
 
+  # Initialize cumulative assessment reactives
+  cumu_strategy <- reactiveVal("indicator")
+  cumu_activities_stored <- reactiveVal(NULL)
+
   # Navigation
   observeEvent(input$goto_step1, updateTabItems(session, "sidebar", "select_objectives"))
   observeEvent(input$goto_step2, updateTabItems(session, "sidebar", "assessment"))
@@ -1872,11 +1899,77 @@ server <- function(input, output, session) {
   observeEvent(list(input$policy_make_template, input$key_s, input$perf_make_template, input$cumu_make_template), {
     req(input$policy_make_template > 0 || input$perf_make_template > 0 || input$cumu_make_template > 0)
 
+    # Determine which assessment type is active
+    assessment <- if(!is.null(input$assessment_type)) input$assessment_type else "policy"
+
+    # Get strategy for cumulative (only if cumulative)
+    strategy <- if(assessment == "cumulative") cumu_strategy() else NULL
+
     # Conditional scoring table
-    scoring_ui <-
-      if (
-        !(input$assessment_type %in% c("policy", "scenarios"))
-      ) {
+    scoring_ui <- if (assessment == "cumulative") {
+      # CUMULATIVE ASSESSMENTS
+      if(strategy == "risk") {
+        # Risk assessment scoring table
+        tagList(
+          tags$h4("Risk Assessment Scoring"),
+          tags$table(
+            style = "width:100%; border-collapse: collapse; border:1px solid #ccc;",
+            tags$thead(
+              tags$tr(
+                tags$th("Level", style = "border:1px solid #ccc; padding:4px;"),
+                tags$th("Description", style = "border:1px solid #ccc; padding:4px;")
+              )
+            ),
+            tags$tbody(
+              tags$tr(tags$td("L", style = "border:1px solid #ccc; padding:4px;"),
+                      tags$td("Low risk - minimal concern; limited interaction potential", style = "border:1px solid #ccc; padding:4px;")),
+              tags$tr(tags$td("M", style = "border:1px solid #ccc; padding:4px;"),
+                      tags$td("Moderate risk - notable concern; some interaction potential", style = "border:1px solid #ccc; padding:4px;")),
+              tags$tr(tags$td("H", style = "border:1px solid #ccc; padding:4px;"),
+                      tags$td("High risk - significant concern; substantial interaction potential", style = "border:1px solid #ccc; padding:4px;"))
+            )
+          ),
+          tags$br(),
+          tags$p(tags$strong("Cumulative Tallies (automatically calculated):"), style = "margin-top: 10px;"),
+          tags$ul(
+            tags$li("Total_L: Count of Low risk impacts across activities"),
+            tags$li("Total_M: Count of Moderate risk impacts across activities"),
+            tags$li("Total_H: Count of High risk impacts across activities")
+          )
+        )
+      } else {
+        # Indicator-based scoring
+        tagList(
+          tags$h4("Indicator-Based Impact Scoring"),
+          tags$table(
+            style = "width:100%; border-collapse: collapse; border:1px solid #ccc;",
+            tags$thead(
+              tags$tr(
+                tags$th("Value", style = "border:1px solid #ccc; padding:4px;"),
+                tags$th("Description", style = "border:1px solid #ccc; padding:4px;")
+              )
+            ),
+            tags$tbody(
+              tags$tr(tags$td("0", style = "border:1px solid #ccc; padding:4px;"),
+                      tags$td("Not met target", style = "border:1px solid #ccc; padding:4px;")),
+              tags$tr(tags$td("1", style = "border:1px solid #ccc; padding:4px;"),
+                      tags$td("Met target", style = "border:1px solid #ccc; padding:4px;")),
+              tags$tr(tags$td("2", style = "border:1px solid #ccc; padding:4px;"),
+                      tags$td("Exceeded target", style = "border:1px solid #ccc; padding:4px;"))
+            )
+          ),
+          tags$br(),
+          tags$p(tags$strong("Tallying Guidance:"), style = "margin-top: 10px; color: #d9534f;"),
+          tags$ul(
+            tags$li("Use the 'Tallying_Method' column to document your approach (e.g., Sum, Average, Maximum, Custom threshold)"),
+            tags$li("Complete the 'Cumulative_Impact' column with your calculated result"),
+            tags$li("Consider using an external worksheet to determine: should impacts be summed? Averaged? Use maximum? Apply custom logic?"),
+            tags$li("Document your rationale for transparency and reproducibility"),
+            tags$li("Download your completed template and apply your chosen tallying methodology")
+          )
+        )
+      }
+    } else if (!(assessment %in% c("policy", "scenarios"))) {
       # Performance scoring table ONLY
       tagList(
         tags$h4("Performance Scoring"),
@@ -1896,10 +1989,9 @@ server <- function(input, output, session) {
         )
       )
     } else {
-      # Existing qualitative + quantitative tables
+      # Policy/Scenarios - Existing qualitative + quantitative tables
       tagList(
         tags$h4("Policy Language Alignment Scoring"),
-        # paste your qualitative table code here
         tags$table(
           style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
           tags$thead(
@@ -1918,7 +2010,6 @@ server <- function(input, output, session) {
         ),
         tags$br(),
         tags$h4("Data/Information Scoring"),
-        # paste your quantitative table code here
         tags$table(
           style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
           tags$thead(
@@ -1946,9 +2037,9 @@ server <- function(input, output, session) {
         scoring_ui
       ),
       easyClose = TRUE,
-      footer = modalButton("Close")
+      footer = modalButton("Close"),
+      size = "l"
     ))
-
   })
 
 
@@ -2448,6 +2539,22 @@ server <- function(input, output, session) {
     show_dl_cum(TRUE)
   })
 
+  output$cumu_strategy_description <- renderUI({
+    strategy <- input$cumu_strategy %||% "indicator"
+
+    strat_text <- if(strategy == "indicator") {
+      "Quantify impacts using indicators with targets. Determine appropriate tallying method using the provided worksheet."
+    } else {
+      "Quick risk-based scoring across activities using a simplified Likert scale (L/M/H)."
+    }
+
+    tagList(
+      tags$strong(if(strategy == "indicator") "Indicator-Based Assessment" else "Coarse Risk Assessment"),
+      tags$br(),
+      tags$p(strat_text, style = "font-size: 0.9em; margin-top: 5px;")
+    )
+  })
+
   output$cum_download_ui <- renderUI({
     req(show_dl_cum())
     fluidRow(
@@ -2470,18 +2577,46 @@ server <- function(input, output, session) {
           status = "success",
           solidHeader = TRUE,
           fluidRow(
-            column(4,
-          numericInput(
-            "num_activities",
-            "Step A: Select Number of Activities:",
-            value = 1, min = 1, max = 10, step = 1
-          )),
-          column(4,
-                 conditionalPanel(
-                   condition = "input.num_activities > 0",
-                   uiOutput("cumu_activity_names_ui")
-                 )),
-          column(4,actionButton("cumu_make_template", "Step C: Create / Reset Template", class = "btn-primary",  style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"))),
+            column(
+              6,
+              radioButtons(
+                "cumu_strategy",
+                "Step A: Select Scoring Strategy:",
+                choices = list(
+                  "Indicator-Based Assessment (Quantified impacts)" = "indicator",
+                  "Coarse Risk Assessment (Simplified risk)" = "risk"
+                ),
+                selected = "indicator"
+              ),
+              tags$div(
+                style = "background-color: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;",
+                htmlOutput("cumu_strategy_description")
+              )
+            ),
+            column(
+              6,
+              numericInput(
+                "num_activities",
+                "Step B: Select Number of Activities:",
+                value = 2, min = 1, max = 10, step = 1
+              ),
+              conditionalPanel(
+                condition = "input.num_activities > 0",
+                uiOutput("cumu_activity_names_ui")
+              )
+            )
+          ),
+          fluidRow(
+            column(
+              12,
+              actionButton(
+                "cumu_make_template",
+                "Step D: Create / Reset Template",
+                class = "btn-primary",
+                style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
+              )
+            )
+          ),
           conditionalPanel(
             condition = "input.cumu_make_template > 0",
             p(
@@ -2509,6 +2644,7 @@ server <- function(input, output, session) {
   }
 
   observeEvent(input$cumu_make_template, {
+    strategy <- input$cumu_strategy %||% "indicator"
 
     if (length(cumu_activity_names()) != input$num_activities || any(cumu_activity_names() == "")) {
       showModal(modalDialog(
@@ -2517,142 +2653,171 @@ server <- function(input, output, session) {
         easyClose = TRUE,
         footer = modalButton("OK")
       ))
+      return()
+    }
 
-    } else {
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so)
 
-    #base[["Indicator"]] <- ""
-    #base[["Target"]]    <- ""
+    n <- input$num_activities %||% 2
+    activities <- cumu_activity_names()
 
-    n <- input$num_activities %||% 3
-    for (i in seq_len(n)) {
-      base[[paste0("Indicator_",i)]] <- NA_real_  # e.g., 0–3
-      base[[paste0("Target_",i)]] <- NA_real_  # e.g., 0–3
-      base[[paste0("A", i, "_impact")]] <- NA_real_  # e.g., 0–3
+    # Store the activities and strategy
+    cumu_activities_stored(activities)
+    cumu_strategy(strategy)
+
+    if (strategy == "indicator") {
+      # STRATEGY 1: Indicator-based (0-2 scale)
+      for (i in seq_len(n)) {
+        base[[paste0(activities[i], "_Indicator")]] <- ""
+        base[[paste0(activities[i], "_Target")]] <- ""
+        base[[paste0(activities[i], "_Impact")]] <- NA_real_
+      }
+      base[["Tallying_Method"]] <- ""
+      base[["Cumulative_Impact"]] <- ""
+
+    } else if (strategy == "risk") {
+      # STRATEGY 2: Risk-based (L/M/H scale)
+      for (i in seq_len(n)) {
+        base[[paste0(activities[i], "_Risk")]] <- NA_character_
+      }
+      base[["Total_L"]] <- 0
+      base[["Total_M"]] <- 0
+      base[["Total_H"]] <- 0
     }
-    base[["Tally"]] <- ""
-
 
     cumu_tbl(base)
-  }
-
   })
 
 
   output$cumu_editor <- renderDT({
-    df <- cumu_tbl(); req(df)
+    df <- cumu_tbl()
     if (is.null(df)) {
-      return(datatable(data.frame(Note = "Complete step A and B to begin."),
-                       rownames = FALSE))
+      return(datatable(data.frame(Note = "Complete steps A-C to begin."), rownames = FALSE))
     }
 
-    # Locked columns
+    strategy <- cumu_strategy()
+
+    # Locked columns (same for both strategies)
     lock_cols <- which(names(df) %in% c(
       "Pillar","Main_Objective","Level_1","Level_2",
       "Level_3","Level_4","Objective_Label"
     )) - 1
 
-    # Dynamic renaming of activity columns
-    cols <- names(df)
-    activities <- cumu_activity_names()
-    names_of_interest <- names(df)
+    if (strategy == "indicator") {
+      # INDICATOR-BASED STRATEGY
+      impact_cols <- grep("_Impact$", names(df)) - 1
+      indicator_cols <- c(grep("_Indicator$", names(df)) - 1, grep("_Target$", names(df)) - 1)
 
-    for (i in seq_len(input$num_activities)) {
-      act <- activities[i]
-      names_of_interest <- unlist(lapply(names_of_interest, function(x) {
-        if (x == paste0("Indicator_", i)) x <- paste0(act, "_Indicator")
-        if (x == paste0("Target_", i)) x <- paste0(act, "_Target")
-        if (x == paste0("A", i, "_impact")) x <- paste0(act, "_Impact")
-        x
-      }))
-    }
-    names(df) <- names_of_interest
-
-    # Column indices
-    impact_cols    <- grep("Impact", names(df)) - 1  # Score columns
-    target_cols    <- grep("Target", names(df)) - 1   # Pink
-    indicator_cols <- grep("Indicator", names(df)) - 1
-    indicator_cols <- c(indicator_cols, target_cols)
-    df[ , indicator_cols + 1] <- lapply(df[ , indicator_cols + 1], as.character)
-
-    # DT
-    datatable(
-      df,
-      rownames = FALSE,
-      colnames = gsub("_"," ", names(df)),
-      editable = list(target = "cell", disable = list(columns = lock_cols)),
-      options = list(scrollX = TRUE, pageLength = 10),
-      callback = JS(
-        "table.on('draw.dt', function(){",
-        "  table.rows().every(function(){",
-        "    var row = this.node();",
-        "    $('td', row).each(function(colIndex){",
-
-        # Lock pointer events for locked columns
-        paste0(
-          "if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
-          "  $(this).css('pointer-events','none');",
-          "}"
-        ),
-
-        # Score dropdown
-        paste0(
-          "if ([", paste(impact_cols, collapse=","), "].includes(colIndex)) {",
-          "  $(this).off('click').on('click', function(){",
-          "    if($(this).find('select').length > 0) return;",
-          "    var val = $(this).text();",
-          "    var opts = ['0','1','2'];",
-          "    var sel = $('<select></select>').css({",
-          "      'color':'black', 'background-color':'white','width':'100%'",
-          "    });",
-          "    $.each(opts, function(i,v){",
-          "      var label = v=='0' ? '0' : v=='1' ? '1' : '2';",
-          "      sel.append($('<option></option>').val(v).html(label));",
-          "    });",
-          "    sel.val(val); $(this).html(sel); sel.focus();",
-          "    sel.on('change', function(){",
-          "      var newVal = $(this).val();",
-          "      $(this).parent().text(newVal);",
-          "      Shiny.setInputValue('cumu_editor_cell_edit',",
-          "        {row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+      datatable(
+        df,
+        rownames = FALSE,
+        colnames = gsub("_", " ", names(df)),
+        editable = list(target = "cell", disable = list(columns = lock_cols)),
+        options = list(scrollX = TRUE, pageLength = 10),
+        callback = JS(
+          "table.on('draw.dt', function(){",
+          "  table.rows().every(function(){",
+          "    var row = this.node();",
+          "    $('td', row).each(function(colIndex){",
+          paste0("if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
+                 "$(this).css('pointer-events','none'); }"),
+          paste0("if ([", paste(impact_cols, collapse=","), "].includes(colIndex)) {",
+                 "$(this).off('click').on('click', function(){",
+                 "if($(this).find('select').length > 0) return;",
+                 "var val = $(this).text();",
+                 "var opts = ['0','1','2'];",
+                 "var sel = $('<select></select>').css({",
+                 "'color':'black','background-color':'white','width':'100%'});",
+                 "$.each(opts, function(i,v){ ",
+                 "sel.append($('<option></option>').val(v).html(v)); });",
+                 "sel.val(val); $(this).html(sel); sel.focus();",
+                 "sel.on('change', function(){",
+                 "var newVal = $(this).val();",
+                 "$(this).parent().text(newVal);",
+                 "Shiny.setInputValue('cumu_editor_cell_edit',",
+                 "{row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+                 "}); }); }"),
           "    });",
           "  });",
-          "}"
-        ),
-
-        "    });",
-        "  });",
-        "});"
-      )
-    ) %>%
-      formatStyle(
-        columns = c("Pillar","Main_Objective","Level_1","Level_2",
-                    "Level_3","Level_4","Objective_Label"),
-        backgroundColor='#d3d3d3'
+          "});"
+        )
       ) %>%
-      formatStyle(columns = indicator_cols + 1, backgroundColor='#ffc0cb') %>%
-      formatStyle(columns = impact_cols + 1, backgroundColor='#add8e6') %>%
-      formatStyle(columns = "Tally", backgroundColor='#add8e6')
+        formatStyle(columns = lock_cols + 1, backgroundColor='#d3d3d3') %>%
+        formatStyle(columns = indicator_cols + 1, backgroundColor='#ffc0cb') %>%
+        formatStyle(columns = impact_cols + 1, backgroundColor='#add8e6') %>%
+        formatStyle(columns = grep("Tallying_Method|Cumulative_Impact", names(df)) + 1,
+                    backgroundColor='#e6f3ff')
+
+    } else {
+      # RISK-BASED STRATEGY
+      risk_cols <- grep("_Risk$", names(df)) - 1
+      summary_cols <- grep("Total_L|Total_M|Total_H", names(df)) - 1
+
+      datatable(
+        df,
+        rownames = FALSE,
+        colnames = gsub("_", " ", names(df)),
+        editable = list(target = "cell", disable = list(columns = c(lock_cols, summary_cols))),
+        options = list(scrollX = TRUE, pageLength = 10),
+        callback = JS(
+          "table.on('draw.dt', function(){",
+          "  table.rows().every(function(){",
+          "    var row = this.node();",
+          "    $('td', row).each(function(colIndex){",
+          paste0("if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
+                 "$(this).css('pointer-events','none'); }"),
+          paste0("if ([", paste(summary_cols, collapse=","), "].includes(colIndex)) {",
+                 "$(this).css('pointer-events','none'); }"),
+          paste0("if ([", paste(risk_cols, collapse=","), "].includes(colIndex)) {",
+                 "$(this).off('click').on('click', function(){",
+                 "if($(this).find('select').length > 0) return;",
+                 "var val = $(this).text();",
+                 "var opts = ['L','M','H'];",
+                 "var sel = $('<select></select>').css({",
+                 "'color':'black','background-color':'white','width':'100%'});",
+                 "$.each(opts, function(i,v){ ",
+                 "sel.append($('<option></option>').val(v).html(v)); });",
+                 "sel.val(val); $(this).html(sel); sel.focus();",
+                 "sel.on('change', function(){",
+                 "var newVal = $(this).val();",
+                 "$(this).parent().text(newVal);",
+                 "Shiny.setInputValue('cumu_editor_cell_edit',",
+                 "{row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+                 "}); }); }"),
+          "    });",
+          "  });",
+          "});"
+        )
+      ) %>%
+        formatStyle(columns = lock_cols + 1, backgroundColor='#d3d3d3') %>%
+        formatStyle(columns = risk_cols + 1, backgroundColor='#ffcccc') %>%
+        formatStyle(columns = summary_cols + 1, backgroundColor='#e6f3ff')
+    }
   })
 
   observeEvent(input$cumu_editor_cell_edit, {
     info <- input$cumu_editor_cell_edit
     df <- cumu_tbl(); req(df)
+    strategy <- cumu_strategy()
+
     i <- info$row; j <- info$col; v <- info$value
     if (is.null(v)) return()
 
-    # Update edited cell
     if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
-    if (is.numeric(df[[j+1]])) v <- as.numeric(v)
+    if (is.numeric(df[[j+1]])) v <- suppressWarnings(as.numeric(v))
     df[i, j+1] <- v
 
-    # Update Tally column as sum of Impact columns (keep blank if all empty)
-    impact_cols <- grep("impact", names(df))
-    #browser()
-    df$Tally <- apply(df[, impact_cols, drop = FALSE], 1, function(x) {
-      if (all(x == "" | is.na(x))) "" else sum(as.numeric(x), na.rm = TRUE)
-    })
+    if (strategy == "risk") {
+      # Calculate risk tallies for risk-based strategy
+      risk_cols <- grep("_Risk$", names(df))
+
+      if (length(risk_cols) > 0) {
+        df$Total_L <- apply(df[, risk_cols, drop = FALSE], 1, function(x) sum(x == "L", na.rm = TRUE))
+        df$Total_M <- apply(df[, risk_cols, drop = FALSE], 1, function(x) sum(x == "M", na.rm = TRUE))
+        df$Total_H <- apply(df[, risk_cols, drop = FALSE], 1, function(x) sum(x == "H", na.rm = TRUE))
+      }
+    }
 
     cumu_tbl(df)
   })
@@ -2666,14 +2831,42 @@ server <- function(input, output, session) {
     filename = function() paste0("Cumulative_", Sys.Date(), ".xlsx"),
     content = function(file) {
       df <- cumu_tbl(); req(df)
-      wb <- createWorkbook(); addWorksheet(wb, "Cumulative"); writeData(wb, "Cumulative", df)
+      strategy <- cumu_strategy()
+
+      wb <- createWorkbook()
+      addWorksheet(wb, "Cumulative")
+      writeData(wb, "Cumulative", df)
+
+      # Add a note sheet about strategy
+      addWorksheet(wb, "Info")
+      info_data <- data.frame(
+        Setting = c("Strategy Used", "Generated"),
+        Value = c(
+          if(strategy == "indicator") "Indicator-Based Assessment (0-2 scale)" else "Coarse Risk Assessment (L/M/H scale)",
+          as.character(Sys.Date())
+        )
+      )
+      writeData(wb, "Info", info_data)
+
+      # Style headers
+      headerStyle <- createStyle(fontColour = "#ffffff", fgFill = "#4F81BD",
+                                 halign = "center", valign = "center",
+                                 textDecoration = "bold", border = "TopBottomLeftRight")
+      addStyle(wb, "Cumulative", headerStyle, rows = 1, cols = 1:ncol(df), gridExpand = TRUE)
+      addStyle(wb, "Info", headerStyle, rows = 1, cols = 1:2, gridExpand = TRUE)
+
+      setColWidths(wb, "Cumulative", cols = 1:ncol(df), widths = "auto")
+      setColWidths(wb, "Info", cols = 1:2, widths = "auto")
+
       saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
+
   output$cumu_download_csv <- downloadHandler(
     filename = function() paste0("Cumulative_", Sys.Date(), ".csv"),
     content = function(file) {
-      df <- cumu_tbl(); req(df); write.csv(df, file, row.names = FALSE)
+      df <- cumu_tbl(); req(df)
+      write.csv(df, file, row.names = FALSE)
     }
   )
 

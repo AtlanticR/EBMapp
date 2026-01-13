@@ -5,7 +5,7 @@ account: dfo-mar-mpas
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 16316601
-bundleId: 11423553
+bundleId: 11438551
 url: https://dfo-mar-mpas.shinyapps.io/EBMapp/
 version: 1
 asMultiple: FALSE
