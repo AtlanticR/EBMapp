@@ -658,7 +658,7 @@ rename_scenario_columns <- function(df, assessment_type, scenario_names_vec) {
 
 # UI
 ui <- dashboardPage(
-  dashboardHeader(title = "EBM App",
+  dashboardHeader(title = "EBM Framework App",
                   tags$li(
                     class = "dropdown",
                     tags$a(
