@@ -983,6 +983,17 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                 " Can. Tech. Rep. Fish. Aquat. Sci. 3716: vii + 175 p."
               ),
               tags$li(
+                "Tam, J., Bundy, A. & Cook, A. M. (2025). ",
+                tags$a(
+                  href = "https://doi.org/10.60825/ph4k-f957",
+                  target = "_blank",
+                  tags$em(
+                    "Using the Ecosystem Based Management Framework to Support Fisheries Advice Provision: Case Study for the Inshore Lobster Fishery in the Maritimes Region (LFA 27-38)."
+                  )
+                ),
+                " Can. Tech. Rep. Fish. Aquat. Sci. 3702: v + 44 p."
+              ),
+              tags$li(
                 "Eger, S. L., & Bundy, A. (2024). ",
                 tags$a(
                   href = "https://publications.gc.ca/collections/collection_2024/mpo-dfo/Fs97-6-3558-eng.pdf",
@@ -996,13 +1007,13 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
               tags$li(
                 "Silver, K. (2024). ",
                 tags$a(
-                  href = "https://dalspace.library.dal.ca/items/4be9fb12-f9a9-4ae0-9407-35a8e0891e82",
+                  href = "https://hdl.handle.net/10222/84874",
                   target = "_blank",
                   tags$em(
-                    "Charting the Progress on Ecosystem-Based Management of Fisheries in NAFO Division 4X: Integrated Fisheries Management Plans through the Lens of the Maritimes Region EBM Framework."
+                    "Charting the Progress on Ecosystem-Based Management of Fisheries in NAFO Division 4X: Integrated Fisheries Management Plans through the Lens of the Maritimes Region EBM Framework [graduate project]."
                   )
                 ),
-                "Dalhousie University"
+                "Halifax, NS: Dalhousie University"
               ),
               tags$li(
                 "Tam, J. C., Parlee, C. E., Campbell-Miller, J., Bellanger, M., Bentley, J., Pourfaraj, V., et al. (2024). ",
@@ -1014,6 +1025,17 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                   )
                 ),
                 " ICES Journal of Marine Science, 81(1), 22–42."
+              ),
+              tags$li(
+                "Akininrola, G.T. (2023). ",
+                tags$a(
+                  href = "http://hdl.handle.net/10222/83652",
+                  target = "_blank",
+                  tags$em(
+                    "Promoting Reconciliation and Indigenous Self-Determination through Ecosystem-Based Management [graduate project]."
+                  )
+                ),
+                " Halifax, NS: Dalhousie University"
               ),
               tags$li(
                 "Paul, S.D. and Stephenson, R.L. (2020). ",
