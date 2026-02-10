@@ -736,7 +736,7 @@ ui <- dashboardPage(
     /* pin References to bottom of the page */
     .sidebar-menu a[data-value='references'] {
       position: fixed;
-      bottom: 10px;
+      bottom: 30px;
       left: 0;
       width: 230px;  /* default sidebar width */
       z-index: 1030;
@@ -774,6 +774,34 @@ ui <- dashboardPage(
         .assessment-type-box { border: 2px solid #ddd; border-radius: 5px; padding: 15px; margin: 10px 0; cursor: pointer; transition: all 0.3s; }
         .assessment-type-box:hover { border-color: #3c8dbc; background-color: #f0f8ff; }
         .assessment-type-box.selected { border-color: #3c8dbc; background-color: #e3f2fd; border-width: 3px; }
+        .body {
+        padding-bottom: 80px;  /* Make room for footer */
+    }
+
+    .content-wrapper, .main-header {
+        margin-bottom: 0;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 14px;
+        border-top: 1px solid #e6e6e6;
+        z-index: 999;  /* Lower than sidebar but above content */
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dashboard-body {
+        margin-bottom: 80px;
+    }
       "))
     ),
     tabItems(
@@ -1302,6 +1330,14 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                 ),
                 uiOutput("assessment_interface")
               )
+      )
+    ),
+
+    # Footer Section
+    tags$div(
+      class = "footer",
+      HTML(
+        "This tool was created with AI tools and human oversight."
       )
     )
   )
