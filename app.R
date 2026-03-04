@@ -31,16 +31,26 @@ use_explanations[[2]] <- function() {
 
     tags$p(
       "Do current DFO policies and management approaches, some of which date back to the 1990s,
-       embrace the full holistic spectrum of current EBM thinking, as outlined in the EBM Framework.
-       Therefore, the EBM Framework can be used to evaluate how current policies and management
-       approaches align with EBM objectives, and develop recommendations for updates where appropriate."
+      embrace the full holistic spectrum of current EBM thinking, as outlined in the EBM Framework.
+      To what extent does existing data address the EBM objectives? Where are the gaps? Therefore,
+      the EBM Framework can be used to evaluate how current policies, management approaches and data
+      align with EBM objectives, and develop recommendations for updates where appropriate"
     ),
 
     tags$hr(),
     tags$p(
-      "For each row of the table below, paste the line from your policy or management approach that aligns
-       with the associated objective in the Policy Alignment column. Assess alignment using one of the two scoring systems below and enter the score in the Score column. Lastly, Enter a rationale in the Rationale column."
+      "Policy or Management Approach Language Alignment; For each row of the table below, paste the
+      line from your policy or management approach that aligns with the associated objective in the Policy Alignment
+      column. Assess alignment using the first scoring systems below and enter the score in the Score column. Lastly,
+      Enter a rationale in the Rationale column."
     ),
+    tags$hr(),
+    tags$p(
+    "Data or information adequacy: For each row of the table below using the second scoring systems below
+    and enter the score in the Score column and put NA into the “Policy_1_alignment” column. Lastly, Enter
+    a rationale in the Rationale column."
+    ),
+
 
     tags$h4("Policy Alignment Table"),
 
@@ -72,9 +82,9 @@ use_explanations[[2]] <- function() {
             tags$td("i. Fishing mortality is limited to levels necessary to promote sustainability", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("Productivity / 1. Pressures on ecosystem productivity are managed / a. Fishing pressures on ecosystem productivity are managed / i. Fishing mortality is limited to levels necessary to promote sustainability /", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("NA", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
-            tags$td(NA, style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px;")
+            tags$td(" ", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td(" ", style = "border: 1px solid #ccc; padding: 6px;"),
+            tags$td(" ", style = "border: 1px solid #ccc; padding: 6px;")
           )
         )
       )
@@ -470,7 +480,7 @@ use_explanations[[5]] <- function() {
   )
 }
 
-names(use_explanations) <- c("Checklist of objectives", "Evaluating Policies and Management Appropaches/ Plans",
+names(use_explanations) <- c("Checklist of objectives", "Evaluating Policies and Management Approaches/ Plans",
                              "Scenario Comparison", "Management Report Card", "Cumulative Effects and Tradeoffs")
 
 
@@ -868,6 +878,11 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                     style = "background-color: #fff3cd; padding: 4px 6px;",
                     strong(
                       "Click on each of the use cases to learn more about how to apply the EBM Framework"
+                    )
+                  ),
+                  p(
+                    strong(
+                      "Note: Use 1 is always used as the first step of Uses 2-5."
                     )
                   ),
 
