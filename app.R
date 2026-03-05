@@ -66,7 +66,7 @@ use_explanations[[2]] <- function() {
             tags$th("Level_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Level_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Level_3", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_4", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
+            tags$th("Level_4", style = "border: 1px solid #cfcc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Score_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
             tags$th("Policy_1_alignment", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
@@ -153,6 +153,30 @@ use_explanations[[2]] <- function() {
             tags$td("Strong – Good information and long term data with temporal and/or spatial coverage to address this objective", style = "border: 1px solid #ccc; padding: 4px;")
           )
         )
+      )
+    ),
+    tags$u(
+      tags$li(
+        "Tam, J., Bundy, A. & Cook, A. M. (2025). ",
+        tags$a(
+          href = "https://doi.org/10.60825/ph4k-f957",
+          target = "_blank",
+          tags$em(
+            "Using the Ecosystem Based Management Framework to Support Fisheries Advice Provision: Case Study for the Inshore Lobster Fishery in the Maritimes Region (LFA 27-38)."
+          )
+        ),
+        " Can. Tech. Rep. Fish. Aquat. Sci. 3702: v + 44 p."
+      ),
+      tags$li(
+        "Eger, S. L., & Bundy, A. (2024). ",
+        tags$a(
+          href = "https://publications.gc.ca/collections/collection_2024/mpo-dfo/Fs97-6-3558-eng.pdf",
+          target = "_blank",
+          tags$em(
+            "Application of the Maritimes Ecosystem Based Management (EBM) Framework to an Oceans Act Marine Protected Area Case Study: St. Anns Bank Marine Protected Area."
+          )
+        ),
+        " Can. Tech. Rep. Fish. Aquat. Sci. 3558: vii + 47 p."
       )
     )
 
