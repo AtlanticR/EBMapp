@@ -1807,7 +1807,16 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
-      write.csv(dat, file, row.names = FALSE)
+      #browser()
+
+      dat[] <- lapply(dat, function(x) {
+        if (is.character(x)) {
+          gsub("^([=+@-])", " ", x)
+        } else {
+          x
+        }
+      })
+      write.csv(dat, file, row.names = FALSE, quote=TRUE)
     }
   )
 
@@ -2321,8 +2330,15 @@ server <- function(input, output, session) {
 
       # Rename columns for scenarios before saving
       df <- rename_scenario_columns(df, input$assessment_type, scenario_names())
+      df[] <- lapply(df, function(x) {
+        if (is.character(x)) {
+          gsub("^([=+@-])", " ", x)
+        } else {
+          x
+        }
+      })
 
-      write.csv(df, file, row.names = FALSE)
+      write.csv(df, file, row.names = FALSE, quote=TRUE)
     }
   )
 
@@ -2594,7 +2610,20 @@ server <- function(input, output, session) {
   output$perf_download_csv <- downloadHandler(
     filename = function() paste0("Performance_", Sys.Date(), ".csv"),
     content = function(file) {
-      df <- perf_tbl(); req(df); write.csv(df, file, row.names = FALSE)
+      df <- perf_tbl()
+
+
+      req(df)
+      df[] <- lapply(df, function(x) {
+        if (is.character(x)) {
+          gsub("^([=+@-])", " ", x)
+        } else {
+          x
+        }
+      })
+
+
+      write.csv(df, file, row.names = FALSE, quote=TRUE)
     }
   )
 
@@ -2966,8 +2995,19 @@ server <- function(input, output, session) {
   output$cumu_download_csv <- downloadHandler(
     filename = function() paste0("Cumulative_", Sys.Date(), ".csv"),
     content = function(file) {
-      df <- cumu_tbl(); req(df)
-      write.csv(df, file, row.names = FALSE)
+      df <- cumu_tbl()
+
+      req(df)
+
+      df[] <- lapply(df, function(x) {
+        if (is.character(x)) {
+          gsub("^([=+@-])", " ", x)
+        } else {
+          x
+        }
+      })
+
+      write.csv(df, file, row.names = FALSE, quote=TRUE)
     }
   )
 
@@ -3177,7 +3217,17 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       dat <- home_filtered_data()
-      write.csv(dat, file, row.names = FALSE)
+
+      dat[] <- lapply(dat, function(x) {
+        if (is.character(x)) {
+          gsub("^([=+@-])", " ", x)
+        } else {
+          x
+        }
+      })
+
+
+      write.csv(dat, file, row.names = FALSE, quote=TRUE)
     }
   )
 
