@@ -2487,6 +2487,7 @@ server <- function(input, output, session) {
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so)
     base[["Indicator"]] <- ""
+    base[["Indicator Value"]] <- ""
     base[["Target"]]    <- ""
     base[["Score"]]     <- NA_real_  # 0, 1, 2
     base[["Rationale"]] <- ""
@@ -2498,6 +2499,7 @@ server <- function(input, output, session) {
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so)
     base[["Indicator"]] <- ""
+    base[["Indicator Value"]] <- ""
     base[["Target"]]    <- ""
     base[["Score"]]     <- NA_real_
     base[["Rationale"]] <- ""
@@ -2564,6 +2566,7 @@ server <- function(input, output, session) {
         backgroundColor='#d3d3d3'
       ) %>%
       formatStyle(columns = "Indicator", backgroundColor='#ffc0cb') %>%
+      formatStyle(columns = "Indicator Value", backgroundColor='#ffc0cb') %>%
       formatStyle(columns = c("Target","Score"), backgroundColor='#add8e6') %>%
       formatStyle(columns = "Rationale", backgroundColor='white')
   })
@@ -2732,7 +2735,7 @@ server <- function(input, output, session) {
             )
             ),
           tags$hr(),
-          DTOutput("cumu_editor"),
+          DTOutput("cumu_editor"),  # JAIM
           br(),
           uiOutput("cum_download_ui")
         )
@@ -2769,6 +2772,7 @@ server <- function(input, output, session) {
         base[[paste0(activities[i], "_Indicator")]] <- ""
         base[[paste0(activities[i], "_Target")]] <- ""
         base[[paste0(activities[i], "_Impact")]] <- NA_real_
+        base[[paste0(activities[i], "_Value")]] <- NA_real_
       }
       base[["Tallying_Method"]] <- ""
       base[["Cumulative_Impact"]] <- ""
@@ -2788,7 +2792,7 @@ server <- function(input, output, session) {
 
 
   output$cumu_editor <- renderDT({
-    df <- cumu_tbl()
+    df <- cumu_tbl() # JAIM
     if (is.null(df)) {
       return(datatable(data.frame(Note = "Complete steps A-C to begin."), rownames = FALSE))
     }
@@ -2804,7 +2808,7 @@ server <- function(input, output, session) {
     if (strategy == "indicator") {
       # INDICATOR-BASED STRATEGY
       impact_cols <- grep("_Impact$", names(df)) - 1
-      indicator_cols <- c(grep("_Indicator$", names(df)) - 1, grep("_Target$", names(df)) - 1)
+      indicator_cols <- c(grep("_Indicator$", names(df)) - 1, grep("_Target$", names(df)), grep("_Value$", names(df)) - 1)
 
       datatable(
         df,
