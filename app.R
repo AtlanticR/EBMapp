@@ -654,14 +654,14 @@ cumu_impact_levels <- c("X Not applicable", "0 No impact", "1 Low", "2 Moderate"
 
 
 # Template constructors used by Step 2
-make_objective_table <- function(so) {
+make_objective_table <- function(so, level_cols) {
   # Ensure stable base columns
   base <- so |>
-    dplyr::select(Pillar, Main_Objective, Level_1, Level_2, Level_3, Level_4)
+    dplyr::select(Pillar, Main_Objective, all_of(level_cols))
 
   # Build label from non‑NA levels for each row
   label_mat <- base |>
-    dplyr::select(Main_Objective, Level_1, Level_2, Level_3, Level_4) |>
+    dplyr::select(Main_Objective, all_of(level_cols)) |>
     as.data.frame()
 
   base$Objective_Label <- apply(
@@ -1394,11 +1394,57 @@ server <- function(input, output, session) {
   observeEvent(input$proceed_to_step2, updateTabItems(session, "sidebar", "assessment"))
   observeEvent(input$goto_step1_from_step2, updateTabItems(session, "sidebar", "select_objectives"))
 
+  observeEvent(input$proceed_to_step2, {
+
+    # check if NOT level1–level4
+    if (!grepl("^level", input$detail_level)) {
+
+      showModal(modalDialog(
+        title = "Level Adjustment",
+        paste0(
+          "You have selected '", input$detail_level,
+          "' as your level of objectives, but for the further use cases, ",
+          "a level objective of Level 1 or more is required. ",
+          "Level 1 will be assumed."
+        ),
+        easyClose = TRUE,
+        footer = modalButton("OK")
+      ))
+
+      # 🔴 force Level 1
+      updateSelectInput(session, "detail_level", selected = "level1")
+    }
+
+  })
+
   # Pillar choices
   observe({
     pillars <- ebm_data |> filter(!is.na(Pillar), Pillar != "") |> distinct(Pillar) |> arrange() |> pull()
     updateCheckboxGroupInput(session, "pillar_filter", choices = pillars, selected = pillars)
   })
+
+  ## DETAIL LEVELS JAIM
+  selected_levels <- reactive({
+    req(input$detail_level)
+    level_map <- c(
+      "level1" = 1,
+      "level2" = 2,
+      "level3" = 3,
+      "level4" = 4
+    )
+
+    if (input$detail_level %in% names(level_map)) {
+    max_level <- level_map[[input$detail_level]]
+    } else {
+      # Note: this forces at least a Level_1. Write message here
+      max_level <- 1
+    }
+
+    return(paste0("Level_", 1:max_level))  # 🔴 CHANGED
+  })
+
+
+  ## END DETAIL LEVELS
 
   output$cumu_activity_names_ui <- renderUI({
     n <- input$num_activities
@@ -1780,8 +1826,11 @@ server <- function(input, output, session) {
   })
 
   # Selected objectives table for Step 2 and exports
-  selected_objectives <- reactive({
+  selected_objectives <- reactive({ # JAIM
     req(input$pillar_filter)
+    req(input$detail_level)
+    level_cols <- selected_levels()
+
     mos <- ebm_data |>
       filter(Pillar %in% input$pillar_filter, !is.na(Main_Objective), Main_Objective != "") |>
       distinct(Main_Objective) |> pull()
@@ -1791,7 +1840,7 @@ server <- function(input, output, session) {
     out <- ebm_data |>
       filter(Pillar %in% input$pillar_filter,
              Main_Objective %in% mos) |>
-      select(Pillar, Main_Objective, Level_1, Level_2, Level_3, Level_4) |>
+      select(Pillar, Main_Objective, all_of(selected_levels())) |>
       distinct()
     if (nrow(out) == 0) return(NULL)
     out
@@ -1807,7 +1856,6 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
-      #browser()
 
       dat[] <- lapply(dat, function(x) {
         if (is.character(x)) {
@@ -2148,13 +2196,11 @@ server <- function(input, output, session) {
     ))
   })
 
-
-
- # JAIM
   observeEvent(input$policy_make_template, {
     # Creates policy_tbl, which is a filtered Pillar from step 1.
     so <- selected_objectives(); req(so) # Filtering the relevant Pillars
-    base <- make_objective_table(so)
+    #browser()
+    base <- make_objective_table(so, selected_levels())
 
     # Pink column – statement / evidence text (policy / advice / scenario description)
     #base[["Statement_or_Evidence"]] <- ""
@@ -2224,8 +2270,7 @@ server <- function(input, output, session) {
     score_cols <- grep("Score", names(df)) - 1
     align_cols <- grep("alignment$|Alignment$|adequacy$|Adequacy$", names(df)) - 1
     lock_cols  <- which(names(df) %in% c(
-      "Pillar","Main_Objective","Level_1","Level_2",
-      "Level_3","Level_4","Objective_Label"
+      "Pillar","Main_Objective",all_of(selected_levels())
     )) - 1
 
     # only non-Score, non-locked columns are editable
@@ -2288,8 +2333,7 @@ server <- function(input, output, session) {
       )
     ) %>%
       formatStyle(
-        columns = c("Pillar","Main_Objective","Level_1","Level_2",
-                    "Level_3","Level_4","Objective_Label"),
+        columns = c("Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"),
         backgroundColor='#d3d3d3'
       ) %>%
       formatStyle(columns = align_cols+1, backgroundColor='#ffc0cb') %>%
@@ -2501,7 +2545,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$perf_make_template, {
     so <- selected_objectives(); req(so)
-    base <- make_objective_table(so)
+    base <- make_objective_table(so, selected_levels())
     base[["Indicator"]] <- ""
     base[["Indicator Value"]] <- ""
     base[["Target"]]    <- ""
@@ -2513,7 +2557,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$perf_make_template, {
     so <- selected_objectives(); req(so)
-    base <- make_objective_table(so)
+    base <- make_objective_table(so, selected_levels())
     base[["Indicator"]] <- ""
     base[["Indicator Value"]] <- ""
     base[["Target"]]    <- ""
@@ -2522,13 +2566,11 @@ server <- function(input, output, session) {
     perf_tbl(base)
   })
 
-  # JAIM 2
   output$perf_editor <- renderDT({
     df <- perf_tbl(); req(df)
 
     lock_cols  <- which(names(df) %in% c(
-      "Pillar","Main_Objective","Level_1","Level_2",
-      "Level_3","Level_4","Objective_Label"
+      "Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"
     )) - 1
 
     score_col  <- which(names(df) == "Score") - 1
@@ -2577,8 +2619,7 @@ server <- function(input, output, session) {
       )
     ) %>%
       formatStyle(
-        columns = c("Pillar","Main_Objective","Level_1","Level_2",
-                    "Level_3","Level_4","Objective_Label"),
+        columns = c("Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"),
         backgroundColor='#d3d3d3'
       ) %>%
       formatStyle(columns = "Indicator", backgroundColor='#ffc0cb') %>%
@@ -2764,7 +2805,7 @@ server <- function(input, output, session) {
             )
             ),
           tags$hr(),
-          DTOutput("cumu_editor"),  # JAIM
+          DTOutput("cumu_editor"),
           br(),
           uiOutput("cum_download_ui")
         )
@@ -2786,7 +2827,7 @@ server <- function(input, output, session) {
     }
 
     so <- selected_objectives(); req(so)
-    base <- make_objective_table(so)
+    base <- make_objective_table(so, selected_levels())
 
     n <- input$num_activities %||% 2
     activities <- cumu_activity_names()
@@ -2821,7 +2862,7 @@ server <- function(input, output, session) {
 
 
   output$cumu_editor <- renderDT({
-    df <- cumu_tbl() # JAIM
+    df <- cumu_tbl()
     if (is.null(df)) {
       return(datatable(data.frame(Note = "Complete steps A-C to begin."), rownames = FALSE))
     }
@@ -2830,8 +2871,7 @@ server <- function(input, output, session) {
 
     # Locked columns (same for both strategies)
     lock_cols <- which(names(df) %in% c(
-      "Pillar","Main_Objective","Level_1","Level_2",
-      "Level_3","Level_4","Objective_Label"
+      "Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"
     )) - 1
 
     if (strategy == "indicator") {
