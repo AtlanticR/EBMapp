@@ -1856,7 +1856,36 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
+      if ('Checked' %in% names(dat)) {
+        dat <- dat[, !(names(dat) %in% "Checked")]
+      }
+#browser()
+      for (i in seq_along(names(dat))) {
+        message(i)
+        NAME_OF_DAT <- names(dat)[i]
+        if (any(grepl('\u2500', dat[[NAME_OF_DAT]]))) {
+          dat[[NAME_OF_DAT]][which(grepl('\u2500', dat[[NAME_OF_DAT]]))] <- gsub('\u2500', '-', dat[[NAME_OF_DAT]][which(grepl('\u2500', dat[[NAME_OF_DAT]]))])
+        }
+        if (any(grepl('\t', dat[[NAME_OF_DAT]]))) {
+          dat[[NAME_OF_DAT]][which(grepl('\t', dat[[NAME_OF_DAT]]))] <- gsub('\t', '', dat[[NAME_OF_DAT]][which(grepl('\t', dat[[NAME_OF_DAT]]))])
+        }
+        if (any(grepl('\u2212', dat[[NAME_OF_DAT]]))) {
+          dat[[NAME_OF_DAT]][which(grepl('\u2212', dat[[NAME_OF_DAT]]))] <- gsub('\u2212', '-', dat[[NAME_OF_DAT]][which(grepl('\u2212', dat[[NAME_OF_DAT]]))])
+        }
+        if (any(grepl("the Crown", dat[[NAME_OF_DAT]]))) {
+          dat[[NAME_OF_DAT]][which(grepl('the Crown', dat[[NAME_OF_DAT]]))] <- "4. Decisions update hte Crown's fiduciary responsibilities to Indigenous Peoples"
+        }
 
+        if (any(grepl("[\u201C\u201D]", dat[[NAME_OF_DAT]]))) {
+          dat[[NAME_OF_DAT]][which(grepl("[\u201C\u201D]", dat[[NAME_OF_DAT]]))] <- gsub("[\u201C\u201D]", '"', dat[[NAME_OF_DAT]][which(grepl("[\u201C\u201D]", dat[[NAME_OF_DAT]]))])
+        }
+
+        if (any(grepl("\u00A0", dat[[NAME_OF_DAT]]))) {
+          dat[[NAME_OF_DAT]][which(grepl("\u00A0", dat[[NAME_OF_DAT]]))] <- gsub("\u00A0", '', dat[[NAME_OF_DAT]][which(grepl("\u00A0", dat[[NAME_OF_DAT]]))])
+        }
+
+
+      }
       dat[] <- lapply(dat, function(x) {
         if (is.character(x)) {
           gsub("^([=+@-])", " ", x)
@@ -1864,6 +1893,12 @@ server <- function(input, output, session) {
           x
         }
       })
+      dat[] <- lapply(dat, function(x) {
+          trimws(x, 'both')
+
+      })
+      #browser()
+
       write.csv(dat, file, row.names = FALSE, quote=TRUE)
     }
   )
