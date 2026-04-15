@@ -1157,7 +1157,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                        ),
                        box(width = NULL, title = "Export Checklist", status = "warning", solidHeader = TRUE,
                            fluidRow(
-                             column(4, downloadButton("download_checklist_word", "Download as Word", class = "btn-primary btn-block")),
+                             column(4, downloadButton("download_checklist_word", "Download as Word (Use landscape view)", class = "btn-primary btn-block")),
                              column(4, downloadButton("download_checklist_excel", "Download as Excel", class = "btn-success btn-block")),
                              column(4, downloadButton("download_checklist_csv", "Download as CSV", class = "btn-info btn-block"))
                            )
@@ -1423,7 +1423,7 @@ server <- function(input, output, session) {
     updateCheckboxGroupInput(session, "pillar_filter", choices = pillars, selected = pillars)
   })
 
-  ## DETAIL LEVELS JAIM
+  ## DETAIL LEVELS
   selected_levels <- reactive({
     req(input$detail_level)
     level_map <- c(
@@ -1826,7 +1826,7 @@ server <- function(input, output, session) {
   })
 
   # Selected objectives table for Step 2 and exports
-  selected_objectives <- reactive({ # JAIM
+  selected_objectives <- reactive({
     req(input$pillar_filter)
     req(input$detail_level)
     level_cols <- selected_levels()
@@ -1859,7 +1859,6 @@ server <- function(input, output, session) {
       if ('Checked' %in% names(dat)) {
         dat <- dat[, !(names(dat) %in% "Checked")]
       }
-#browser()
       for (i in seq_along(names(dat))) {
         message(i)
         NAME_OF_DAT <- names(dat)[i]
@@ -1897,8 +1896,6 @@ server <- function(input, output, session) {
           trimws(x, 'both')
 
       })
-      #browser()
-
       write.csv(dat, file, row.names = FALSE, quote=TRUE)
     }
   )
@@ -1928,6 +1925,9 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".docx"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
+      # if ('Checked' %in% names(dat)) {
+      #   dat <- dat[, !(names(dat) %in% "Checked")]
+      # }
       doc <- read_docx()
       doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
       doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
@@ -1960,6 +1960,7 @@ server <- function(input, output, session) {
       ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
 
       doc <- body_add_flextable(doc, ft)
+      #browser()
       print(doc, target = file)
     }
   )
@@ -2234,7 +2235,6 @@ server <- function(input, output, session) {
   observeEvent(input$policy_make_template, {
     # Creates policy_tbl, which is a filtered Pillar from step 1.
     so <- selected_objectives(); req(so) # Filtering the relevant Pillars
-    #browser()
     base <- make_objective_table(so, selected_levels())
 
     # Pink column – statement / evidence text (policy / advice / scenario description)
@@ -3243,7 +3243,8 @@ server <- function(input, output, session) {
           fluidRow(
             column(3, downloadButton("home_download_excel", "Download as Excel", class = "btn-success btn-block")),
             column(3, downloadButton("home_download_csv", "Download as CSV", class = "btn-info btn-block")),
-            column(3, downloadButton("home_download_word", "Download as Word", class = "btn-primary btn-block"))
+            column(3, downloadButton("home_download_word", "Download as Word (Use landscape view)", class = "btn-primary btn-block")),
+            column(3, downloadButton("home_download_pillar_pdf", "Download Pillar PDF", class = "btn-info btn-block")) # JAIM
           )
         )
       )
@@ -3285,6 +3286,63 @@ server <- function(input, output, session) {
       return(ebm_data %>% filter(Main_Objective == filter_value))
     }
   })
+
+  output$home_download_pillar_pdf <- downloadHandler(
+    #JAIM
+
+    filename = function() {
+
+      paste0("EBM_", gsub(" ", "_", home_filter()), "_", Sys.Date(), ".pdf")
+
+    },
+
+    content = function(file) {
+
+      #req(input$home_area_clicked)
+
+      # ---- 1. CLASSIFY INPUT INTO GROUP ----
+      word <- dplyr::case_when(
+        input$home_area_clicked %in% c("Habitat", "Biodiversity", "Productivity") ~ "Ecological",
+
+        input$home_area_clicked %in% c("Economic Efficiency",
+                                       "Economic Equity",
+                                       "Economic Sustainability") ~ "Economic",
+
+        input$home_area_clicked %in% c("Sustainable Communities",
+                                       "Health & Well-being",
+                                       "Ethical & Just Activities",
+                                       "Culture") ~ "Social",
+
+        input$home_area_clicked %in% c("Legal Obligations & Other Commitments",
+                                       "Governance Structure & Processes",
+                                       "Governance Outcomes") ~ "Governance",
+
+        TRUE ~ NA_character_
+      )
+
+      validate(
+        need(!is.na(word), "No matching PDF category found.")
+      )
+
+      # ---- 2. FIND PDF IN ROOT /data ----
+      pdf_dir <- file.path("data")
+
+      pdf_file <- list.files(
+        pdf_dir,
+        pattern = paste0(word, ".*\\.pdf$"),
+        full.names = TRUE
+      )
+
+      validate(
+        need(length(pdf_file) == 1, "PDF file not found or ambiguous.")
+      )
+
+      # ---- 3. COPY TO DOWNLOAD FILE ----
+      file.copy(pdf_file, file, overwrite = TRUE)
+    }
+  )
+
+
 
   output$home_download_csv <- downloadHandler(
     filename = function() {
@@ -3338,16 +3396,34 @@ server <- function(input, output, session) {
     content = function(file) {
       dat <- home_filtered_data()
       doc <- read_docx()
+
       doc <- body_add_par(doc, paste("EBM Framework -", home_filter()), style = "heading 1")
       doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
       doc <- body_add_par(doc, "")
 
       ft <- flextable(dat)
       ft <- theme_booktabs(ft)
+
       ft <- autofit(ft)
-      ft <- fontsize(ft, size = 9, part = "all")
+
+      ft <- fontsize(ft, size = 12, part = "all")
+
+      # 🔴 THIS IS THE MAIN FIX
+      ft <- fit_to_width(ft, max_width = 12.5)  # keeps table within page width
+
+      # 🔴 OPTIONAL: reduce padding so columns shrink better
+      ft <- padding(ft, padding = 2)
 
       doc <- body_add_flextable(doc, ft)
+
+      # 🔴 OPTIONAL: switch to landscape if still too wide
+      doc <- body_set_default_section(
+        doc,
+        prop_section(
+          page_size = page_size(orient = "landscape"),  # 🔴 wider page
+          page_margins = page_mar(left = 0.5, right = 0.5)  # 🔴 smaller margins
+        )
+      )
       print(doc, target = file)
     }
   )
