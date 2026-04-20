@@ -2275,8 +2275,6 @@ server <- function(input, output, session) {
 
     base <- make_objective_table(so, selected_levels())
 
-
-
     # NEW: keep only rows where the corresponding checkbox is checked 🔴
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
@@ -2644,17 +2642,22 @@ server <- function(input, output, session) {
     base[["Score"]]     <- NA_real_  # 0, 1, 2
     base[["Rationale"]] <- ""
 
-    perf_tbl(base)
-  })
+    #browser()
+    checked_ids <- names(input)[
+      grepl("^chk_", names(input)) &
+        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+    ]
+    patterns <- sub(".*\\.\\.", "", checked_ids)
 
-  observeEvent(input$perf_make_template, {
-    so <- selected_objectives(); req(so)
-    base <- make_objective_table(so, selected_levels())
-    base[["Indicator"]] <- ""
-    base[["Indicator Value"]] <- ""
-    base[["Target"]]    <- ""
-    base[["Score"]]     <- NA_real_
-    base[["Rationale"]] <- ""
+    idx <- which(
+      Reduce("|", lapply(patterns, function(p) {
+        grepl(make.names(p), make.names(base$Objective_Label))
+      }))
+    )
+
+    base <- base[idx,]
+
+
     perf_tbl(base)
   })
 
@@ -2920,6 +2923,22 @@ server <- function(input, output, session) {
 
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so, selected_levels())
+
+    checked_ids <- names(input)[
+      grepl("^chk_", names(input)) &
+        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+    ]
+    patterns <- sub(".*\\.\\.", "", checked_ids)
+
+    idx <- which(
+      Reduce("|", lapply(patterns, function(p) {
+        grepl(make.names(p), make.names(base$Objective_Label))
+      }))
+    )
+
+    base <- base[idx,]
+
+
 
     n <- input$num_activities %||% 2
     activities <- cumu_activity_names()
