@@ -22,7 +22,9 @@ use_explanations[[1]] <- function() {
       tags$li("Suggestion to start with Level 1 Objectives and use lower level objectives to inform intent of the objectives"),
       tags$li("In some cases, Level Two or lower level objectives may be more useful"),
       tags$li("Assess which objectives are relevant to your needs")
-    )
+    ),
+    tags$br(),
+    tags$p('Note: Use 1 is always used as the first step of Uses 2-5.')
   )
 }
 
@@ -235,8 +237,8 @@ use_explanations[[3]] <- function() {
             tags$td("i. Fishing mortality is limited to levels necessary to promote sustainability", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("Productivity / 1. Pressures on ecosystem productivity are managed / a. Fishing pressures on ecosystem productivity are managed / i. Fishing mortality is limited to levels necessary to promote sustainability /", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("NA", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
-            tags$td(NA, style = "border: 1px solid #ccc; padding: 6px;"),
+            tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;")
           )
         )
@@ -346,6 +348,7 @@ use_explanations[[4]] <- function() {
             tags$th("Level_4", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
+            tags$th("Indicator_Value", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
             tags$th("Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
             tags$th("Score", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Rationale", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
@@ -360,8 +363,9 @@ use_explanations[[4]] <- function() {
             tags$td("i. Fishing mortality is limited to levels necessary to promote sustainability", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("Productivity / 1. Pressures on ecosystem productivity are managed / a. Fishing pressures on ecosystem productivity are managed / i. Fishing mortality is limited to levels necessary to promote sustainability /", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("NA", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
-            tags$td(NA, style = "border: 1px solid #ccc; padding: 6px;"),
+            tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;")
           )
         )
@@ -452,9 +456,11 @@ use_explanations[[5]] <- function() {
             tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Fishing_Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
             tags$th("Fishing_Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
+            tags$th("Fishing_Value", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
             tags$th("Fishing_Impact", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Contaminants_Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
             tags$th("Contaminants_Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
+            tags$th("Contaminants_Value", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
             tags$th("Contaminants_Impact", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
             tags$th("Tally", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
           )
@@ -469,6 +475,8 @@ use_explanations[[5]] <- function() {
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("Productivity / 1. Pressures on ecosystem productivity are managed / a. Fishing pressures on ecosystem productivity are managed / i. Fishing mortality is limited to levels necessary to promote sustainability /", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
+            tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;")
           )
@@ -1128,7 +1136,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
               ),
               fluidRow(
                 column(4,
-                       box(width = NULL, title = "Filter Options", status = "info", solidHeader = TRUE,
+                       box(width = NULL, title = "Step A: Filter Options", status = "info", solidHeader = TRUE,
                            radioButtons(
                              "detail_level",
                              label = "Level of Detail",
@@ -1152,7 +1160,7 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
                        )
                 ),
                 column(8,
-                       box(width = NULL, title = "Interactive Checklist", status = "primary", solidHeader = TRUE,
+                       box(width = NULL, title = "Step B: Interactive Checklist", status = "primary", solidHeader = TRUE,
                            uiOutput("checklist_content")
                        ),
                        box(width = NULL, title = "Export Checklist", status = "warning", solidHeader = TRUE,
@@ -1391,30 +1399,55 @@ server <- function(input, output, session) {
   # Navigation
   observeEvent(input$goto_step1, updateTabItems(session, "sidebar", "select_objectives"))
   observeEvent(input$goto_step2, updateTabItems(session, "sidebar", "assessment"))
-  observeEvent(input$proceed_to_step2, updateTabItems(session, "sidebar", "assessment"))
+  #observeEvent(input$proceed_to_step2, updateTabItems(session, "sidebar", "assessment"))
   observeEvent(input$goto_step1_from_step2, updateTabItems(session, "sidebar", "select_objectives"))
 
-  observeEvent(input$proceed_to_step2, {
+  observeEvent(input$proceed_to_step2, { #JAIM
 
-    # check if NOT level1–level4
+    checked_ids <- names(input)[
+      grepl("^chk_", names(input)) &
+        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+    ]
+
+
+    # 🚫 BLOCK navigation if invalid
     if (!grepl("^level", input$detail_level)) {
 
       showModal(modalDialog(
         title = "Level Adjustment",
         paste0(
           "You have selected '", input$detail_level,
-          "' as your level of objectives, but for the further use cases, ",
-          "a level objective of Level 1 or more is required. ",
-          "Level 1 will be assumed."
+          "' as your level of objectives, but Level 1 or higher is required for a proper assessment. ",
+          "Please go back and select the relevant objectives for your assessment."
         ),
         easyClose = TRUE,
         footer = modalButton("OK")
       ))
 
-      # 🔴 force Level 1
-      updateSelectInput(session, "detail_level", selected = "level1")
+      #updateSelectInput(session, "detail_level", selected = "level1")
+
+      return()  # 🔴 STOP HERE → prevents tab switch
     }
 
+    if (length(checked_ids) == 0) {
+
+      showModal(modalDialog(
+        title = "Select Relevant Objectives",
+        paste0(
+          "You have selected no objectives on the right hand side that are relevant to your assessment. Please go back and select the relevant objectives for your assessment."
+        ),
+        easyClose = TRUE,
+        footer = modalButton("OK")
+      ))
+
+      #updateSelectInput(session, "detail_level", selected = "level1")
+
+      return()  # 🔴 STOP HERE → prevents tab switch
+    }
+
+
+    # ✅ ONLY runs if valid
+    updateTabItems(session, "sidebar", "assessment")
   })
 
   # Pillar choices
@@ -1519,7 +1552,7 @@ server <- function(input, output, session) {
   })
 
   # Main objective choices
-  output$main_objective_checkboxes <- renderUI({
+  output$main_objective_checkboxes <- renderUI({ # JAIM maybe
     req(input$pillar_filter)
     main_objs <- ebm_data |>
       filter(Pillar %in% input$pillar_filter,
@@ -1551,6 +1584,8 @@ server <- function(input, output, session) {
 
   # Checklist UI
   output$checklist_content <- renderUI({
+    # JAIM
+
     req(input$pillar_filter, input$detail_level)
 
     if (input$detail_level == "pillar") {
@@ -1566,6 +1601,7 @@ server <- function(input, output, session) {
           )
         ))
       }
+      message(do.call(tagList, pillar_items))
       return(do.call(tagList, pillar_items))
     }
 
@@ -1717,10 +1753,12 @@ server <- function(input, output, session) {
       stringsAsFactors = FALSE
     )
 
+
+
     if (input$detail_level == "pillar") {
       for (pillar in input$pillar_filter) {
         checkbox_id <- paste0("chk_pillar_", make.names(pillar))
-        checked <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "☑" else "☐"
+        checked <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
         checklist_data <- rbind(checklist_data, data.frame(
           Checked = checked, Pillar = pillar, Main_Objective = "", Main_Objectives_text = "",
           Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
@@ -1746,7 +1784,7 @@ server <- function(input, output, session) {
         if (is.na(main_obj_text)) main_obj_text <- ""
 
         checkbox_id <- paste0("chk_main_", make.names(paste(pillar, main_obj)))
-        checked_main <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "☑" else "☐"
+        checked_main <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
 
         row <- data.frame(
           Checked = checked_main,
@@ -1761,7 +1799,7 @@ server <- function(input, output, session) {
           l1s <- main_obj_data %>% filter(!is.na(Level_1), Level_1 != "") %>% distinct(Level_1) %>% pull()
           for (l1 in l1s) {
             id_l1 <- paste0("chk_l1_", make.names(paste(pillar, main_obj, l1)))
-            checked_l1 <- if (!is.null(input[[id_l1]]) && isTRUE(input[[id_l1]])) "☑" else "☐"
+            checked_l1 <- if (!is.null(input[[id_l1]]) && isTRUE(input[[id_l1]])) "X" else " "
             checklist_data <- rbind(checklist_data, data.frame(
               Checked = checked_l1, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
               Level_1 = l1, Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
@@ -1771,7 +1809,7 @@ server <- function(input, output, session) {
               l2s <- main_obj_data %>% filter(Level_1 == l1, !is.na(Level_2), Level_2 != "") %>% distinct(Level_2) %>% pull()
               for (l2 in l2s) {
                 id_l2 <- paste0("chk_l2_", make.names(paste(pillar, main_obj, l1, l2)))
-                checked_l2 <- if (!is.null(input[[id_l2]]) && isTRUE(input[[id_l2]])) "☑" else "☐"
+                checked_l2 <- if (!is.null(input[[id_l2]]) && isTRUE(input[[id_l2]])) "X" else " "
                 checklist_data <- rbind(checklist_data, data.frame(
                   Checked = checked_l2, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
                   Level_1 = "", Level_2 = l2, Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
@@ -1781,7 +1819,7 @@ server <- function(input, output, session) {
                   l3s <- main_obj_data %>% filter(Level_1 == l1, Level_2 == l2, !is.na(Level_3), Level_3 != "") %>% distinct(Level_3) %>% pull()
                   for (l3 in l3s) {
                     id_l3 <- paste0("chk_l3_", make.names(paste(pillar, main_obj, l1, l2, l3)))
-                    checked_l3 <- if (!is.null(input[[id_l3]]) && isTRUE(input[[id_l3]])) "☑" else "☐"
+                    checked_l3 <- if (!is.null(input[[id_l3]]) && isTRUE(input[[id_l3]])) "X" else " "
                     checklist_data <- rbind(checklist_data, data.frame(
                       Checked = checked_l3, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
                       Level_1 = "", Level_2 = "", Level_3 = l3, Level_4 = "", stringsAsFactors = FALSE
@@ -1792,7 +1830,7 @@ server <- function(input, output, session) {
                                                       !is.na(Level_4), Level_4 != "") %>% distinct(Level_4) %>% pull()
                       for (l4 in l4s) {
                         id_l4 <- paste0("chk_l4_", make.names(paste(pillar, main_obj, l1, l2, l3, l4)))
-                        checked_l4 <- if (!is.null(input[[id_l4]]) && isTRUE(input[[id_l4]])) "☑" else "☐"
+                        checked_l4 <- if (!is.null(input[[id_l4]]) && isTRUE(input[[id_l4]])) "X" else " "
                         checklist_data <- rbind(checklist_data, data.frame(
                           Checked = checked_l4, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
                           Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = l4, stringsAsFactors = FALSE
@@ -1826,7 +1864,7 @@ server <- function(input, output, session) {
   })
 
   # Selected objectives table for Step 2 and exports
-  selected_objectives <- reactive({
+  selected_objectives <- reactive({ # JAIM
     req(input$pillar_filter)
     req(input$detail_level)
     level_cols <- selected_levels()
@@ -1842,6 +1880,7 @@ server <- function(input, output, session) {
              Main_Objective %in% mos) |>
       select(Pillar, Main_Objective, all_of(selected_levels())) |>
       distinct()
+
     if (nrow(out) == 0) return(NULL)
     out
   })
@@ -1856,9 +1895,6 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
-      if ('Checked' %in% names(dat)) {
-        dat <- dat[, !(names(dat) %in% "Checked")]
-      }
       for (i in seq_along(names(dat))) {
         message(i)
         NAME_OF_DAT <- names(dat)[i]
@@ -1904,6 +1940,8 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".xlsx"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
+      #browser()
+
       wb <- createWorkbook()
       addWorksheet(wb, "Checklist")
       writeData(wb, "Checklist", dat)
@@ -1960,7 +1998,6 @@ server <- function(input, output, session) {
       ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
 
       doc <- body_add_flextable(doc, ft)
-      #browser()
       print(doc, target = file)
     }
   )
@@ -2235,7 +2272,27 @@ server <- function(input, output, session) {
   observeEvent(input$policy_make_template, {
     # Creates policy_tbl, which is a filtered Pillar from step 1.
     so <- selected_objectives(); req(so) # Filtering the relevant Pillars
+
     base <- make_objective_table(so, selected_levels())
+
+
+
+    # NEW: keep only rows where the corresponding checkbox is checked 🔴
+    checked_ids <- names(input)[
+      grepl("^chk_", names(input)) &
+        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+    ]
+    patterns <- sub(".*\\.\\.", "", checked_ids)
+
+    idx <- which(
+      Reduce("|", lapply(patterns, function(p) {
+        grepl(make.names(p), make.names(base$Objective_Label))
+      }))
+    )
+
+    base <- base[idx,]
+
+    # END NEW: 🔴
 
     # Pink column – statement / evidence text (policy / advice / scenario description)
     #base[["Statement_or_Evidence"]] <- ""
@@ -3244,7 +3301,7 @@ server <- function(input, output, session) {
             column(3, downloadButton("home_download_excel", "Download as Excel", class = "btn-success btn-block")),
             column(3, downloadButton("home_download_csv", "Download as CSV", class = "btn-info btn-block")),
             column(3, downloadButton("home_download_word", "Download as Word (Use landscape view)", class = "btn-primary btn-block")),
-            column(3, downloadButton("home_download_pillar_pdf", "Download Pillar PDF", class = "btn-info btn-block")) # JAIM
+            column(3, downloadButton("home_download_pillar_pdf", "Download Pillar PDF", class = "btn-info btn-block"))
           )
         )
       )
@@ -3288,18 +3345,12 @@ server <- function(input, output, session) {
   })
 
   output$home_download_pillar_pdf <- downloadHandler(
-    #JAIM
-
     filename = function() {
-
       paste0("EBM_", gsub(" ", "_", home_filter()), "_", Sys.Date(), ".pdf")
-
     },
 
     content = function(file) {
-
       #req(input$home_area_clicked)
-
       # ---- 1. CLASSIFY INPUT INTO GROUP ----
       word <- dplyr::case_when(
         input$home_area_clicked %in% c("Habitat", "Biodiversity", "Productivity") ~ "Ecological",
