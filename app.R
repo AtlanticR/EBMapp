@@ -1746,6 +1746,7 @@ server <- function(input, output, session) {
       Pillar = character(),
       Main_Objective = character(),
       Main_Objectives_text = character(),
+      Objective_Label = character(),
       Level_1 = character(),
       Level_2 = character(),
       Level_3 = character(),
@@ -1761,6 +1762,7 @@ server <- function(input, output, session) {
         checked <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
         checklist_data <- rbind(checklist_data, data.frame(
           Checked = checked, Pillar = pillar, Main_Objective = "", Main_Objectives_text = "",
+          Objective_Label = "",
           Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
         ))
       }
@@ -1786,54 +1788,94 @@ server <- function(input, output, session) {
         checkbox_id <- paste0("chk_main_", make.names(paste(pillar, main_obj)))
         checked_main <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
 
+        obj_label <- paste(pillar, main_obj)
+
         row <- data.frame(
           Checked = checked_main,
           Pillar = pillar,
           Main_Objective = main_obj,
           Main_Objectives_text = if (input$detail_level %in% c("main_text", "level1", "level2", "level3", "level4")) main_obj_text else "",
+          Objective_Label = obj_label,   # ADD THIS
           Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
         )
         checklist_data <- rbind(checklist_data, row)
 
         if (input$detail_level %in% c("level1", "level2", "level3", "level4")) {
           l1s <- main_obj_data %>% filter(!is.na(Level_1), Level_1 != "") %>% distinct(Level_1) %>% pull()
-          for (l1 in l1s) {
+          for (l1 in l1s) { # L1S
             id_l1 <- paste0("chk_l1_", make.names(paste(pillar, main_obj, l1)))
             checked_l1 <- if (!is.null(input[[id_l1]]) && isTRUE(input[[id_l1]])) "X" else " "
+            obj_label <- paste(pillar, main_obj, l1)
             checklist_data <- rbind(checklist_data, data.frame(
-              Checked = checked_l1, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
-              Level_1 = l1, Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
+              Checked = checked_l1,
+              Pillar = pillar,
+              Main_Objective = main_obj,
+              Main_Objectives_text = "",
+              Objective_Label = obj_label,
+              Level_1 = l1,
+              Level_2 = "",
+              Level_3 = "",
+              Level_4 = "",
+              stringsAsFactors = FALSE
             ))
 
             if (input$detail_level %in% c("level2", "level3", "level4")) {
               l2s <- main_obj_data %>% filter(Level_1 == l1, !is.na(Level_2), Level_2 != "") %>% distinct(Level_2) %>% pull()
-              for (l2 in l2s) {
+              for (l2 in l2s) { # L2S
                 id_l2 <- paste0("chk_l2_", make.names(paste(pillar, main_obj, l1, l2)))
                 checked_l2 <- if (!is.null(input[[id_l2]]) && isTRUE(input[[id_l2]])) "X" else " "
+                obj_label <- paste(pillar, main_obj, l1, l2)
+
                 checklist_data <- rbind(checklist_data, data.frame(
-                  Checked = checked_l2, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
-                  Level_1 = "", Level_2 = l2, Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
+                  Checked = checked_l2,
+                  Pillar = pillar,
+                  Main_Objective = main_obj,
+                  Main_Objectives_text = "",
+                  Objective_Label = obj_label,
+                  Level_1 = l1,
+                  Level_2 = l2,
+                  Level_3 = "",
+                  Level_4 = "",
+                  stringsAsFactors = FALSE
                 ))
+
 
                 if (input$detail_level %in% c("level3", "level4")) {
                   l3s <- main_obj_data %>% filter(Level_1 == l1, Level_2 == l2, !is.na(Level_3), Level_3 != "") %>% distinct(Level_3) %>% pull()
-                  for (l3 in l3s) {
+                  for (l3 in l3s) { #L3S
                     id_l3 <- paste0("chk_l3_", make.names(paste(pillar, main_obj, l1, l2, l3)))
                     checked_l3 <- if (!is.null(input[[id_l3]]) && isTRUE(input[[id_l3]])) "X" else " "
+                    obj_label <- paste(pillar, main_obj, l1, l2, l3)
                     checklist_data <- rbind(checklist_data, data.frame(
-                      Checked = checked_l3, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
-                      Level_1 = "", Level_2 = "", Level_3 = l3, Level_4 = "", stringsAsFactors = FALSE
+                      Checked = checked_l3,
+                      Pillar = pillar,
+                      Main_Objective = main_obj,
+                      Main_Objectives_text = "",
+                      Objective_Label = obj_label,
+                      Level_1 = l1,
+                      Level_2 = l2,
+                      Level_3 = l3,
+                      Level_4 = "",
+                      stringsAsFactors = FALSE
                     ))
-
                     if (input$detail_level == "level4") {
                       l4s <- main_obj_data %>% filter(Level_1 == l1, Level_2 == l2, Level_3 == l3,
                                                       !is.na(Level_4), Level_4 != "") %>% distinct(Level_4) %>% pull()
-                      for (l4 in l4s) {
+                      for (l4 in l4s) { # L4S
                         id_l4 <- paste0("chk_l4_", make.names(paste(pillar, main_obj, l1, l2, l3, l4)))
                         checked_l4 <- if (!is.null(input[[id_l4]]) && isTRUE(input[[id_l4]])) "X" else " "
+                        obj_label <- paste(pillar, main_obj, l1, l2, l3, l4)
                         checklist_data <- rbind(checklist_data, data.frame(
-                          Checked = checked_l4, Pillar = "", Main_Objective = "", Main_Objectives_text = "",
-                          Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = l4, stringsAsFactors = FALSE
+                          Checked = checked_l4,
+                          Pillar = pillar,
+                          Main_Objective = main_obj,
+                          Main_Objectives_text = "",
+                          Objective_Label = obj_label,
+                          Level_1 = l1,
+                          Level_2 = l2,
+                          Level_3 = l3,
+                          Level_4 = l4,
+                          stringsAsFactors = FALSE
                         ))
                       }
                     }
@@ -1847,21 +1889,39 @@ server <- function(input, output, session) {
     }
 
     if (input$detail_level == "main") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label")]
     } else if (input$detail_level == "main_text") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Main_Objectives_text")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","Main_Objectives_text")]
     } else if (input$detail_level == "level1") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Main_Objectives_text", "Level_1")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","Main_Objectives_text", "Level_1")]
     } else if (input$detail_level == "level2") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Main_Objectives_text", "Level_1", "Level_2")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","Main_Objectives_text", "Level_1", "Level_2")]
     } else if (input$detail_level == "level3") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Main_Objectives_text", "Level_1", "Level_2", "Level_3")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3")]
     } else if (input$detail_level == "level4") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Main_Objectives_text", "Level_1", "Level_2", "Level_3", "Level_4")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3", "Level_4")]
     }
 
-    checklist_data
-  })
+
+    level_map <- list(
+      level1 = "Level_1",
+      level2 = "Level_2",
+      level3 = "Level_3",
+      level4 = "Level_4"
+    )
+    target_col <- level_map[[input$detail_level]]
+
+    if (!(is.null(target_col))) {
+
+    checklist_data <- checklist_data %>%
+      dplyr::filter(
+        !is.na(.data[[target_col]]),
+        .data[[target_col]] != ""
+      )
+    }
+
+    checklist_data[, names(checklist_data) != "Checked"]
+    })
 
   # Selected objectives table for Step 2 and exports
   selected_objectives <- reactive({ # JAIM
@@ -1895,6 +1955,32 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
+
+      checked_ids <- names(input)[
+        grepl("^chk_", names(input)) &
+          vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+      ]
+      patterns <- sub(".*\\.\\.", "", checked_ids)
+
+      idx <- which(
+        Reduce("|", lapply(patterns, function(p) {
+          grepl(make.names(p), make.names(dat$Objective_Label))
+        }))
+      )
+
+      if (length(idx) == 0) {
+        # NOT LEVEL 1-4 (e.g. Productivity)
+        idx <- which(
+          Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
+            grepl(make.names(p), make.names(dat$Objective_Label))
+          }))
+        )
+
+      }
+
+
+      dat <- dat[idx,]
+
       for (i in seq_along(names(dat))) {
         message(i)
         NAME_OF_DAT <- names(dat)[i]
@@ -1940,6 +2026,36 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".xlsx"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
+
+      ## BELOW WORKS FOR LEVEL_1 BUT NOT FOR E.G. PRODUCTIVITY. I WILL NEED TO FIX EXCEL, CSV, AND WORD.
+
+      # NEW
+      checked_ids <- names(input)[
+        grepl("^chk_", names(input)) &
+          vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+      ]
+      patterns <- sub(".*\\.\\.", "", checked_ids)
+
+      idx <- which(
+        Reduce("|", lapply(patterns, function(p) {
+          grepl(make.names(p), make.names(dat$Objective_Label))
+        }))
+      )
+
+      if (length(idx) == 0) {
+        # NOT LEVEL 1-4 (e.g. Productivity)
+        idx <- which(
+          Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
+            grepl(make.names(p), make.names(dat$Objective_Label))
+          }))
+        )
+
+      }
+
+      dat <- dat[idx,]
+
+
+      # END NEW
       #browser()
 
       wb <- createWorkbook()
@@ -1966,6 +2082,31 @@ server <- function(input, output, session) {
       # if ('Checked' %in% names(dat)) {
       #   dat <- dat[, !(names(dat) %in% "Checked")]
       # }
+
+      checked_ids <- names(input)[
+        grepl("^chk_", names(input)) &
+          vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+      ]
+      patterns <- sub(".*\\.\\.", "", checked_ids)
+
+      idx <- which(
+        Reduce("|", lapply(patterns, function(p) {
+          grepl(make.names(p), make.names(dat$Objective_Label))
+        }))
+      )
+
+      if (length(idx) == 0) {
+        # NOT LEVEL 1-4 (e.g. Productivity)
+        idx <- which(
+          Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
+            grepl(make.names(p), make.names(dat$Objective_Label))
+          }))
+        )
+
+      }
+
+      dat <- dat[idx,]
+
       doc <- read_docx()
       doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
       doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
