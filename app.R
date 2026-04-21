@@ -8,6 +8,7 @@ library(ggplot2)
 library(openxlsx)
 library(officer)
 library(flextable)
+library(stringr)
 
 # Null coalesce helper
 `%||%` <- function(a,b) if (is.null(a)) b else a
@@ -518,9 +519,80 @@ names(use_explanations) <- c("Checklist of objectives", "Evaluating Policies and
 
 
 # Load data
+library(dplyr)
+
 ebm_data <- read.csv("data/EBM Framework Spreadsheet 3-Nov-2025.csv",
                      stringsAsFactors = FALSE) |>
   mutate(across(where(is.character), ~trimws(.)))
+
+
+to_roman <- function(x) tolower(as.character(as.roman(x)))
+
+pillar_prefix <- c(
+  "Ecological" = "Ec",
+  "Economic"   = "En",
+  "Social & Cultural" = "So",
+  "Governance" = "Go"
+)
+
+ebm_data <- ebm_data %>%
+
+  # 🔴 Pillar code
+  mutate(Pillar_code = pillar_prefix[Pillar]) %>%
+
+  # 🔴 MAIN OBJECTIVE (A, B, C) — restart WITHIN Pillar
+  group_by(Pillar) %>%
+  mutate(
+    Main_code = LETTERS[dense_rank(Main_Objective)]
+  ) %>%
+
+  # 🔴 LEVEL 1 (1,2,3) — restart within Pillar + Main
+  group_by(Pillar, Main_Objective) %>%
+  mutate(
+    L1_code = ifelse(!is.na(Level_1) & Level_1 != "",
+                     as.character(dense_rank(Level_1)),
+                     NA)
+  ) %>%
+
+  # 🔴 LEVEL 2 (a,b,c)
+  group_by(Pillar, Main_Objective, Level_1) %>%
+  mutate(
+    L2_code = ifelse(!is.na(Level_2) & Level_2 != "",
+                     letters[dense_rank(Level_2)],
+                     NA)
+  ) %>%
+
+  # 🔴 LEVEL 3 (i,ii,iii)
+  group_by(Pillar, Main_Objective, Level_1, Level_2) %>%
+  mutate(
+    L3_code = ifelse(!is.na(Level_3) & Level_3 != "",
+                     to_roman(dense_rank(Level_3)),
+                     NA)
+  ) %>%
+
+  ungroup()
+
+ebm_data <- ebm_data %>%
+  mutate(
+    short_label = paste(
+      Pillar_code,
+      Main_code,
+      L1_code,
+      L2_code,
+      L3_code,
+      sep = "."
+    ),
+
+    # 🔴 clean NAs
+    #short_label = gsub("\\.NA", "", short_label),
+    #short_label = gsub("\\.$", "", short_label)
+  )
+
+ebm_data$short_label <- gsub("(\\.NA)+$", "", ebm_data$short_label)
+
+## END OBJECTIVE_LABEL
+
+
 
 # Build a full hierarchical checklist for selected pillars + MOs
 build_hierarchy_ui <- function(data, pillars, main_objs, detail) {
@@ -1747,6 +1819,7 @@ server <- function(input, output, session) {
       Main_Objective = character(),
       Main_Objectives_text = character(),
       Objective_Label = character(),
+      short_label = character(),
       Level_1 = character(),
       Level_2 = character(),
       Level_3 = character(),
@@ -1762,7 +1835,7 @@ server <- function(input, output, session) {
         checked <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
         checklist_data <- rbind(checklist_data, data.frame(
           Checked = checked, Pillar = pillar, Main_Objective = "", Main_Objectives_text = "",
-          Objective_Label = "",
+          Objective_Label = "", short_label="",
           Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
         ))
       }
@@ -1789,13 +1862,14 @@ server <- function(input, output, session) {
         checked_main <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
 
         obj_label <- paste(pillar, main_obj)
+        sl <- unique(main_obj_data$short_label)[1]
 
         row <- data.frame(
           Checked = checked_main,
           Pillar = pillar,
           Main_Objective = main_obj,
           Main_Objectives_text = if (input$detail_level %in% c("main_text", "level1", "level2", "level3", "level4")) main_obj_text else "",
-          Objective_Label = obj_label,   # ADD THIS
+          Objective_Label = obj_label,      short_label = sl,
           Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
         )
         checklist_data <- rbind(checklist_data, row)
@@ -1806,12 +1880,18 @@ server <- function(input, output, session) {
             id_l1 <- paste0("chk_l1_", make.names(paste(pillar, main_obj, l1)))
             checked_l1 <- if (!is.null(input[[id_l1]]) && isTRUE(input[[id_l1]])) "X" else " "
             obj_label <- paste(pillar, main_obj, l1)
+
+            sl <- main_obj_data %>%   # 🔴 ADD
+              filter(Level_1 == l1) %>%
+              pull(short_label) %>% unique() %>% .[1]
+
             checklist_data <- rbind(checklist_data, data.frame(
               Checked = checked_l1,
               Pillar = pillar,
               Main_Objective = main_obj,
               Main_Objectives_text = "",
               Objective_Label = obj_label,
+              short_label = sl,
               Level_1 = l1,
               Level_2 = "",
               Level_3 = "",
@@ -1826,12 +1906,18 @@ server <- function(input, output, session) {
                 checked_l2 <- if (!is.null(input[[id_l2]]) && isTRUE(input[[id_l2]])) "X" else " "
                 obj_label <- paste(pillar, main_obj, l1, l2)
 
+
+                sl <- main_obj_data %>%   # 🔴 ADD
+                  filter(Level_1 == l1, Level_2 == l2) %>%
+                  pull(short_label) %>% unique() %>% .[1]
+
                 checklist_data <- rbind(checklist_data, data.frame(
                   Checked = checked_l2,
                   Pillar = pillar,
                   Main_Objective = main_obj,
                   Main_Objectives_text = "",
                   Objective_Label = obj_label,
+                  short_label = sl,
                   Level_1 = l1,
                   Level_2 = l2,
                   Level_3 = "",
@@ -1846,12 +1932,18 @@ server <- function(input, output, session) {
                     id_l3 <- paste0("chk_l3_", make.names(paste(pillar, main_obj, l1, l2, l3)))
                     checked_l3 <- if (!is.null(input[[id_l3]]) && isTRUE(input[[id_l3]])) "X" else " "
                     obj_label <- paste(pillar, main_obj, l1, l2, l3)
+
+                    sl <- main_obj_data %>%   # 🔴 ADD
+                      filter(Level_1 == l1, Level_2 == l2, Level_3 == l3) %>%
+                      pull(short_label) %>% unique() %>% .[1]
+
                     checklist_data <- rbind(checklist_data, data.frame(
                       Checked = checked_l3,
                       Pillar = pillar,
                       Main_Objective = main_obj,
                       Main_Objectives_text = "",
                       Objective_Label = obj_label,
+                      short_label = sl,
                       Level_1 = l1,
                       Level_2 = l2,
                       Level_3 = l3,
@@ -1865,12 +1957,19 @@ server <- function(input, output, session) {
                         id_l4 <- paste0("chk_l4_", make.names(paste(pillar, main_obj, l1, l2, l3, l4)))
                         checked_l4 <- if (!is.null(input[[id_l4]]) && isTRUE(input[[id_l4]])) "X" else " "
                         obj_label <- paste(pillar, main_obj, l1, l2, l3, l4)
+
+                        sl <- main_obj_data %>%   # 🔴 ADD
+                          filter(Level_1 == l1, Level_2 == l2, Level_3 == l3, Level_4 == l4) %>%
+                          pull(short_label) %>% unique() %>% .[1]
+
+
                         checklist_data <- rbind(checklist_data, data.frame(
                           Checked = checked_l4,
                           Pillar = pillar,
                           Main_Objective = main_obj,
                           Main_Objectives_text = "",
                           Objective_Label = obj_label,
+                          short_label = sl,   # 🔴 ADD
                           Level_1 = l1,
                           Level_2 = l2,
                           Level_3 = l3,
@@ -1889,17 +1988,17 @@ server <- function(input, output, session) {
     }
 
     if (input$detail_level == "main") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label", "short_label")]
     } else if (input$detail_level == "main_text") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","Main_Objectives_text")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","short_label", "Main_Objectives_text")]
     } else if (input$detail_level == "level1") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","Main_Objectives_text", "Level_1")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","short_label", "Main_Objectives_text", "Level_1")]
     } else if (input$detail_level == "level2") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","Main_Objectives_text", "Level_1", "Level_2")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label", "short_label", "Main_Objectives_text", "Level_1", "Level_2")]
     } else if (input$detail_level == "level3") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label", "short_label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3")]
     } else if (input$detail_level == "level4") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3", "Level_4")]
+      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label", "short_label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3", "Level_4")]
     }
 
 
@@ -2018,6 +2117,11 @@ server <- function(input, output, session) {
           trimws(x, 'both')
 
       })
+
+      #browser()
+      dat <- dat[, -which(names(dat) == 'Objective_Label')]
+      names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
+
       write.csv(dat, file, row.names = FALSE, quote=TRUE)
     }
   )
@@ -2054,10 +2158,11 @@ server <- function(input, output, session) {
 
       dat <- dat[idx,]
 
+      dat <- dat[, -which(names(dat) == 'Objective_Label')]
+      names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
+
 
       # END NEW
-      #browser()
-
       wb <- createWorkbook()
       addWorksheet(wb, "Checklist")
       writeData(wb, "Checklist", dat)
@@ -2106,6 +2211,9 @@ server <- function(input, output, session) {
       }
 
       dat <- dat[idx,]
+
+      dat <- dat[, -which(names(dat) == 'Objective_Label')]
+      names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
       doc <- read_docx()
       doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
@@ -2783,7 +2891,6 @@ server <- function(input, output, session) {
     base[["Score"]]     <- NA_real_  # 0, 1, 2
     base[["Rationale"]] <- ""
 
-    #browser()
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
