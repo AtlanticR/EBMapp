@@ -9,6 +9,7 @@ library(openxlsx)
 library(officer)
 library(flextable)
 library(stringr)
+library(purrr)
 
 # Null coalesce helper
 `%||%` <- function(a,b) if (is.null(a)) b else a
@@ -517,6 +518,41 @@ names(use_explanations) <- c("Checklist of objectives", "Evaluating Policies and
                              "Scenario Comparison", "Management Report Card", "Cumulative Effects and Tradeoffs")
 
 
+filter_short_label <- function(base) {
+
+  base <- base %>%
+    mutate(
+      parts = strsplit(short_label, "\\."),
+
+      lvl_num = as.integer(gsub("level", "", filter)),
+
+      filtered_label = purrr::map2_chr(parts, filter, function(parts, filter) {
+
+        # level 4 = no filtering
+        if (filter == "level4") {
+          return(paste(parts, collapse = "."))
+        }
+
+        # custom semantic rules
+        if (filter == "pillar") {
+          n_keep <- 1
+        } else if (filter %in% c("main", "main_text")) {
+          n_keep <- 2
+        } else {
+          # fallback to numeric logic (level1–3)
+          lvl_num <- as.integer(gsub("level", "", filter))
+          n_keep <- lvl_num + 2
+        }
+
+        n_keep <- min(n_keep, length(parts))
+        paste(parts[1:n_keep], collapse = ".")
+      })
+    ) %>%
+    select(-parts, -lvl_num)
+
+  base
+}
+
 
 # Load data
 library(dplyr)
@@ -750,33 +786,6 @@ make_objective_table <- function(so, level_cols) {
     function(r) paste0(stats::na.omit(r), collapse = "/")
   )
   ## TEST TO FILTER SHORT_LABEL DEPENDING ON WHICH LEVEL OF DETAIL WE SELECTED:
-
-  filter_short_label <- function(base) {
-
-    base <- base %>%
-      mutate(
-        parts = strsplit(short_label, "\\."),
-
-        # convert "level1" → 1, etc.
-        lvl_num = as.integer(gsub("level", "", filter)),
-
-        # compute how many parts to keep
-        n_keep = ifelse(lvl_num == 4, Inf, lvl_num + 2),
-
-        filtered_label = map2_chr(parts, n_keep, function(parts, n_keep) {
-
-          if (is.infinite(n_keep)) {
-            return(paste(parts, collapse = "."))
-          }
-
-          n_keep <- min(n_keep, length(parts))
-          paste(parts[1:n_keep], collapse = ".")
-        })
-      ) %>%
-      select(-parts, -lvl_num, -n_keep)
-
-    base
-  }
 
   base <- filter_short_label(base)
   base$short_label <- base$filtered_label
@@ -2012,6 +2021,8 @@ server <- function(input, output, session) {
                           Level_4 = l4,
                           stringsAsFactors = FALSE
                         ))
+
+
                       }
                     }
                   }
@@ -2055,6 +2066,15 @@ server <- function(input, output, session) {
       )
     }
 
+    #browser()
+
+    checklist_data$filter <- input$detail_level
+    checklist_data <- filter_short_label(checklist_data)
+    checklist_data$short_label <- checklist_data$filtered_label
+    checklist_data <- checklist_data[, !(names(checklist_data) %in% c("filter", "filtered_label"))]
+
+
+
     checklist_data[, names(checklist_data) != "Checked"]
     })
 
@@ -2078,8 +2098,19 @@ server <- function(input, output, session) {
 
     out$filter <- input$detail_level
 
+    # if (!(input$detail_level) == 'main') {
+    #   browser()
+    # }
+
+
+    # out <- filter_short_label(out)
+    # out$short_label <- out$filtered_label
+    # out <- out[, !(names(out) %in% c("filter", "filtered_label"))]
+    #
+    # out <- unique(out)
+
     if (nrow(out) == 0) return(NULL)
-    out
+    return(out)
   })
 
   output$objectives_selected <- reactive({
@@ -2092,6 +2123,8 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
+
+      #browser()
 
       checked_ids <- names(input)[
         grepl("^chk_", names(input)) &
