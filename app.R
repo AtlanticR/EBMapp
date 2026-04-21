@@ -737,18 +737,54 @@ cumu_impact_levels <- c("X Not applicable", "0 No impact", "1 Low", "2 Moderate"
 make_objective_table <- function(so, level_cols) {
   # Ensure stable base columns
   base <- so |>
-    dplyr::select(Pillar, Main_Objective, all_of(level_cols))
+    dplyr::select(Pillar, Main_Objective, all_of(level_cols), short_label, filter)
 
   # Build label from non‑NA levels for each row
   label_mat <- base |>
-    dplyr::select(Main_Objective, all_of(level_cols)) |>
+    dplyr::select(Pillar, Main_Objective, all_of(level_cols)) |>
     as.data.frame()
 
   base$Objective_Label <- apply(
     label_mat,
     1,
-    function(r) paste(stats::na.omit(r), collapse = " / ")
+    function(r) paste0(stats::na.omit(r), collapse = "/")
   )
+  ## TEST TO FILTER SHORT_LABEL DEPENDING ON WHICH LEVEL OF DETAIL WE SELECTED:
+
+  filter_short_label <- function(base) {
+
+    base <- base %>%
+      mutate(
+        parts = strsplit(short_label, "\\."),
+
+        # convert "level1" → 1, etc.
+        lvl_num = as.integer(gsub("level", "", filter)),
+
+        # compute how many parts to keep
+        n_keep = ifelse(lvl_num == 4, Inf, lvl_num + 2),
+
+        filtered_label = map2_chr(parts, n_keep, function(parts, n_keep) {
+
+          if (is.infinite(n_keep)) {
+            return(paste(parts, collapse = "."))
+          }
+
+          n_keep <- min(n_keep, length(parts))
+          paste(parts[1:n_keep], collapse = ".")
+        })
+      ) %>%
+      select(-parts, -lvl_num, -n_keep)
+
+    base
+  }
+
+  base <- filter_short_label(base)
+  base$short_label <- base$filtered_label
+  base <- base[, !(names(base) %in% c("filter", "filtered_label"))]
+
+
+
+  ## END TEST
 
   base
 }
@@ -2023,7 +2059,7 @@ server <- function(input, output, session) {
     })
 
   # Selected objectives table for Step 2 and exports
-  selected_objectives <- reactive({ # JAIM
+  selected_objectives <- reactive({
     req(input$pillar_filter)
     req(input$detail_level)
     level_cols <- selected_levels()
@@ -2037,8 +2073,10 @@ server <- function(input, output, session) {
     out <- ebm_data |>
       filter(Pillar %in% input$pillar_filter,
              Main_Objective %in% mos) |>
-      select(Pillar, Main_Objective, all_of(selected_levels())) |>
+      select(Pillar, Main_Objective, all_of(selected_levels()), short_label) |>
       distinct()
+
+    out$filter <- input$detail_level
 
     if (nrow(out) == 0) return(NULL)
     out
@@ -2117,8 +2155,6 @@ server <- function(input, output, session) {
           trimws(x, 'both')
 
       })
-
-      #browser()
       dat <- dat[, -which(names(dat) == 'Objective_Label')]
       names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
@@ -2537,7 +2573,22 @@ server <- function(input, output, session) {
       }))
     )
 
+    if (length(idx) == 0) {
+      # NOT LEVEL 1-4 (e.g. Productivity)
+      idx <- which(
+        Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
+          grepl(make.names(p), make.names(base$Objective_Label))
+        }))
+      )
+
+    }
     base <- base[idx,]
+
+    base <- base[, -which(names(base) == 'Objective_Label')]
+    names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
+
+    base <- unique(base)
+
 
     # END NEW: 🔴
 
@@ -2902,8 +2953,23 @@ server <- function(input, output, session) {
         grepl(make.names(p), make.names(base$Objective_Label))
       }))
     )
+    base <- unique(base)
+
+
+    if (length(idx) == 0) {
+      # NOT LEVEL 1-4 (e.g. Productivity)
+      idx <- which(
+        Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
+          grepl(make.names(p), make.names(base$Objective_Label))
+        }))
+      )
+
+    }
 
     base <- base[idx,]
+
+    base <- base[, -which(names(base) == 'Objective_Label')]
+    names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
 
 
     perf_tbl(base)
@@ -3184,7 +3250,21 @@ server <- function(input, output, session) {
       }))
     )
 
+    if (length(idx) == 0) {
+      # NOT LEVEL 1-4 (e.g. Productivity)
+      idx <- which(
+        Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
+          grepl(make.names(p), make.names(base$Objective_Label))
+        }))
+      )
+
+    }
+
     base <- base[idx,]
+    base <- base[, -which(names(base) == 'Objective_Label')]
+    names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
+    base <- unique(base)
+
 
 
 
