@@ -1519,7 +1519,7 @@ server <- function(input, output, session) {
   #observeEvent(input$proceed_to_step2, updateTabItems(session, "sidebar", "assessment"))
   observeEvent(input$goto_step1_from_step2, updateTabItems(session, "sidebar", "select_objectives"))
 
-  observeEvent(input$proceed_to_step2, { #JAIM
+  observeEvent(input$proceed_to_step2, {
 
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
@@ -1669,7 +1669,7 @@ server <- function(input, output, session) {
   })
 
   # Main objective choices
-  output$main_objective_checkboxes <- renderUI({ # JAIM maybe
+  output$main_objective_checkboxes <- renderUI({
     req(input$pillar_filter)
     main_objs <- ebm_data |>
       filter(Pillar %in% input$pillar_filter,
@@ -1701,8 +1701,6 @@ server <- function(input, output, session) {
 
   # Checklist UI
   output$checklist_content <- renderUI({
-    # JAIM
-
     req(input$pillar_filter, input$detail_level)
 
     if (input$detail_level == "pillar") {
@@ -2065,9 +2063,6 @@ server <- function(input, output, session) {
         .data[[target_col]] != ""
       )
     }
-
-    #browser()
-
     checklist_data$filter <- input$detail_level
     checklist_data <- filter_short_label(checklist_data)
     checklist_data$short_label <- checklist_data$filtered_label
@@ -2098,17 +2093,6 @@ server <- function(input, output, session) {
 
     out$filter <- input$detail_level
 
-    # if (!(input$detail_level) == 'main') {
-    #   browser()
-    # }
-
-
-    # out <- filter_short_label(out)
-    # out$short_label <- out$filtered_label
-    # out <- out[, !(names(out) %in% c("filter", "filtered_label"))]
-    #
-    # out <- unique(out)
-
     if (nrow(out) == 0) return(NULL)
     return(out)
   })
@@ -2119,17 +2103,23 @@ server <- function(input, output, session) {
   outputOptions(output, "objectives_selected", suspendWhenHidden = FALSE)
 
   # Checklist downloads
+
   output$download_checklist_csv <- downloadHandler(
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
-
       #browser()
 
       checked_ids <- names(input)[
         grepl("^chk_", names(input)) &
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
+      if (length(checked_ids) == 0) {
+
+        write.csv(dat[0, ], file, row.names = FALSE, quote=TRUE)
+      } else {
+
+
       patterns <- sub(".*\\.\\.", "", checked_ids)
 
       idx <- which(
@@ -2188,10 +2178,14 @@ server <- function(input, output, session) {
           trimws(x, 'both')
 
       })
+
+
       dat <- dat[, -which(names(dat) == 'Objective_Label')]
       names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
+
       write.csv(dat, file, row.names = FALSE, quote=TRUE)
+    }
     }
   )
 
@@ -2207,6 +2201,13 @@ server <- function(input, output, session) {
         grepl("^chk_", names(input)) &
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
+
+
+      if (length(checked_ids) == 0) {
+
+        write.csv(dat[0, ], file, row.names = FALSE, quote=TRUE)
+      } else {
+
       patterns <- sub(".*\\.\\.", "", checked_ids)
 
       idx <- which(
@@ -2246,6 +2247,7 @@ server <- function(input, output, session) {
                gridExpand = TRUE, stack = TRUE)
       setColWidths(wb, "Checklist", cols = 1:ncol(dat), widths = "auto")
       saveWorkbook(wb, file, overwrite = TRUE)
+      }
     }
   )
 
@@ -2261,6 +2263,11 @@ server <- function(input, output, session) {
         grepl("^chk_", names(input)) &
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
+
+      if (length(checked_ids) == 0) {
+
+        write.csv(dat[0, ], file, row.names = FALSE, quote=TRUE)
+      } else {
       patterns <- sub(".*\\.\\.", "", checked_ids)
 
       idx <- which(
@@ -2317,6 +2324,7 @@ server <- function(input, output, session) {
 
       doc <- body_add_flextable(doc, ft)
       print(doc, target = file)
+      }
     }
   )
 
