@@ -2174,7 +2174,7 @@ server <- function(input, output, session) {
       dat <- dat[, -which(names(dat) == 'Objective_Label')]
       names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
-      browser()
+      #browser()
 
 
       write.csv(dat, file, row.names = FALSE, quote=TRUE)
