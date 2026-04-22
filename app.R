@@ -194,126 +194,117 @@ use_explanations[[2]] <- function() {
 use_explanations[[3]] <- function() {
   tagList(
 
-    tags$p(
-      "In the complex world of decision making, clear objectives are required to evaluate different potential management options or scenarios.
-      The objectives of the Governance, Ecological, Economic and Social and Cultural Pillars of the EBM Framework provide a holistic basis for comparison across scenarios.
-      For example, the scenarios could be different options for opening a new fishery, decisions on whether to approve introductions and transfers of fish, different placements of a protected area, different locations of wind energy, or aquaculture sites or stocking options for Atlantic salmon.
-      The simplest scenario comparison would be to decide whether or not to move ahead with a project. This decision would be evaluated against the EBM Framework objectives.
-      A more complex decision would involve two or more scenarios and two or more activities (eg. Offshore wind and fisheries)."
-    ),
+  # ---------------------------
+  # ORIGINAL PREAMBLE (UNCHANGED)
+  # ---------------------------
+  tags$p(
+    "In the complex world of decision making, clear objectives are required to evaluate different potential management options or scenarios. The objectives of the Governance, Ecological, Economic and Social and Cultural Pillars of the EBM Framework provide a holistic basis for comparison across scenarios. For example, the scenarios could be different options for opening a new fishery, decisions on whether to approve introductions and transfers of fish, different placements of a protected area, different locations of wind energy, or aquaculture sites or stocking options for Atlantic salmon. The simplest scenario comparison would be to decide whether or not to move ahead with a project. This decision would be evaluated against the EBM Framework objectives. A more complex decision would involve two or more scenarios and two or more activities (eg. Offshore wind and fisheries)."
+  ),
 
-    tags$hr(),
-    tags$p(
-      "For each row of the table below, paste the line from your policy or management approaches that align
-       with the associated objective in the Policy Alignment columns. Assess alignment using one of the two
-      tables below and enter the score in the Score column. Lastly, enter your rationale in the Rationale column"
-    ),
+  tags$hr(),
 
-    # Scrollable wide table
-    div(
-      style = "overflow-x: auto; width: 100%;",
-      tags$table(
-        style = "min-width: 1500px; border-collapse: collapse; border: 1px solid #ccc;",
-        tags$thead(
-          tags$tr(
-            tags$th("Pillar", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Main_Objective", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_3", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_4", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Score_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Score_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Policy_1_alignment", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Policy_2_alignment", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Rationale", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
-          )
-        ),
-        tags$tbody(
-          tags$tr(
-            tags$td("Ecological", style = "border: 1px solid #ccc; padding: 6px; vertical-align: top;"),
-            tags$td("Productivity", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("1. Pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("a. Fishing pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("i. Fishing mortality is limited to levels necessary to promote sustainability", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("Productivity / 1. Pressures on ecosystem productivity are managed / a. Fishing pressures on ecosystem productivity are managed / i. Fishing mortality is limited to levels necessary to promote sustainability /", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px;")
-          )
-        )
-      )
+  # ---------------------------
+  # SCENARIO ASSESSMENT LOGIC
+  # ---------------------------
+  tags$p(
+    strong("Scenario assessment approach:")
+  ),
+
+  tags$p(
+    "Scenarios can be evaluated using either quantitative indicators or qualitative judgement depending on data availability."
+  ),
+
+  tags$ul(
+    tags$li(
+      strong("Quantitative assessment: "),
+      "Uses measured indicator values, targets, and calculated scores."
+    ),
+    tags$li(
+      strong("Qualitative assessment: "),
+      "Uses expert judgement and direct scoring without requiring indicator or target data."
     )
-    ,
+  ),
 
-    tags$h4("Policy Language Alignment Scoring"),
+  tags$hr(),
 
-    tags$table(
-      style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
-      tags$thead(
-        tags$tr(
-          tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
-        )
-      ),
-      tags$tbody(
-        tags$tr(tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Not relevant / applicable - dependent on context, case study, purview, department, jurisdiction, etc.", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("No mention - the objective of the EBM framework is not present within this unit of analysis", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Implicit Content mention - the phrase/terms used in the unit of analysis generally or vaguely aligns with, or alludes to, the intended meaning in the EBM Framework (e.g., high-level concepts)", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Explicit Content mention - the phrase/terms used in the unit of analysis partially aligns with, or alludes to, the meaning intended in the EBM framework, but may appear slightly different.", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Content & Context alignment - the phrase/terms used in the unit of analysis explicitly matches the intended content as well as the context of the EBM framework objectives", style = "border: 1px solid #ccc; padding: 4px;"))
-      )
+  # ---------------------------
+  # HEADER STRUCTURE DEMO
+  # ---------------------------
+  tags$h4("Table Structure Examples"),
+
+  tags$p(strong("1. Quantitative scenario assessment (full indicator-based structure)")),
+
+  tags$table(
+    style = "border-collapse: collapse; width: 100%; margin-bottom: 15px;",
+    tags$tr(
+      tags$th("Objective Columns", style="border:1px solid #ccc; padding:6px;"),
+      tags$th("Scenario 1", colspan = 4, style="border:1px solid #ccc; padding:6px; text-align:center;"),
+      tags$th("Scenario 2", colspan = 4, style="border:1px solid #ccc; padding:6px; text-align:center;"),
+      tags$th("Rationale", style="border:1px solid #ccc; padding:6px;")
     ),
-    tags$h4("Data/Information Adequacy Scoring"),
-    tags$table(
-      style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
-      tags$thead(
-        tags$tr(
-          tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
-        )
-      ),
-      tags$table(
-        style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
-        tags$thead(
-          tags$tr(
-            tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
-          )
-        ),
-        tags$tbody(
-          tags$tr(
-            tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Not relevant / applicable – Objective is not relevant to policy/management approach or plan.", style = "border: 1px solid #ccc; padding: 4px;")
-          ),
-          tags$tr(
-            tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("ZERO – No data or information to address this objective of the EBM framework", style = "border: 1px solid #ccc; padding: 4px;")
-          ),
-          tags$tr(
-            tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Weak – Some data or information to address this objective, but it is inconsistent temporally and/or spatially", style = "border: 1px solid #ccc; padding: 4px;")
-          ),
-          tags$tr(
-            tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Moderate – Some data or information with reasonable temporal and spatial coverage to address this objective", style = "border: 1px solid #ccc; padding: 4px;")
-          ),
-          tags$tr(
-            tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Strong – Good information and long term data with temporal and/or spatial coverage to address this objective", style = "border: 1px solid #ccc; padding: 4px;")
-          )
-        )
-      )
-    )
+    tags$tr(
+      tags$td("Pillar → Objective hierarchy", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Indicator", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Value", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Target", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Score", style="border:1px solid #ccc; padding:6px;"),
 
+      tags$td("Indicator", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Value", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Target", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Score", style="border:1px solid #ccc; padding:6px;"),
+
+      tags$td("Free text", style="border:1px solid #ccc; padding:6px;")
+    )
+  ),
+
+  tags$p(strong("2. Qualitative scenario assessment (simplified scoring structure)")),
+
+  tags$table(
+    style = "border-collapse: collapse; width: 100%;",
+    tags$tr(
+      tags$th("Objective Columns", style="border:1px solid #ccc; padding:6px;"),
+      tags$th("Scenario 1 Score", style="border:1px solid #ccc; padding:6px;"),
+      tags$th("Scenario 2 Score", style="border:1px solid #ccc; padding:6px;")
+    ),
+    tags$tr(
+      tags$td("Pillar → Objective hierarchy", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("0–2 score", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("0–2 score", style="border:1px solid #ccc; padding:6px;")
+      )
+  ),
+
+  tags$hr(),
+
+  # ---------------------------
+  # SCORING SYSTEM
+  # ---------------------------
+  tags$h4("Shared Scoring Framework"),
+
+  tags$p(
+    "All scenario evaluations use a consistent Likert-based scoring system to ensure comparability:"
+  ),
+
+  tags$table(
+    style = "border-collapse: collapse; width: 50%;",
+    tags$tr(
+      tags$th("Value", style="border:1px solid #ccc; padding:6px;"),
+      tags$th("Meaning", style="border:1px solid #ccc; padding:6px;")
+    ),
+    tags$tr(
+      tags$td("0", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Not met target", style="border:1px solid #ccc; padding:6px;")
+    ),
+    tags$tr(
+      tags$td("1", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Met target", style="border:1px solid #ccc; padding:6px;")
+    ),
+    tags$tr(
+      tags$td("2", style="border:1px solid #ccc; padding:6px;"),
+      tags$td("Exceeded target", style="border:1px solid #ccc; padding:6px;")
+    )
   )
+)
 }
 
 
@@ -2339,13 +2330,19 @@ server <- function(input, output, session) {
     req(input$assessment_type)
     switch(input$assessment_type,
            policy = policy_ui(),
-           scenarios = policy_ui(),   # USE 3 (same UI)
+           scenarios = performance_ui(),
            performance = performance_ui(),
            cumulative = cumulative_ui())
   })
 
   # ========== POLICY/SCENARIO ASSESSMENT ==========
   policy_tbl <- reactiveVal(NULL)
+
+  observeEvent(input$assessment_type, { # KYLO
+    policy_tbl(NULL)
+    perf_tbl(NULL)
+    cumu_tbl(NULL)
+  })
 
   policy_ui <- function() {
     so <- selected_objectives(); req(so)
@@ -2354,7 +2351,7 @@ server <- function(input, output, session) {
       fluidRow(
         box(
           width = 12,
-          title = ifelse(input$assessment_type == 'policy', "Evaluating policies and management approaches (USE 2)", "Scenario Comparison (USE 3)"),
+          title = "Evaluating policies and management approaches (USE 2)",
           status = "success",
           solidHeader = TRUE,
           fluidRow(
@@ -2370,17 +2367,6 @@ server <- function(input, output, session) {
                 selected = 'qual'
               )
             ),
-            conditionalPanel(
-              condition = "input.assessment_type == 'scenarios'",
-              column(
-                4,
-                numericInput(
-                  "num_scenarios",
-                  "Step B. Select Number of policies / advice sources / scenarios:",
-                  value = 2, min = 2, max = 10, step = 1
-                )
-              )
-            ),
             column(
               4,
               actionButton(
@@ -2389,16 +2375,6 @@ server <- function(input, output, session) {
                        ifelse(input$assessment_type == 'scenarios', "Step D: Create / Reset Template to begin", "Step B: Create / Reset Template to begin")),
                 class = "btn-primary",
                 style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
-              )
-            )
-          ),
-          # Add scenario naming UI for scenarios only
-          conditionalPanel(
-            condition = "input.assessment_type == 'scenarios' && input.num_scenarios > 0",
-            fluidRow(
-              column(12,
-                     tags$h5("Step C: Name Your Scenarios"),
-                     uiOutput("scenario_names_ui")
               )
             )
           ),
@@ -2450,7 +2426,15 @@ server <- function(input, output, session) {
 
 
   observeEvent(list(input$policy_make_template, input$key_s, input$perf_make_template, input$cumu_make_template), {
-    req(input$policy_make_template > 0 || input$perf_make_template > 0 || input$cumu_make_template > 0)
+    #req(input$policy_make_template > 0 || input$perf_make_template > 0 || input$cumu_make_template > 0)
+
+    req(
+      (input$policy_make_template %||% 0) > 0 ||
+        (input$perf_make_template %||% 0) > 0 ||
+        (input$cumu_make_template %||% 0) > 0 ||
+        !is.null(input$key_s)
+    )
+
 
     # Determine which assessment type is active
     assessment <- if(!is.null(input$assessment_type)) input$assessment_type else "policy"
@@ -2522,7 +2506,7 @@ server <- function(input, output, session) {
           )
         )
       }
-    } else if (!(assessment %in% c("policy", "scenarios"))) {
+    } else if (!(assessment %in% c("policy"))) {
       # Performance scoring table ONLY
       tagList(
         tags$h4("Performance Scoring"),
@@ -2925,12 +2909,77 @@ server <- function(input, output, session) {
       fluidRow(
         box(
           width = 12,
-          title = "Management Performance Report Card (EBM USE 4)",
+          title = ifelse(
+            input$assessment_type == 'performance',
+            "Management Performance Report Card (EBM USE 4)",
+            "Scenario Comparison (USE 3)"
+          ),
           status = "success",
           solidHeader = TRUE,
-          actionButton("perf_make_template", "Create / Reset Template to begin", class = "btn-primary",  style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"),
+
+          # ---------------------------
+          # Steps A–C (Scenarios only)
+          # ---------------------------
+          conditionalPanel(
+            condition = "input.assessment_type == 'scenarios'",
+
+            # Step A + B
+            fluidRow(
+              column(
+                4,
+                radioButtons(
+                  "scenario_method",
+                  "Step A. Select Scoring method:",
+                  choices = c(
+                    "Qualitative Scoring" = "qual",
+                    "Quantitative Indicator Scoring" = "likert"
+                  ),
+                  selected = 'qual'
+                )
+              ),
+              column(
+                4,
+                numericInput(
+                  "num_scenarios",
+                  "Step B. Select Number of policies / advice sources / scenarios:",
+                  value = 2, min = 2, max = 10, step = 1
+                )
+              )
+            ),
+
+            br(),
+
+            # Step C
+            fluidRow(
+              column(
+                12,
+                tags$h5("Step C: Name Your Scenarios"),
+                uiOutput("scenario_names_ui")
+              )
+            )
+          ),
+
           br(),
-          br(),
+
+          # ---------------------------
+          # Step D (Create Template)
+          # ---------------------------
+          actionButton(
+            "perf_make_template",
+            ifelse(
+              input$assessment_type == 'performance',
+              "Create / Reset Template to begin",
+              "Step D: Create / Reset Template to begin"
+            ),
+            class = "btn-primary",
+            style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
+          ),
+
+          br(), br(),
+
+          # ---------------------------
+          # Instructions (after Step D)
+          # ---------------------------
           conditionalPanel(
             condition = "input.perf_make_template > 0",
             p(
@@ -2946,9 +2995,13 @@ server <- function(input, output, session) {
                 "Make sure you double click to edit the table. A single click in a column will not work."
               )
             )
+          ),
 
-            ),
           tags$hr(),
+
+          # ---------------------------
+          # Outputs
+          # ---------------------------
           DTOutput("perf_editor"),
           br(),
           uiOutput("perf_download_ui")
@@ -2975,18 +3028,18 @@ server <- function(input, output, session) {
 
 
   observeEvent(input$perf_make_template, {
+
     so <- selected_objectives(); req(so)
     base <- make_objective_table(so, selected_levels())
-    base[["Indicator"]] <- ""
-    base[["Indicator Value"]] <- ""
-    base[["Target"]]    <- ""
-    base[["Score"]]     <- NA_real_  # 0, 1, 2
-    base[["Rationale"]] <- ""
 
+    # ---------------------------
+    # Filter selected objectives
+    # ---------------------------
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
     ]
+
     patterns <- sub(".*\\.\\.", "", checked_ids)
 
     idx <- which(
@@ -2994,64 +3047,181 @@ server <- function(input, output, session) {
         grepl(make.names(p), make.names(base$Objective_Label))
       }))
     )
-    base <- unique(base)
-
 
     if (length(idx) == 0) {
-      # NOT LEVEL 1-4 (e.g. Productivity)
       idx <- which(
         Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
           grepl(make.names(p), make.names(base$Objective_Label))
         }))
       )
-
     }
 
     base <- base[idx,]
+    base <- unique(base)
 
-    base <- base[, -which(names(base) == 'Objective_Label')]
-    names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
+    base <- base[, -which(names(base) == "Objective_Label")]
+    names(base)[which(names(base) == "short_label")] <- "Objective_Label"
 
+    # ---------------------------
+    # SCENARIOS
+    # ---------------------------
+    if (input$assessment_type == "scenarios") {
+
+      n <- input$num_scenarios %||% 1
+      method <- isolate(input$scenario_method)
+      method <- method %||% "qual"
+
+      names_provided <- scenario_names()
+
+      if (length(names_provided) != n || any(names_provided == "" | is.na(names_provided))) {
+        showModal(modalDialog(
+          title = "Incomplete Scenario Names",
+          "You must provide names for all scenarios before creating the template.",
+          easyClose = TRUE,
+          footer = modalButton("OK")
+        ))
+        return()
+      }
+
+      # =========================================================
+      # QUALITATIVE: ONLY SCORE PER SCENARIO
+      # =========================================================
+      if (method == "qual") {
+
+        for (i in seq_len(n)) {
+
+          scen_name <- names_provided[i]
+
+          base[[paste0(scen_name, "_Score")]] <- NA_real_
+        }
+
+        # ensure no leftover columns from other modes
+        base[["Rationale"]] <- NULL
+        base[grep("_Indicator$", names(base))] <- NULL
+        base[grep("_Indicator Value$", names(base))] <- NULL
+        base[grep("_Target$", names(base))] <- NULL
+
+        # =========================================================
+        # FULL SCENARIO STRUCTURE
+        # =========================================================
+      } else {
+
+        for (i in seq_len(n)) {
+
+          scen_name <- names_provided[i]
+
+          base[[paste0(scen_name, "_Indicator")]] <- ""
+          base[[paste0(scen_name, "_Indicator Value")]] <- ""
+          base[[paste0(scen_name, "_Target")]] <- ""
+          base[[paste0(scen_name, "_Score")]] <- NA_real_
+        }
+
+        base[["Rationale"]] <- ""
+      }
+
+      # ---------------------------
+      # PERFORMANCE (UNCHANGED)
+      # ---------------------------
+    } else {
+
+      base[["Indicator"]] <- ""
+      base[["Indicator Value"]] <- ""
+      base[["Target"]] <- ""
+      base[["Score"]] <- NA_real_
+      base[["Rationale"]] <- ""
+    }
 
     perf_tbl(base)
+
   })
 
   output$perf_editor <- renderDT({
+
     df <- perf_tbl(); req(df)
 
-    lock_cols  <- which(names(df) %in% c(
+    is_scenarios <- input$assessment_type == "scenarios"
+    method <- isolate(input$scenario_method) %||% "qual"
+
+    # ---------------------------
+    # Locked columns
+    # ---------------------------
+    lock_cols <- which(names(df) %in% c(
       "Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"
     )) - 1
 
-    score_col  <- which(names(df) == "Score") - 1
-    editable_cols <- setdiff(seq_len(ncol(df)) - 1, c(lock_cols, score_col))
+    # ---------------------------
+    # COLUMN MODE LOGIC
+    # ---------------------------
 
+    if (is_scenarios && method == "qual") {
+
+      # ONLY SCORE COLUMNS EXIST
+      score_cols <- grep("_Score$", names(df)) - 1
+
+      indicator_cols <- c()
+      value_cols <- c()
+      target_cols <- c()
+
+    } else if (is_scenarios && method != "qual") {
+
+      # FULL SCENARIO STRUCTURE
+      score_cols <- grep("_Score$", names(df)) - 1
+      indicator_cols <- grep("_Indicator$", names(df))
+      value_cols <- grep("_Indicator Value$", names(df))
+      target_cols <- grep("_Target$", names(df))
+
+    } else {
+
+      # PERFORMANCE MODE
+      score_cols <- which(names(df) == "Score") - 1
+      indicator_cols <- which(names(df) == "Indicator")
+      value_cols <- which(names(df) == "Indicator Value")
+      target_cols <- which(names(df) == "Target")
+    }
+
+    # ---------------------------
+    # TABLE
+    # ---------------------------
     datatable(
       df,
       rownames = FALSE,
       colnames = gsub("_"," ", names(df)),
-      editable = list(target = "cell", disable = list(columns = lock_cols)),
+      editable = list(
+        target = "cell",
+        disable = list(columns = c(lock_cols, score_cols))
+      ),
       options = list(scrollX = TRUE, pageLength = 10),
+
       callback = JS(
         "table.on('draw.dt', function(){",
         "  table.rows().every(function(){",
         "    var row = this.node();",
         "    $('td', row).each(function(colIndex){",
+
+        # ---------------------------
+        # LOCKED COLUMNS
+        # ---------------------------
         paste0(
           "if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
           "  $(this).css('pointer-events','none');",
           "}"
         ),
+
+        # ---------------------------
+        # SCORE DROPDOWNS
+        # ---------------------------
         paste0(
-          "if ([", score_col, "].includes(colIndex)) {",
+          "if ([", paste(score_cols, collapse=","), "].includes(colIndex)) {",
           "  $(this).off('click').on('click', function(){",
           "    if($(this).find('select').length > 0) return;",
           "    var val = $(this).text();",
-          "    var opts = [,'0','1','2'];", # ROXANNE
+          "    var opts = ['','0','1','2','3'];",
           "    var sel = $('<select></select>').css({",
-          "      'color':'black', 'background-color':'white','width':'100%'",
+          "      'color':'black','background-color':'white','width':'100%'",
           "    });",
-          "    $.each(opts, function(i,v){ sel.append($('<option></option>').val(v).html(v)); });",
+          "    $.each(opts, function(i,v){",
+          "      sel.append($('<option></option>').val(v).html(v));",
+          "    });",
           "    sel.val(val);",
           "    $(this).html(sel); sel.focus();",
           "    sel.on('change', function(){",
@@ -3063,19 +3233,27 @@ server <- function(input, output, session) {
           "  });",
           "}"
         ),
+
         "    });",
         "  });",
         "});"
       )
     ) %>%
-      formatStyle(
-        columns = c("Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"),
-        backgroundColor='#d3d3d3'
-      ) %>%
-      formatStyle(columns = "Indicator", backgroundColor='#ffc0cb') %>%
-      formatStyle(columns = "Indicator Value", backgroundColor='#ffc0cb') %>%
-      formatStyle(columns = c("Target","Score"), backgroundColor='#add8e6') %>%
-      formatStyle(columns = "Rationale", backgroundColor='white')
+
+      # ---------------------------
+    # STYLING (SAFE ACROSS MODES)
+    # ---------------------------
+    formatStyle(
+      columns = c("Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"),
+      backgroundColor = '#d3d3d3'
+    ) %>%
+
+      formatStyle(columns = indicator_cols, backgroundColor = '#ffc0cb') %>%
+      formatStyle(columns = value_cols, backgroundColor = '#ffc0cb') %>%
+      formatStyle(columns = target_cols, backgroundColor = '#add8e6') %>%
+
+      formatStyle(columns = score_cols + 1, backgroundColor = '#add8e6')
+
   })
 
   observeEvent(input$perf_editor_cell_edit, {
