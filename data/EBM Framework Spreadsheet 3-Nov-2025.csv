@@ -1,23 +1,23 @@
 ﻿Pillar,Main_Objective,Main_Objectives_text,Level_1,Level_2,Level_3,Level_4
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,a. Fishing pressures on ecosystem productivity are managed,"i. 	Fishing mortality is limited to levels necessary to promote sustainability 
 ",
-Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,a. Fishing pressures on ecosystem productivity are managed,"ii. 	Sufficient escapement from exploitation for spawning",- Target limit escapement
+Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,a. Fishing pressures on ecosystem productivity are managed,"ii. 	Sufficient escapement from exploitation for spawning",#NAME?
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,b. Other pressures on ecosystem productivity are managed,"i. 	Fish mortality from works, undertakings, and activities other than fishing is avoided, mitigated and/or offset
 
 ",
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,b. Other pressures on ecosystem productivity are managed,"ii. 	Activities causing disturbance in areas or seasons of high importance (or critical) for species’ life-history functions are limited, such as in spawning areas, juvenile or nursery habitats",
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,b. Other pressures on ecosystem productivity are managed,"iii. 	Alteration of nutrient concentrations affecting primary production is controlled",
-Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,b. Other pressures on ecosystem productivity are managed,"iv. 	Ensure that aquaculture operators meet environmental protection standards, such as Adhere to Aquaculture Activities Regulations (AARs)",- Nutrient concentrations are managed within “X” standards
+Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,b. Other pressures on ecosystem productivity are managed,"iv. 	Ensure that aquaculture operators meet environmental protection standards, such as Adhere to Aquaculture Activities Regulations (AARs)",#NAME?
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,1. Pressures on ecosystem productivity are managed,b. Other pressures on ecosystem productivity are managed,"iv. 	Ensure that aquaculture operators meet environmental protection standards, such as Adhere to Aquaculture Activities Regulations (AARs)", -  BOD (Biological oxygen demand) is managed within “X” standards
-Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"i. 	Impacts on the top of the food web are limited",- Manage anthropogenic pressures on top predators
-Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"ii. 	Impacts on forage species are limited",- Ensure sufficient forage base for predators
+Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"i. 	Impacts on the top of the food web are limited",#NAME?
+Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"ii. 	Impacts on forage species are limited",#NAME?
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"iii. 	Impacts on trophic guilds and trophic structure are limited","- Ensure sufficient biomass of each trophic guild
 "
-Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"iii. 	Impacts on trophic guilds and trophic structure are limited",- Limit impacts on structural change
+Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"iii. 	Impacts on trophic guilds and trophic structure are limited",#NAME?
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"iv. 	Impacts on the size structure are limited","- Ensure broad size distribution of species in the ecological community
 "
-Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"iv. 	Impacts on the size structure are limited",- Ensure broad size distribution within individual species
-Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,b. Ecosystem functioning is promoted and conserved,"i. 	Activities that could impact ecosystem functioning in areas of high aggregations or areas of high ecological importance are limited  ","- Features that contribute to ecosystem functioning, such as riparian zones and cold water upwelling areas, are protected"
+Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,a. Ecosystem structure is promoted and conserved,"iv. 	Impacts on the size structure are limited",#NAME?
+Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,b. Ecosystem functioning is promoted and conserved,"i. 	Activities that could impact ecosystem functioning in areas of high aggregations or areas of high ecological importance are limited  ",#NAME?
 Ecological,Productivity,Do not cause unacceptable reduction in productivity so that components can play their role in the functioning of the ecosystem,2. Ecosystem structure and functioning is promoted and conserved,b. Ecosystem functioning is promoted and conserved,"ii. 	Areas of importance for bioturbation are protected",
 Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to preserve the structure and natural resilience of aquatic ecosystems.",1. Population biodiversity is conserved and promoted or enhanced,a. Population structure is preserved,"i. 	Population component mortality is distributed in relation to component biomass
 
@@ -31,7 +31,7 @@ Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to 
 ",
 Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to preserve the structure and natural resilience of aquatic ecosystems.",2. Species biodiversity is conserved and protected,a. Unintended or incidental mortality for all species is controlled,"ii. 	Freshwater area protection measures that contribute to international, national and provincial targets for freshwater conservation are increased",
 Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to preserve the structure and natural resilience of aquatic ecosystems.",2. Species biodiversity is conserved and protected,a. Unintended or incidental mortality for all species is controlled,"iii. 	Seasonal and other fisheries closures are maintained and enhanced",
-Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to preserve the structure and natural resilience of aquatic ecosystems.",2. Species biodiversity is conserved and protected,a. Unintended or incidental mortality for all species is controlled,"iv. 	By-catch in fishing gear is minimized",- Specific targets for bycatch
+Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to preserve the structure and natural resilience of aquatic ecosystems.",2. Species biodiversity is conserved and protected,a. Unintended or incidental mortality for all species is controlled,"iv. 	By-catch in fishing gear is minimized",#NAME?
 Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to preserve the structure and natural resilience of aquatic ecosystems.",2. Species biodiversity is conserved and protected,b. Negative impacts of invasive species and non-indigenous species are minimised,"i. 	Respond to newly detected invasive and non-indigenous species
 ",
 Ecological,Biodiversity,"Biodiversity is conserved, maintained, and restored to preserve the structure and natural resilience of aquatic ecosystems.",2. Species biodiversity is conserved and protected,b. Negative impacts of invasive species and non-indigenous species are minimised,"ii. 	Established populations of invasive species and non-indigenous species are managed and controlled",
@@ -66,7 +66,7 @@ Ecological,Habitat ,Do not cause unacceptable modification to habitat in order t
 ",− Sensitive benthic areas
 Ecological,Habitat ,Do not cause unacceptable modification to habitat in order to safeguard both physical and chemical properties of the ecosystem.,"1. Habitat required for all species, particularly priority species, is maintained and protected","e. Rare, unique and vulnerable habitats are protected
 ","i. Disturbance of the habitats is minimized, including :
-","- Coastal biogenic habitat forming species (e.g., eel grass, kelp, macrophytes, saltmarsh, freshwater wetlands)"
+",#NAME?
 Ecological,Habitat ,Do not cause unacceptable modification to habitat in order to safeguard both physical and chemical properties of the ecosystem.,"1. Habitat required for all species, particularly priority species, is maintained and protected",f. Introduction of Aquatic Invasive Species (AIS) is prevented,,
 Ecological,Habitat ,Do not cause unacceptable modification to habitat in order to safeguard both physical and chemical properties of the ecosystem.,"1. Habitat required for all species, particularly priority species, is maintained and protected",g. Climate refugia are protected,,
 Ecological,Habitat ,Do not cause unacceptable modification to habitat in order to safeguard both physical and chemical properties of the ecosystem.,"1. Habitat required for all species, particularly priority species, is maintained and protected",h. Biogenic habitats and/or carbon sinks are maintained or enhanced,"i. 	Biogenic habitats are protected and restored
@@ -313,7 +313,7 @@ implemented in governance and management",1. Legal obligations and commitments t
 ",
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",1. Legal obligations and commitments to Indigenous peoples are recognised and implemented ,,"ii.	 The Treaty right to fish in pursuit of a moderate livelihood is upheld and implemented ",
+implemented in governance and management",1. Legal obligations and commitments to Indigenous peoples are recognised and implemented ,"b.	The prioritization of fishery access, including Food, Social and Ceremonial fisheries and the Treaty right to fish in pursuit of a moderate livelihood, is supported – Also see Social and Cultural Pillar D. Culture","ii.	 The Treaty right to fish in pursuit of a moderate livelihood is upheld and implemented ",
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
 implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"a. All relevant legislation and regulations in decision-making are adhered to, including (but not
@@ -322,10 +322,14 @@ limited to):
 ",
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,,ii. Relevant provisions of the Fisheries Act,
+implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"a. All relevant legislation and regulations in decision-making are adhered to, including (but not
+limited to):
+",ii. Relevant provisions of the Fisheries Act,
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,,iii. Relevant provisions of the Species at Risk Act,
+implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"a. All relevant legislation and regulations in decision-making are adhered to, including (but not
+limited to):
+",iii. Relevant provisions of the Species at Risk Act,
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
 implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"b. All relevant policies specific to DFO’s mandate in decision-making are implemented, including
@@ -337,16 +341,24 @@ implemented in governance and management",2. National legal obligations and comm
 ",
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,,"ii. Species at Risk policies,",
+implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"b. All relevant policies specific to DFO’s mandate in decision-making are implemented, including
+(but not limited to):
+","ii. Species at Risk policies,",
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,,iii. Habitat protection policies,
+implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"b. All relevant policies specific to DFO’s mandate in decision-making are implemented, including
+(but not limited to):
+",iii. Habitat protection policies,
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,,"iv. Licensing policies, such as fleet separation",
+implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"b. All relevant policies specific to DFO’s mandate in decision-making are implemented, including
+(but not limited to):
+","iv. Licensing policies, such as fleet separation",
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,,v. The principle of adjacency,
+implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"b. All relevant policies specific to DFO’s mandate in decision-making are implemented, including
+(but not limited to):
+",v. The principle of adjacency,
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
 implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"c. A precautionary approach is used to manage fisheries and other activities
@@ -354,7 +366,8 @@ implemented in governance and management",2. National legal obligations and comm
 ",
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
-implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,,ii. Limit reference points are established where possible,
+implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,"c. A precautionary approach is used to manage fisheries and other activities
+",ii. Limit reference points are established where possible,
 Governance,Legal Obligations and other commitments,"Legal obligations and other
 commitments related to aquatic systems, including to Indigenous Peoples, are recognised and
 implemented in governance and management",2. National legal obligations and commitments related to aquatic systems are recognisd and implemented ,d. Relevant aspects of the Federal Sustainable Development Strategy are included where appropriate. ,,
@@ -406,7 +419,8 @@ place to enable effective decision making related to aquatic systems",1. Procedu
 ","i. Roles and responsibilities of parties in decision making are defined
 ",
 Governance,Governance Structures and Processes ,"Appropriate governance structures are in
-place to enable effective decision making related to aquatic systems",1. Procedural equity ,,ii. Decision making process(es) are clearly defined for all,
+place to enable effective decision making related to aquatic systems",1. Procedural equity ,"b. Roles and responsibilities of all relevant parties are clearly defined and agreed upon
+",ii. Decision making process(es) are clearly defined for all,
 Governance,Governance Structures and Processes ,"Appropriate governance structures are in
 place to enable effective decision making related to aquatic systems",1. Procedural equity ,c. Accountability for actions and inactions is fostered for all relevant parties,,
 Governance,Governance Structures and Processes ,"Appropriate governance structures are in
