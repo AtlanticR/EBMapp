@@ -1844,7 +1844,7 @@ server <- function(input, output, session) {
 
   # Get full checklist for Step 1
 
-  get_full_checklist <- reactive({
+  get_full_checklist <- reactive({ #JAIM
     req(input$pillar_filter, input$detail_level)
 
     checklist_data <- data.frame(
@@ -1923,7 +1923,7 @@ server <- function(input, output, session) {
               Checked = checked_l1,
               Pillar = pillar,
               Main_Objective = main_obj,
-              Main_Objectives_text = "",
+              Main_Objectives_text = main_obj_text,
               Objective_Label = obj_label,
               short_label = sl,
               Level_1 = l1,
@@ -1949,7 +1949,7 @@ server <- function(input, output, session) {
                   Checked = checked_l2,
                   Pillar = pillar,
                   Main_Objective = main_obj,
-                  Main_Objectives_text = "",
+                  Main_Objectives_text = main_obj_text,
                   Objective_Label = obj_label,
                   short_label = sl,
                   Level_1 = l1,
@@ -1975,7 +1975,7 @@ server <- function(input, output, session) {
                       Checked = checked_l3,
                       Pillar = pillar,
                       Main_Objective = main_obj,
-                      Main_Objectives_text = "",
+                      Main_Objectives_text = main_obj_text,
                       Objective_Label = obj_label,
                       short_label = sl,
                       Level_1 = l1,
@@ -2001,7 +2001,7 @@ server <- function(input, output, session) {
                           Checked = checked_l4,
                           Pillar = pillar,
                           Main_Objective = main_obj,
-                          Main_Objectives_text = "",
+                          Main_Objectives_text = main_obj_text,
                           Objective_Label = obj_label,
                           short_label = sl,   # 🔴 ADD
                           Level_1 = l1,
@@ -2099,8 +2099,6 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist(); req(dat)
-      #browser()
-
       checked_ids <- names(input)[
         grepl("^chk_", names(input)) &
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
