@@ -1500,6 +1500,8 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
 
 server <- function(input, output, session) {
 
+  rv <- reactiveValues()
+
   # Initialize cumulative assessment reactives
   cumu_strategy <- reactiveVal("indicator")
   cumu_activities_stored <- reactiveVal(NULL)
@@ -2092,6 +2094,302 @@ server <- function(input, output, session) {
     !is.null(selected_objectives()) && nrow(selected_objectives()) > 0
   })
   outputOptions(output, "objectives_selected", suspendWhenHidden = FALSE)
+
+
+  ## START TEST
+
+  observe({
+
+    req(input$pillar_filter, input$main_objective_filter, input$detail_level)
+
+    filtered_data <- ebm_data %>%
+      dplyr::filter(
+        Pillar %in% input$pillar_filter,
+        Main_Objective %in% input$main_objective_filter
+      )
+
+    checkbox_ids <- names(input)[
+      grepl("^chk_", names(input)) &
+        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+    ]
+
+    if (length(checkbox_ids) == 0) return()
+
+    if (is.null(rv$previous_checkbox_state)) {
+      rv$previous_checkbox_state <- list()
+    }
+
+    changed_id <- NULL
+
+    for (id in checkbox_ids) {
+      old_val <- rv$previous_checkbox_state[[id]]
+      new_val <- isTRUE(input[[id]])
+
+      if (is.null(old_val) || !identical(old_val, new_val)) {
+        changed_id <- id
+        break
+      }
+    }
+
+    if (is.null(changed_id)) return()
+
+    for (id in checkbox_ids) {
+      rv$previous_checkbox_state[[id]] <- isTRUE(input[[id]])
+    }
+
+    id <- changed_id
+    current_value <- isTRUE(input[[id]])
+
+    # =====================================================
+    # FIXED: STRICT DOWNWARD CASCADE
+    # =====================================================
+    update_children <- function(
+    pillar,
+    main_obj = NULL,
+    l1 = NULL,
+    l2 = NULL,
+    l3 = NULL,
+    value = TRUE
+    ) {
+
+      dat <- filtered_data %>%
+        dplyr::filter(Pillar == pillar)
+
+      if (!is.null(main_obj)) {
+        dat <- dat %>% dplyr::filter(Main_Objective == main_obj)
+      }
+
+      if (!is.null(l1)) {
+        dat <- dat %>% dplyr::filter(Level_1 == l1)
+      }
+
+      if (!is.null(l2)) {
+        dat <- dat %>% dplyr::filter(Level_2 == l2)
+      }
+
+      if (!is.null(l3)) {
+        dat <- dat %>% dplyr::filter(Level_3 == l3)
+      }
+
+      # =====================================================
+      # LEVEL 1 🔴 FIX: prevent rebuild when deeper levels exist
+      # =====================================================
+      if (is.null(l2) && is.null(l3)) {
+
+        l1_rows <- dat %>%
+          dplyr::distinct(Main_Objective, Level_1)
+
+        for (i in seq_len(nrow(l1_rows))) {
+
+          id_l1 <- paste0(
+            "chk_l1_",
+            make.names(paste(pillar, l1_rows$Main_Objective[i], l1_rows$Level_1[i]))
+          )
+
+          updateCheckboxInput(session, id_l1, value = value)
+        }
+      }
+
+      # =====================================================
+      # LEVEL 2 🔴 FIX: prevent rebuild when Level 3 is active
+      # =====================================================
+      if (is.null(l3)) {
+
+        l2_rows <- dat %>%
+          dplyr::distinct(Main_Objective, Level_1, Level_2)
+
+        for (j in seq_len(nrow(l2_rows))) {
+
+          id_l2 <- paste0(
+            "chk_l2_",
+            make.names(paste(
+              pillar,
+              l2_rows$Main_Objective[j],
+              l2_rows$Level_1[j],
+              l2_rows$Level_2[j]
+            ))
+          )
+
+          updateCheckboxInput(session, id_l2, value = value)
+        }
+
+      } else {
+
+        # 🔴 FIX: ONLY stay within Level 3 context
+        l2_rows <- dat %>%
+          dplyr::filter(Level_3 == l3) %>%
+          dplyr::distinct(Main_Objective, Level_1, Level_2)
+      }
+
+      # =====================================================
+      # LEVEL 3 (UNCHANGED STRUCTURE)
+      # =====================================================
+      if (input$detail_level %in% c("level3", "level4")) {
+
+        l3_rows <- dat %>%
+          dplyr::distinct(Main_Objective, Level_1, Level_2, Level_3)
+
+        for (k in seq_len(nrow(l3_rows))) {
+
+          id_l3 <- paste0(
+            "chk_l3_",
+            make.names(paste(
+              pillar,
+              l3_rows$Main_Objective[k],
+              l3_rows$Level_1[k],
+              l3_rows$Level_2[k],
+              l3_rows$Level_3[k]
+            ))
+          )
+
+          updateCheckboxInput(session, id_l3, value = value)
+
+          # =================================================
+          # LEVEL 4 🔴 FIX: no indirect upward bleed
+          # =================================================
+          if (input$detail_level == "level4") {
+
+            l4_rows <- dat %>%
+              dplyr::filter(Level_3 == l3_rows$Level_3[k]) %>%
+              dplyr::distinct(Level_4)
+
+            for (m in seq_len(nrow(l4_rows))) {
+
+              id_l4 <- paste0(
+                "chk_l4_",
+                make.names(paste(
+                  pillar,
+                  l3_rows$Main_Objective[k],
+                  l3_rows$Level_1[k],
+                  l3_rows$Level_2[k],
+                  l3_rows$Level_3[k],
+                  l4_rows$Level_4[m]
+                ))
+              )
+
+              updateCheckboxInput(session, id_l4, value = value)
+            }
+          }
+        }
+      }
+    }
+
+    # =====================================================
+    # PILLAR CLICKED
+    # =====================================================
+    if (grepl("^chk_pillar_", id)) {
+
+      pillar <- gsub("^chk_pillar_", "", id)
+      pillar <- gsub("\\.", " ", pillar)
+
+      pillar_data <- filtered_data %>%
+        dplyr::filter(Pillar == pillar)
+
+      for (main_obj in unique(pillar_data$Main_Objective)) {
+
+        updateCheckboxInput(
+          session,
+          paste0("chk_main_", make.names(paste(pillar, main_obj))),
+          value = current_value
+        )
+
+        update_children(pillar, main_obj, value = current_value)
+      }
+    }
+
+    # =====================================================
+    # MAIN OBJECTIVE CLICKED
+    # =====================================================
+    if (grepl("^chk_main_", id)) {
+
+      clean_id <- gsub("^chk_main_", "", id)
+
+      match_row <- filtered_data %>%
+        dplyr::filter(make.names(paste(Pillar, Main_Objective)) == clean_id) %>%
+        dplyr::slice(1)
+
+      if (nrow(match_row) > 0) {
+        update_children(
+          match_row$Pillar,
+          match_row$Main_Objective,
+          value = current_value
+        )
+      }
+    }
+
+    # =====================================================
+    # LEVEL 1 CLICKED
+    # =====================================================
+    if (grepl("^chk_l1_", id)) {
+
+      clean_id <- gsub("^chk_l1_", "", id)
+
+      match_row <- filtered_data %>%
+        dplyr::filter(make.names(paste(Pillar, Main_Objective, Level_1)) == clean_id) %>%
+        dplyr::slice(1)
+
+      if (nrow(match_row) > 0) {
+        update_children(
+          match_row$Pillar,
+          match_row$Main_Objective,
+          match_row$Level_1,
+          value = current_value
+        )
+      }
+    }
+
+    # =====================================================
+    # LEVEL 2 CLICKED
+    # =====================================================
+    if (grepl("^chk_l2_", id)) {
+
+      clean_id <- gsub("^chk_l2_", "", id)
+
+      match_row <- filtered_data %>%
+        dplyr::filter(
+          make.names(paste(Pillar, Main_Objective, Level_1, Level_2)) == clean_id
+        ) %>%
+        dplyr::slice(1)
+
+      if (nrow(match_row) > 0) {
+
+        update_children(
+          pillar = match_row$Pillar,
+          main_obj = match_row$Main_Objective,
+          l2 = match_row$Level_2,
+          value = current_value
+        )
+      }
+    }
+
+    # =====================================================
+    # LEVEL 3 CLICKED 🔴 FIXED (THIS IS KEY)
+    # =====================================================
+    if (grepl("^chk_l3_", id)) {
+
+      clean_id <- gsub("^chk_l3_", "", id)
+
+      match_row <- filtered_data %>%
+        dplyr::filter(
+          make.names(paste(Pillar, Main_Objective, Level_1, Level_2, Level_3)) == clean_id
+        ) %>%
+        dplyr::slice(1)
+
+      if (nrow(match_row) > 0) {
+
+        update_children(
+          pillar = match_row$Pillar,
+          main_obj = match_row$Main_Objective,
+          l2 = match_row$Level_2,
+          l3 = match_row$Level_3,
+          value = current_value
+        )
+      }
+    }
+
+  })
+
+## END TEST
 
   # Checklist downloads
 
