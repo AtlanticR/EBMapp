@@ -12,17 +12,25 @@ library(stringr)
 library(purrr)
 
 # Null coalesce helper
-`%||%` <- function(a,b) if (is.null(a)) b else a
+`%||%` <- function(a, b) if (is.null(a)) b else a
 
 use_explanations <- list()
 use_explanations[[1]] <- function() {
   tagList(
-    tags$p("Question: what objectives are relevant to my management plan/decision/project development etc?"),
+    tags$p(
+      "Question: what objectives are relevant to my management plan/decision/project development etc?"
+    ),
 
     tags$ul(
-      tags$li("Review objectives in each of the 4 Pillars (Ecological, Economic, Social and Cultural, and Governance)"),
-      tags$li("Suggestion to start with Level 1 Objectives and use lower level objectives to inform intent of the objectives"),
-      tags$li("In some cases, Level Two or lower level objectives may be more useful"),
+      tags$li(
+        "Review objectives in each of the 4 Pillars (Ecological, Economic, Social and Cultural, and Governance)"
+      ),
+      tags$li(
+        "Suggestion to start with Level 1 Objectives and use lower level objectives to inform intent of the objectives"
+      ),
+      tags$li(
+        "In some cases, Level Two or lower level objectives may be more useful"
+      ),
       tags$li("Assess which objectives are relevant to your needs")
     ),
     tags$br(),
@@ -32,7 +40,6 @@ use_explanations[[1]] <- function() {
 
 use_explanations[[2]] <- function() {
   tagList(
-
     tags$p(
       "Do current DFO policies and management approaches, some of which date back to the 1990s,
       embrace the full holistic spectrum of current EBM thinking, as outlined in the EBM Framework.
@@ -50,11 +57,10 @@ use_explanations[[2]] <- function() {
     ),
     tags$hr(),
     tags$p(
-    "Data or information adequacy: For each row of the table below using the second scoring systems below
+      "Data or information adequacy: For each row of the table below using the second scoring systems below
     and enter the score in the Score column and put NA into the “Policy_1_alignment” column. Lastly, Enter
     a rationale in the Rationale column."
     ),
-
 
     tags$h4("Policy Alignment Table"),
 
@@ -65,35 +71,85 @@ use_explanations[[2]] <- function() {
         style = "min-width: 1500px; border-collapse: collapse; border: 1px solid #ccc;",
         tags$thead(
           tags$tr(
-            tags$th("Pillar", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Main_Objective", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_3", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_4", style = "border: 1px solid #cfcc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Score_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Policy_1_alignment", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Rationale", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
+            tags$th(
+              "Pillar",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Main_Objective",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_1",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_2",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_3",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_4",
+              style = "border: 1px solid #cfcc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Objective_Label",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Score_1",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Policy_1_alignment",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Rationale",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            )
           )
         ),
         tags$tbody(
           tags$tr(
-            tags$td("Ecological", style = "border: 1px solid #ccc; padding: 6px; vertical-align: top;"),
-            tags$td("Productivity", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("1. Pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("a. Fishing pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("i. Fishing mortality is limited to levels necessary to promote sustainability", style = "border: 1px solid #ccc; padding: 6px;"),
+            tags$td(
+              "Ecological",
+              style = "border: 1px solid #ccc; padding: 6px; vertical-align: top;"
+            ),
+            tags$td(
+              "Productivity",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "1. Pressures on ecosystem productivity are managed",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "a. Fishing pressures on ecosystem productivity are managed",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "i. Fishing mortality is limited to levels necessary to promote sustainability",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("Ec.C.1.a.i", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td(" ", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td(
+              "Ec.C.1.a.i",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              " ",
+              style = "border: 1px solid #ccc; padding: 6px; text-align: center;"
+            ),
             tags$td(" ", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td(" ", style = "border: 1px solid #ccc; padding: 6px;")
           )
         )
       )
-    )
-    ,
+    ),
 
     tags$h4("Policy Language Alignment Scoring"),
 
@@ -102,20 +158,48 @@ use_explanations[[2]] <- function() {
       tags$thead(
         tags$tr(
           tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$th(
+            "Description",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         )
       ),
       tags$tbody(
-        tags$tr(tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Not relevant / applicable - dependent on context, case study, purview, department, jurisdiction, etc.", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("No mention - the objective of the EBM framework is not present within this unit of analysis", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Implicit Content mention - the phrase/terms used in the unit of analysis generally or vaguely aligns with, or alludes to, the intended meaning in the EBM Framework (e.g., high-level concepts)", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Explicit Content mention - the phrase/terms used in the unit of analysis partially aligns with, or alludes to, the meaning intended in the EBM framework, but may appear slightly different.", style = "border: 1px solid #ccc; padding: 4px;")),
-        tags$tr(tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"),
-                tags$td("Content & Context alignment - the phrase/terms used in the unit of analysis explicitly matches the intended content as well as the context of the EBM framework objectives", style = "border: 1px solid #ccc; padding: 4px;"))
+        tags$tr(
+          tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"),
+          tags$td(
+            "Not relevant / applicable - dependent on context, case study, purview, department, jurisdiction, etc.",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
+        ),
+        tags$tr(
+          tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
+          tags$td(
+            "No mention - the objective of the EBM framework is not present within this unit of analysis",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
+        ),
+        tags$tr(
+          tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
+          tags$td(
+            "Implicit Content mention - the phrase/terms used in the unit of analysis generally or vaguely aligns with, or alludes to, the intended meaning in the EBM Framework (e.g., high-level concepts)",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
+        ),
+        tags$tr(
+          tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
+          tags$td(
+            "Explicit Content mention - the phrase/terms used in the unit of analysis partially aligns with, or alludes to, the meaning intended in the EBM framework, but may appear slightly different.",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
+        ),
+        tags$tr(
+          tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"),
+          tags$td(
+            "Content & Context alignment - the phrase/terms used in the unit of analysis explicitly matches the intended content as well as the context of the EBM framework objectives",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
+        )
       )
     ),
     tags$h4("Data/Information Adequacy Scoring"),
@@ -124,7 +208,10 @@ use_explanations[[2]] <- function() {
       tags$thead(
         tags$tr(
           tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$th(
+            "Description",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         )
       ),
       tags$table(
@@ -132,29 +219,47 @@ use_explanations[[2]] <- function() {
         tags$thead(
           tags$tr(
             tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
+            tags$th(
+              "Description",
+              style = "border: 1px solid #ccc; padding: 4px;"
+            )
           )
         ),
         tags$tbody(
           tags$tr(
             tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Not relevant / applicable – Objective is not relevant to policy/management approach or plan.", style = "border: 1px solid #ccc; padding: 4px;")
+            tags$td(
+              "Not relevant / applicable – Objective is not relevant to policy/management approach or plan.",
+              style = "border: 1px solid #ccc; padding: 4px;"
+            )
           ),
           tags$tr(
             tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("ZERO – No data or information to address this objective of the EBM framework", style = "border: 1px solid #ccc; padding: 4px;")
+            tags$td(
+              "ZERO – No data or information to address this objective of the EBM framework",
+              style = "border: 1px solid #ccc; padding: 4px;"
+            )
           ),
           tags$tr(
             tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Weak – Some data or information to address this objective, but it is inconsistent temporally and/or spatially", style = "border: 1px solid #ccc; padding: 4px;")
+            tags$td(
+              "Weak – Some data or information to address this objective, but it is inconsistent temporally and/or spatially",
+              style = "border: 1px solid #ccc; padding: 4px;"
+            )
           ),
           tags$tr(
             tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Moderate – Some data or information with reasonable temporal and spatial coverage to address this objective", style = "border: 1px solid #ccc; padding: 4px;")
+            tags$td(
+              "Moderate – Some data or information with reasonable temporal and spatial coverage to address this objective",
+              style = "border: 1px solid #ccc; padding: 4px;"
+            )
           ),
           tags$tr(
             tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"),
-            tags$td("Strong – Good information and long term data with temporal and/or spatial coverage to address this objective", style = "border: 1px solid #ccc; padding: 4px;")
+            tags$td(
+              "Strong – Good information and long term data with temporal and/or spatial coverage to address this objective",
+              style = "border: 1px solid #ccc; padding: 4px;"
+            )
           )
         )
       )
@@ -183,135 +288,161 @@ use_explanations[[2]] <- function() {
         " Can. Tech. Rep. Fish. Aquat. Sci. 3558: vii + 47 p."
       )
     )
-
-
   )
 }
-
-
 
 
 use_explanations[[3]] <- function() {
   tagList(
-
-  # ---------------------------
-  # ORIGINAL PREAMBLE (UNCHANGED)
-  # ---------------------------
-  tags$p(
-    "In the complex world of decision making, clear objectives are required to evaluate different potential management options or scenarios. The objectives of the Governance, Ecological, Economic and Social and Cultural Pillars of the EBM Framework provide a holistic basis for comparison across scenarios. For example, the scenarios could be different options for opening a new fishery, decisions on whether to approve introductions and transfers of fish, different placements of a protected area, different locations of wind energy, or aquaculture sites or stocking options for Atlantic salmon. The simplest scenario comparison would be to decide whether or not to move ahead with a project. This decision would be evaluated against the EBM Framework objectives. A more complex decision would involve two or more scenarios and two or more activities (eg. Offshore wind and fisheries)."
-  ),
-
-  tags$hr(),
-
-  # ---------------------------
-  # SCENARIO ASSESSMENT LOGIC
-  # ---------------------------
-  tags$p(
-    strong("Scenario assessment approach:")
-  ),
-
-  tags$p(
-    "Scenarios can be evaluated using either quantitative indicators or qualitative judgement depending on data availability."
-  ),
-
-  tags$ul(
-    tags$li(
-      strong("Quantitative assessment: "),
-      "Uses measured indicator values, targets, and calculated scores."
+    # ---------------------------
+    # ORIGINAL PREAMBLE (UNCHANGED)
+    # ---------------------------
+    tags$p(
+      "In the complex world of decision making, clear objectives are required to evaluate different potential management options or scenarios. The objectives of the Governance, Ecological, Economic and Social and Cultural Pillars of the EBM Framework provide a holistic basis for comparison across scenarios. For example, the scenarios could be different options for opening a new fishery, decisions on whether to approve introductions and transfers of fish, different placements of a protected area, different locations of wind energy, or aquaculture sites or stocking options for Atlantic salmon. The simplest scenario comparison would be to decide whether or not to move ahead with a project. This decision would be evaluated against the EBM Framework objectives. A more complex decision would involve two or more scenarios and two or more activities (eg. Offshore wind and fisheries)."
     ),
-    tags$li(
-      strong("Qualitative assessment: "),
-      "Uses expert judgement and direct scoring without requiring indicator or target data."
-    )
-  ),
 
-  tags$hr(),
+    tags$hr(),
 
-  # ---------------------------
-  # HEADER STRUCTURE DEMO
-  # ---------------------------
-  tags$h4("Table Structure Examples"),
-
-  tags$p(strong("1. Quantitative scenario assessment (full indicator-based structure)")),
-
-  tags$table(
-    style = "border-collapse: collapse; width: 100%; margin-bottom: 15px;",
-    tags$tr(
-      tags$th("Objective Columns", style="border:1px solid #ccc; padding:6px;"),
-      tags$th("Scenario 1", colspan = 4, style="border:1px solid #ccc; padding:6px; text-align:center;"),
-      tags$th("Scenario 2", colspan = 4, style="border:1px solid #ccc; padding:6px; text-align:center;"),
-      tags$th("Rationale", style="border:1px solid #ccc; padding:6px;")
+    # ---------------------------
+    # SCENARIO ASSESSMENT LOGIC
+    # ---------------------------
+    tags$p(
+      strong("Scenario assessment approach:")
     ),
-    tags$tr(
-      tags$td("Pillar → Objective hierarchy", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Indicator", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Value", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Target", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Score", style="border:1px solid #ccc; padding:6px;"),
 
-      tags$td("Indicator", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Value", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Target", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Score", style="border:1px solid #ccc; padding:6px;"),
-
-      tags$td("Free text", style="border:1px solid #ccc; padding:6px;")
-    )
-  ),
-
-  tags$p(strong("2. Qualitative scenario assessment (simplified scoring structure)")),
-
-  tags$table(
-    style = "border-collapse: collapse; width: 100%;",
-    tags$tr(
-      tags$th("Objective Columns", style="border:1px solid #ccc; padding:6px;"),
-      tags$th("Scenario 1 Score", style="border:1px solid #ccc; padding:6px;"),
-      tags$th("Scenario 2 Score", style="border:1px solid #ccc; padding:6px;")
+    tags$p(
+      "Scenarios can be evaluated using either quantitative indicators or qualitative judgement depending on data availability."
     ),
-    tags$tr(
-      tags$td("Pillar → Objective hierarchy", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("0–2 score", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("0–2 score", style="border:1px solid #ccc; padding:6px;")
+
+    tags$ul(
+      tags$li(
+        strong("Quantitative assessment: "),
+        "Uses measured indicator values, targets, and calculated scores."
+      ),
+      tags$li(
+        strong("Qualitative assessment: "),
+        "Uses expert judgement and direct scoring without requiring indicator or target data."
       )
-  ),
-
-  tags$hr(),
-
-  # ---------------------------
-  # SCORING SYSTEM
-  # ---------------------------
-  tags$h4("Shared Scoring Framework"),
-
-  tags$p(
-    "All scenario evaluations use a consistent Likert-based scoring system to ensure comparability:"
-  ),
-
-  tags$table(
-    style = "border-collapse: collapse; width: 50%;",
-    tags$tr(
-      tags$th("Value", style="border:1px solid #ccc; padding:6px;"),
-      tags$th("Meaning", style="border:1px solid #ccc; padding:6px;")
     ),
-    tags$tr(
-      tags$td("0", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Not met target", style="border:1px solid #ccc; padding:6px;")
+
+    tags$hr(),
+
+    # ---------------------------
+    # HEADER STRUCTURE DEMO
+    # ---------------------------
+    tags$h4("Table Structure Examples"),
+
+    tags$p(strong(
+      "1. Quantitative scenario assessment (full indicator-based structure)"
+    )),
+
+    tags$table(
+      style = "border-collapse: collapse; width: 100%; margin-bottom: 15px;",
+      tags$tr(
+        tags$th(
+          "Objective Columns",
+          style = "border:1px solid #ccc; padding:6px;"
+        ),
+        tags$th(
+          "Scenario 1",
+          colspan = 4,
+          style = "border:1px solid #ccc; padding:6px; text-align:center;"
+        ),
+        tags$th(
+          "Scenario 2",
+          colspan = 4,
+          style = "border:1px solid #ccc; padding:6px; text-align:center;"
+        ),
+        tags$th("Rationale", style = "border:1px solid #ccc; padding:6px;")
+      ),
+      tags$tr(
+        tags$td(
+          "Pillar → Objective hierarchy",
+          style = "border:1px solid #ccc; padding:6px;"
+        ),
+        tags$td("Indicator", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Value", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Target", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Score", style = "border:1px solid #ccc; padding:6px;"),
+
+        tags$td("Indicator", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Value", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Target", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Score", style = "border:1px solid #ccc; padding:6px;"),
+
+        tags$td("Free text", style = "border:1px solid #ccc; padding:6px;")
+      )
     ),
-    tags$tr(
-      tags$td("1", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Met target", style="border:1px solid #ccc; padding:6px;")
+
+    tags$p(strong(
+      "2. Qualitative scenario assessment (simplified scoring structure)"
+    )),
+
+    tags$table(
+      style = "border-collapse: collapse; width: 100%;",
+      tags$tr(
+        tags$th(
+          "Objective Columns",
+          style = "border:1px solid #ccc; padding:6px;"
+        ),
+        tags$th(
+          "Scenario 1 Score",
+          style = "border:1px solid #ccc; padding:6px;"
+        ),
+        tags$th(
+          "Scenario 2 Score",
+          style = "border:1px solid #ccc; padding:6px;"
+        )
+      ),
+      tags$tr(
+        tags$td(
+          "Pillar → Objective hierarchy",
+          style = "border:1px solid #ccc; padding:6px;"
+        ),
+        tags$td("0–2 score", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("0–2 score", style = "border:1px solid #ccc; padding:6px;")
+      )
     ),
-    tags$tr(
-      tags$td("2", style="border:1px solid #ccc; padding:6px;"),
-      tags$td("Exceeded target", style="border:1px solid #ccc; padding:6px;")
+
+    tags$hr(),
+
+    # ---------------------------
+    # SCORING SYSTEM
+    # ---------------------------
+    tags$h4("Shared Scoring Framework"),
+
+    tags$p(
+      "All scenario evaluations use a consistent Likert-based scoring system to ensure comparability:"
+    ),
+
+    tags$table(
+      style = "border-collapse: collapse; width: 50%;",
+      tags$tr(
+        tags$th("Value", style = "border:1px solid #ccc; padding:6px;"),
+        tags$th("Meaning", style = "border:1px solid #ccc; padding:6px;")
+      ),
+      tags$tr(
+        tags$td("0", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Not met target", style = "border:1px solid #ccc; padding:6px;")
+      ),
+      tags$tr(
+        tags$td("1", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td("Met target", style = "border:1px solid #ccc; padding:6px;")
+      ),
+      tags$tr(
+        tags$td("2", style = "border:1px solid #ccc; padding:6px;"),
+        tags$td(
+          "Exceeded target",
+          style = "border:1px solid #ccc; padding:6px;"
+        )
+      )
     )
   )
-)
 }
-
 
 
 use_explanations[[4]] <- function() {
   tagList(
-
     tags$p(
       "The EBM Framework can be used as the basis for assessing management success against the relevant objectives, thus forming a management report card.
       Ideally management plans will have been developed or evaluated and updated using the EBM Framework (see USE 1 above).
@@ -333,52 +464,116 @@ use_explanations[[4]] <- function() {
         style = "min-width: 1500px; border-collapse: collapse; border: 1px solid #ccc;",
         tags$thead(
           tags$tr(
-            tags$th("Pillar", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Main_Objective", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_3", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_4", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Indicator_Value", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Score", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Rationale", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
+            tags$th(
+              "Pillar",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Main_Objective",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_1",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_2",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_3",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_4",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Objective_Label",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Indicator",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Indicator_Value",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Target",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Score",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Rationale",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            )
           )
         ),
         tags$tbody(
           tags$tr(
-            tags$td("Ecological", style = "border: 1px solid #ccc; padding: 6px; vertical-align: top;"),
-            tags$td("Productivity", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("1. Pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("a. Fishing pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("i. Fishing mortality is limited to levels necessary to promote sustainability", style = "border: 1px solid #ccc; padding: 6px;"),
+            tags$td(
+              "Ecological",
+              style = "border: 1px solid #ccc; padding: 6px; vertical-align: top;"
+            ),
+            tags$td(
+              "Productivity",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "1. Pressures on ecosystem productivity are managed",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "a. Fishing pressures on ecosystem productivity are managed",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "i. Fishing mortality is limited to levels necessary to promote sustainability",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("Ec.C.1.a.i", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td(
+              "Ec.C.1.a.i",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "",
+              style = "border: 1px solid #ccc; padding: 6px; text-align: center;"
+            ),
+            tags$td(
+              "",
+              style = "border: 1px solid #ccc; padding: 6px; text-align: center;"
+            ),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;")
           )
         )
       )
-    )
-    ,
-
+    ),
 
     tags$table(
       style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
       tags$thead(
         tags$tr(
           tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$th(
+            "Description",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         )
       ),
       tags$tbody(
         tags$tr(
           tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$td("Not met target", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$td(
+            "Not met target",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         ),
         tags$tr(
           tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
@@ -386,44 +581,65 @@ use_explanations[[4]] <- function() {
         ),
         tags$tr(
           tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$td("Exceeded target", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$td(
+            "Exceeded target",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         )
       )
     )
-
   )
 }
 
 use_explanations[[5]] <- function() {
   tagList(
-
     tags$p(
       "Assessing the cumulative effects of activities, the risks associated with them and the potential trade-offs among them is the basis for EBM, Integrated Management, Marine Spatial Planning and the Blue Economy, i.e., the holistic management of aquatic resource use.
       This use requires common objectives across the activities being assessed. These may need to be established, since management plans will already exist for each activity and they will not share all the same objectives."
     ),
-    tags$p("Question: what are cumulative effects of activities 1, 2, 3 etc., in area X?"),
+    tags$p(
+      "Question: what are cumulative effects of activities 1, 2, 3 etc., in area X?"
+    ),
 
     tags$hr(),
 
     tags$h4("Two Scoring Strategies Available:"),
 
-    tags$p(tags$strong("Strategy 1: Indicator-Based Assessment (Quantified Impacts)")),
+    tags$p(tags$strong(
+      "Strategy 1: Indicator-Based Assessment (Quantified Impacts)"
+    )),
     tags$ul(
-      tags$li("Suitable for detailed, quantitative cumulative effects analysis"),
-      tags$li("Score each activity-objective combination using indicators (0–2 scale)"),
+      tags$li(
+        "Suitable for detailed, quantitative cumulative effects analysis"
+      ),
+      tags$li(
+        "Score each activity-objective combination using indicators (0–2 scale)"
+      ),
       tags$li("Specify targets for each indicator"),
       tags$li("Document your tallying method in the 'Tallying_Method' column"),
-      tags$li("Calculate cumulative impact using your chosen approach (sum, average, maximum, custom threshold, or other method)"),
-      tags$li("Use an external worksheet if needed to determine the most appropriate tallying methodology for your context")
+      tags$li(
+        "Calculate cumulative impact using your chosen approach (sum, average, maximum, custom threshold, or other method)"
+      ),
+      tags$li(
+        "Use an external worksheet if needed to determine the most appropriate tallying methodology for your context"
+      )
     ),
 
-    tags$p(tags$strong("Strategy 2: Coarse Risk Assessment (Simplified Screening)")),
+    tags$p(tags$strong(
+      "Strategy 2: Coarse Risk Assessment (Simplified Screening)"
+    )),
     tags$ul(
       tags$li("Suitable for rapid, screening-level risk assessments"),
       tags$li("Quick risk-based scoring across activities (L/M/H scale)"),
-      tags$li("Automatically tallies counts of Low, Moderate, and High risk impacts"),
-      tags$li("Useful for identifying which activity-objective combinations warrant deeper analysis"),
-      tags$li("Ideal for early-stage decision-support and identifying priority concerns")
+      tags$li(
+        "Automatically tallies counts of Low, Moderate, and High risk impacts"
+      ),
+      tags$li(
+        "Useful for identifying which activity-objective combinations warrant deeper analysis"
+      ),
+      tags$li(
+        "Ideal for early-stage decision-support and identifying priority concerns"
+      )
     ),
 
     tags$hr(),
@@ -440,34 +656,103 @@ use_explanations[[5]] <- function() {
         style = "min-width: 1500px; border-collapse: collapse; border: 1px solid #ccc;",
         tags$thead(
           tags$tr(
-            tags$th("Pillar", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Main_Objective", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_1", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_2", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_3", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Level_4", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Objective_Label", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Fishing_Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Fishing_Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Fishing_Value", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Fishing_Impact", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Contaminants_Indicator", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Contaminants_Target", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Contaminants_Value", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"),
-            tags$th("Contaminants_Impact", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"),
-            tags$th("Tally", style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;")
+            tags$th(
+              "Pillar",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Main_Objective",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_1",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_2",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_3",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Level_4",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Objective_Label",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Fishing_Indicator",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Fishing_Target",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Fishing_Value",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Fishing_Impact",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Contaminants_Indicator",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Contaminants_Target",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Contaminants_Value",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: center;"
+            ),
+            tags$th(
+              "Contaminants_Impact",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            ),
+            tags$th(
+              "Tally",
+              style = "border: 1px solid #ccc; padding: 6px; white-space: nowrap; text-align: left;"
+            )
           )
         ),
         tags$tbody(
           tags$tr(
-            tags$td("Ecological", style = "border: 1px solid #ccc; padding: 6px; vertical-align: top;"),
-            tags$td("Productivity", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("1. Pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("a. Fishing pressures on ecosystem productivity are managed", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("i. Fishing mortality is limited to levels necessary to promote sustainability", style = "border: 1px solid #ccc; padding: 6px;"),
+            tags$td(
+              "Ecological",
+              style = "border: 1px solid #ccc; padding: 6px; vertical-align: top;"
+            ),
+            tags$td(
+              "Productivity",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "1. Pressures on ecosystem productivity are managed",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "a. Fishing pressures on ecosystem productivity are managed",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "i. Fishing mortality is limited to levels necessary to promote sustainability",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("Ec.C.1.a.i", style = "border: 1px solid #ccc; padding: 6px;"),
-            tags$td("", style = "border: 1px solid #ccc; padding: 6px; text-align: center;"),
+            tags$td(
+              "Ec.C.1.a.i",
+              style = "border: 1px solid #ccc; padding: 6px;"
+            ),
+            tags$td(
+              "",
+              style = "border: 1px solid #ccc; padding: 6px; text-align: center;"
+            ),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
             tags$td("", style = "border: 1px solid #ccc; padding: 6px;"),
@@ -475,21 +760,26 @@ use_explanations[[5]] <- function() {
           )
         )
       )
-    )
-    ,
+    ),
 
     tags$table(
       style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
       tags$thead(
         tags$tr(
           tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$th(
+            "Description",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         )
       ),
       tags$tbody(
         tags$tr(
           tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$td("Not met target", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$td(
+            "Not met target",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         ),
         tags$tr(
           tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
@@ -497,20 +787,26 @@ use_explanations[[5]] <- function() {
         ),
         tags$tr(
           tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
-          tags$td("Exceeded target", style = "border: 1px solid #ccc; padding: 4px;")
+          tags$td(
+            "Exceeded target",
+            style = "border: 1px solid #ccc; padding: 4px;"
+          )
         )
       )
     )
-
   )
 }
 
-names(use_explanations) <- c("Checklist of objectives", "Evaluating Policies and Management Approaches/ Plans",
-                             "Scenario Comparison", "Management Report Card", "Cumulative Effects and Tradeoffs")
+names(use_explanations) <- c(
+  "Checklist of objectives",
+  "Evaluating Policies and Management Approaches/ Plans",
+  "Scenario Comparison",
+  "Management Report Card",
+  "Cumulative Effects and Tradeoffs"
+)
 
 
 filter_short_label <- function(base) {
-
   base <- base %>%
     mutate(
       parts = strsplit(short_label, "\\."),
@@ -518,7 +814,6 @@ filter_short_label <- function(base) {
       lvl_num = as.integer(gsub("level", "", filter)),
 
       filtered_label = purrr::map2_chr(parts, filter, function(parts, filter) {
-
         # level 4 = no filtering
         if (filter == "level4") {
           return(paste(parts, collapse = "."))
@@ -544,20 +839,25 @@ filter_short_label <- function(base) {
   base
 }
 
+# Truncate a short_label to a given number of segments
+# e.g. truncate_label("Ec.C.2.a.i", 4) -> "Ec.C.2.a"
+truncate_label <- function(label, n_parts) {
+  parts <- strsplit(label, "\\.")[[1]]
+  paste(parts[1:min(n_parts, length(parts))], collapse = ".")
+}
 
-# Load data
-library(dplyr)
-
-ebm_data <- read.csv("data/EBM Framework Spreadsheet 3-Nov-2025.csv",
-                     stringsAsFactors = FALSE) |>
-  mutate(across(where(is.character), ~trimws(.)))
+ebm_data <- read.csv(
+  "data/EBM Framework Spreadsheet 3-Nov-2025.csv",
+  stringsAsFactors = FALSE
+) |>
+  mutate(across(where(is.character), ~ trimws(.)))
 
 
 to_roman <- function(x) tolower(as.character(as.roman(x)))
 
 pillar_prefix <- c(
   "Ecological" = "Ec",
-  "Economic"   = "En",
+  "Economic" = "En",
   "Social & Cultural" = "So",
   "Governance" = "Go"
 )
@@ -576,25 +876,31 @@ ebm_data <- ebm_data %>%
   # 🔴 LEVEL 1 (1,2,3) — restart within Pillar + Main
   group_by(Pillar, Main_Objective) %>%
   mutate(
-    L1_code = ifelse(!is.na(Level_1) & Level_1 != "",
-                     as.character(dense_rank(Level_1)),
-                     NA)
+    L1_code = ifelse(
+      !is.na(Level_1) & Level_1 != "",
+      as.character(dense_rank(Level_1)),
+      NA
+    )
   ) %>%
 
   # 🔴 LEVEL 2 (a,b,c)
   group_by(Pillar, Main_Objective, Level_1) %>%
   mutate(
-    L2_code = ifelse(!is.na(Level_2) & Level_2 != "",
-                     letters[dense_rank(Level_2)],
-                     NA)
+    L2_code = ifelse(
+      !is.na(Level_2) & Level_2 != "",
+      letters[dense_rank(Level_2)],
+      NA
+    )
   ) %>%
 
   # 🔴 LEVEL 3 (i,ii,iii)
   group_by(Pillar, Main_Objective, Level_1, Level_2) %>%
   mutate(
-    L3_code = ifelse(!is.na(Level_3) & Level_3 != "",
-                     to_roman(dense_rank(Level_3)),
-                     NA)
+    L3_code = ifelse(
+      !is.na(Level_3) & Level_3 != "",
+      to_roman(dense_rank(Level_3)),
+      NA
+    )
   ) %>%
 
   ungroup()
@@ -619,8 +925,6 @@ ebm_data$short_label <- gsub("(\\.NA)+$", "", ebm_data$short_label)
 
 ## END OBJECTIVE_LABEL
 
-
-
 # Build a full hierarchical checklist for selected pillars + MOs
 build_hierarchy_ui <- function(data, pillars, main_objs, detail) {
   items <- list()
@@ -628,11 +932,22 @@ build_hierarchy_ui <- function(data, pillars, main_objs, detail) {
   # Only pillars
   if (detail == "pillar") {
     for (p in pillars) {
-      items <- c(items, list(
-        div(class = "pillar-section",
-            div(class = "checkbox-label",
-                checkboxInput(paste0("chk_pillar_", make.names(p)), strong(p), FALSE)))
-      ))
+      items <- c(
+        items,
+        list(
+          div(
+            class = "pillar-section",
+            div(
+              class = "checkbox-label",
+              checkboxInput(
+                paste0("chk_pillar_", make.names(p)),
+                strong(p),
+                FALSE
+              )
+            )
+          )
+        )
+      )
     }
     return(tagList(items))
   }
@@ -642,25 +957,49 @@ build_hierarchy_ui <- function(data, pillars, main_objs, detail) {
   if (detail %in% c("main", "main_text")) {
     for (p in pillars) {
       pdat <- sel |> filter(Pillar == p)
-      mos <- pdat |> filter(!is.na(Main_Objective), Main_Objective != "") |> distinct(Main_Objective) |> pull()
-      if (length(main_objs)) mos <- intersect(mos, main_objs)
-      if (!length(mos)) next
+      mos <- pdat |>
+        filter(!is.na(Main_Objective), Main_Objective != "") |>
+        distinct(Main_Objective) |>
+        pull()
+      if (length(main_objs)) {
+        mos <- intersect(mos, main_objs)
+      }
+      if (!length(mos)) {
+        next
+      }
 
-      items <- c(items, list(
-        div(class = "pillar-section", div(class = "pillar-header", p))
-      ))
+      items <- c(
+        items,
+        list(
+          div(class = "pillar-section", div(class = "pillar-header", p))
+        )
+      )
 
       for (mo in mos) {
-        motext <- pdat |> filter(Main_Objective == mo) |> pull(Main_Objectives_text) |> unique()
+        motext <- pdat |>
+          filter(Main_Objective == mo) |>
+          pull(Main_Objectives_text) |>
+          unique()
         motext <- motext[!is.na(motext)][1] %||% ""
 
         sect <- list(
-          div(class = "main-objective-section",
-              div(class = "checkbox-label",
-                  checkboxInput(paste0("chk_main_", make.names(paste(p, mo))), strong(mo), FALSE)))
+          div(
+            class = "main-objective-section",
+            div(
+              class = "checkbox-label",
+              checkboxInput(
+                paste0("chk_main_", make.names(paste(p, mo))),
+                strong(mo),
+                FALSE
+              )
+            )
+          )
         )
         if (detail == "main_text" && nchar(motext)) {
-          sect <- c(sect, list(p(style = "font-style: italic; margin-left: 10px;", motext)))
+          sect <- c(
+            sect,
+            list(p(style = "font-style: italic; margin-left: 10px;", motext))
+          )
         }
         items <- c(items, sect)
       }
@@ -670,54 +1009,133 @@ build_hierarchy_ui <- function(data, pillars, main_objs, detail) {
 
   # Full hierarchy (Level 1–4)
   for (p in pillars) {
-    pdat <- sel |> filter(Pillar == p,
-                          Main_Objective %in% main_objs)
-    if (nrow(pdat) == 0) next
+    pdat <- sel |> filter(Pillar == p, Main_Objective %in% main_objs)
+    if (nrow(pdat) == 0) {
+      next
+    }
 
-    items <- c(items, list(
-      div(class = "pillar-section", div(class = "pillar-header", p))
-    ))
+    items <- c(
+      items,
+      list(
+        div(class = "pillar-section", div(class = "pillar-header", p))
+      )
+    )
 
-    mos <- pdat |> filter(!is.na(Main_Objective), Main_Objective != "") |> distinct(Main_Objective) |> pull()
+    mos <- pdat |>
+      filter(!is.na(Main_Objective), Main_Objective != "") |>
+      distinct(Main_Objective) |>
+      pull()
     for (mo in mos) {
       mdat <- pdat |> filter(Main_Objective == mo)
       motext <- mdat |> pull(Main_Objectives_text) |> unique()
       motext <- motext[!is.na(motext)][1] %||% ""
 
       mo_block <- list(
-        div(class = "main-objective-section",
-            div(class = "checkbox-label",
-                checkboxInput(paste0("chk_main_", make.names(paste(p, mo))), strong(mo), FALSE)))
+        div(
+          class = "main-objective-section",
+          div(
+            class = "checkbox-label",
+            checkboxInput(
+              paste0("chk_main_", make.names(paste(p, mo))),
+              strong(mo),
+              FALSE
+            )
+          )
+        )
       )
       if (nchar(motext)) {
-        mo_block <- c(mo_block, list(p(style = "font-style: italic; margin-left: 10px;", motext)))
+        mo_block <- c(
+          mo_block,
+          list(p(style = "font-style: italic; margin-left: 10px;", motext))
+        )
       }
 
-      l1s <- mdat |> filter(!is.na(Level_1), Level_1 != "") |> distinct(Level_1) |> pull()
+      l1s <- mdat |>
+        filter(!is.na(Level_1), Level_1 != "") |>
+        distinct(Level_1) |>
+        pull()
       for (l1 in l1s) {
-        mo_block <- c(mo_block, list(
-          div(class = "level-1 checkbox-label",
-              checkboxInput(paste0("chk_l1_", make.names(paste(p, mo, l1))), l1, FALSE))
-        ))
-        l2s <- mdat |> filter(Level_1 == l1, !is.na(Level_2), Level_2 != "") |> distinct(Level_2) |> pull()
+        mo_block <- c(
+          mo_block,
+          list(
+            div(
+              class = "level-1 checkbox-label",
+              checkboxInput(
+                paste0("chk_l1_", make.names(paste(p, mo, l1))),
+                l1,
+                FALSE
+              )
+            )
+          )
+        )
+        l2s <- mdat |>
+          filter(Level_1 == l1, !is.na(Level_2), Level_2 != "") |>
+          distinct(Level_2) |>
+          pull()
         for (l2 in l2s) {
-          mo_block <- c(mo_block, list(
-            div(class = "level-2 checkbox-label",
-                checkboxInput(paste0("chk_l2_", make.names(paste(p, mo, l1, l2))), l2, FALSE))
-          ))
-          l3s <- mdat |> filter(Level_1 == l1, Level_2 == l2, !is.na(Level_3), Level_3 != "") |> distinct(Level_3) |> pull()
+          mo_block <- c(
+            mo_block,
+            list(
+              div(
+                class = "level-2 checkbox-label",
+                checkboxInput(
+                  paste0("chk_l2_", make.names(paste(p, mo, l1, l2))),
+                  l2,
+                  FALSE
+                )
+              )
+            )
+          )
+          l3s <- mdat |>
+            filter(
+              Level_1 == l1,
+              Level_2 == l2,
+              !is.na(Level_3),
+              Level_3 != ""
+            ) |>
+            distinct(Level_3) |>
+            pull()
           for (l3 in l3s) {
-            mo_block <- c(mo_block, list(
-              div(class = "level-3 checkbox-label",
-                  checkboxInput(paste0("chk_l3_", make.names(paste(p, mo, l1, l2, l3))), l3, FALSE))
-            ))
-            l4s <- mdat |> filter(Level_1 == l1, Level_2 == l2, Level_3 == l3,
-                                  !is.na(Level_4), Level_4 != "") |> distinct(Level_4) |> pull()
+            mo_block <- c(
+              mo_block,
+              list(
+                div(
+                  class = "level-3 checkbox-label",
+                  checkboxInput(
+                    paste0("chk_l3_", make.names(paste(p, mo, l1, l2, l3))),
+                    l3,
+                    FALSE
+                  )
+                )
+              )
+            )
+            l4s <- mdat |>
+              filter(
+                Level_1 == l1,
+                Level_2 == l2,
+                Level_3 == l3,
+                !is.na(Level_4),
+                Level_4 != ""
+              ) |>
+              distinct(Level_4) |>
+              pull()
             for (l4 in l4s) {
-              mo_block <- c(mo_block, list(
-                div(class = "lefvel-4 checkbox-label",
-                    checkboxInput(paste0("chk_l4_", make.names(paste(p, mo, l1, l2, l3, l4))), l4, FALSE))
-              ))
+              mo_block <- c(
+                mo_block,
+                list(
+                  div(
+                    class = "lefvel-4 checkbox-label",
+                    checkboxInput(
+                      paste0(
+                        "chk_l4_",
+                        make.names(paste(p, mo, l1, l2, l3, l4))
+                      ),
+                      l4,
+                      FALSE
+                    )
+                  )
+                )
+              )
             }
           }
         }
@@ -757,48 +1175,299 @@ perf_levels <- c(
 )
 
 # USE 5 impact Likert
-cumu_impact_levels <- c("X Not applicable", "0 No impact", "1 Low", "2 Moderate", "3 High")
+cumu_impact_levels <- c(
+  "X Not applicable",
+  "0 No impact",
+  "1 Low",
+  "2 Moderate",
+  "3 High"
+)
 
 
 # Template constructors used by Step 2
-make_objective_table <- function(so, level_cols) {
-  # Ensure stable base columns
-  base <- so |>
-    dplyr::select(Pillar, Main_Objective, all_of(level_cols), short_label, filter)
+make_objective_table <- function(so, level_cols, checked_ids = NULL) {
+  if (is.null(checked_ids) || length(checked_ids) == 0) {
+    empty <- so |>
+      dplyr::select(
+        Pillar,
+        Main_Objective,
+        all_of(level_cols),
+        short_label,
+        filter
+      ) |>
+      dplyr::distinct()
+    empty$Objective_Label <- ""
+    empty <- filter_short_label(empty)
+    empty$short_label <- empty$filtered_label
+    empty <- empty[, !(names(empty) %in% c("filter", "filtered_label"))]
+    return(empty[0, ])
+  }
 
-  # Build label from non‑NA levels for each row
-  label_mat <- base |>
-    dplyr::select(Pillar, Main_Objective, all_of(level_cols)) |>
-    as.data.frame()
+  # Get scope
+  scope <- so |>
+    dplyr::select(Pillar, Main_Objective) |>
+    dplyr::distinct()
 
-  base$Objective_Label <- apply(
-    label_mat,
-    1,
-    function(r) paste0(stats::na.omit(r), collapse = "/")
+  detail_level <- so$filter[1]
+
+  # Build one row per unique node at each level from ebm_data
+  # Level 4 rows
+  l4_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_4), Level_4 != "") |>
+    dplyr::select(
+      Pillar,
+      Main_Objective,
+      Level_1,
+      Level_2,
+      Level_3,
+      Level_4,
+      short_label
+    ) |>
+    dplyr::distinct() |>
+    dplyr::mutate(node_level = 4L)
+
+  # Level 3 rows (unique L1+L2+L3 combinations, L4 blank)
+  l3_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_3), Level_3 != "") |>
+    dplyr::select(
+      Pillar,
+      Main_Objective,
+      Level_1,
+      Level_2,
+      Level_3,
+      short_label
+    ) |>
+    dplyr::distinct() |>
+    dplyr::mutate(Level_4 = "", node_level = 3L)
+
+  # Level 2 rows (unique L1+L2 combinations, L3/L4 blank)
+  l2_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_2), Level_2 != "") |>
+    dplyr::select(Pillar, Main_Objective, Level_1, Level_2, short_label) |>
+    dplyr::distinct() |>
+    dplyr::mutate(Level_3 = "", Level_4 = "", node_level = 2L)
+
+  # Level 1 rows
+  l1_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_1), Level_1 != "") |>
+    dplyr::select(Pillar, Main_Objective, Level_1, short_label) |>
+    dplyr::distinct() |>
+    dplyr::mutate(Level_2 = "", Level_3 = "", Level_4 = "", node_level = 1L)
+
+  # Bind all levels together
+  base_full <- dplyr::bind_rows(l4_rows, l3_rows, l2_rows, l1_rows)
+  base_full$filter <- detail_level
+
+  # Fix short_label for each node level by truncating to correct depth
+  # Pillar=1, Main=2, L1=3, L2=4, L3=5, L4=6 parts
+  base_full$short_label <- mapply(
+    function(lbl, nl) {
+      truncate_label(lbl, nl + 2L)
+    },
+    base_full$short_label,
+    base_full$node_level
   )
-  ## TEST TO FILTER SHORT_LABEL DEPENDING ON WHICH LEVEL OF DETAIL WE SELECTED:
 
-  base <- filter_short_label(base)
-  base$short_label <- base$filtered_label
-  base <- base[, !(names(base) %in% c("filter", "filtered_label"))]
+  # Build Objective_Label
+  label_mat <- base_full |>
+    dplyr::select(Pillar, Main_Objective, Level_1, Level_2, Level_3, Level_4) |>
+    as.data.frame()
+  base_full$Objective_Label <- apply(label_mat, 1, function(r) {
+    paste0(r[r != "" & !is.na(r)], collapse = "/")
+  })
 
+  rows_to_keep <- c()
+  label_overrides <- c()
 
+  for (i in seq_len(nrow(base_full))) {
+    row <- base_full[i, ]
+    nl <- row$node_level
+    is_leaf <- FALSE
+    is_checked <- FALSE
+    override_label <- NA_character_
 
-  ## END TEST
+    if (nl == 4L) {
+      is_leaf <- TRUE
+      check_id <- paste0(
+        "chk_l4_",
+        make.names(paste(
+          row$Pillar,
+          row$Main_Objective,
+          row$Level_1,
+          row$Level_2,
+          row$Level_3,
+          row$Level_4
+        ))
+      )
+      is_checked <- check_id %in% checked_ids
+    } else if (nl == 3L) {
+      check_id <- paste0(
+        "chk_l3_",
+        make.names(paste(
+          row$Pillar,
+          row$Main_Objective,
+          row$Level_1,
+          row$Level_2,
+          row$Level_3
+        ))
+      )
+      child_count <- sum(
+        ebm_data$Pillar == row$Pillar &
+          ebm_data$Main_Objective == row$Main_Objective &
+          ebm_data$Level_1 == row$Level_1 &
+          ebm_data$Level_2 == row$Level_2 &
+          ebm_data$Level_3 == row$Level_3 &
+          !is.na(ebm_data$Level_4) &
+          ebm_data$Level_4 != "",
+        na.rm = TRUE
+      )
+      if (child_count == 0L) {
+        is_leaf <- TRUE
+        is_checked <- check_id %in% checked_ids
+      } else if (check_id %in% checked_ids) {
+        child_prefix <- paste0(
+          "chk_l4_",
+          make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1,
+            row$Level_2,
+            row$Level_3
+          ))
+        )
+        if (!any(grepl(child_prefix, checked_ids, fixed = TRUE))) {
+          is_leaf <- TRUE
+          is_checked <- TRUE
+          override_label <- truncate_label(row$short_label, 5L)
+        }
+      }
+    } else if (nl == 2L) {
+      check_id <- paste0(
+        "chk_l2_",
+        make.names(paste(
+          row$Pillar,
+          row$Main_Objective,
+          row$Level_1,
+          row$Level_2
+        ))
+      )
+      child_count <- sum(
+        ebm_data$Pillar == row$Pillar &
+          ebm_data$Main_Objective == row$Main_Objective &
+          ebm_data$Level_1 == row$Level_1 &
+          ebm_data$Level_2 == row$Level_2 &
+          !is.na(ebm_data$Level_3) &
+          ebm_data$Level_3 != "",
+        na.rm = TRUE
+      )
+      if (child_count == 0L) {
+        is_leaf <- TRUE
+        is_checked <- check_id %in% checked_ids
+      } else if (check_id %in% checked_ids) {
+        child_prefix <- paste0(
+          "chk_l3_",
+          make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1,
+            row$Level_2
+          ))
+        )
+        if (!any(grepl(child_prefix, checked_ids, fixed = TRUE))) {
+          is_leaf <- TRUE
+          is_checked <- TRUE
+          override_label <- truncate_label(row$short_label, 4L)
+        }
+      }
+    } else if (nl == 1L) {
+      check_id <- paste0(
+        "chk_l1_",
+        make.names(paste(
+          row$Pillar,
+          row$Main_Objective,
+          row$Level_1
+        ))
+      )
+      child_count <- sum(
+        ebm_data$Pillar == row$Pillar &
+          ebm_data$Main_Objective == row$Main_Objective &
+          ebm_data$Level_1 == row$Level_1 &
+          !is.na(ebm_data$Level_2) &
+          ebm_data$Level_2 != "",
+        na.rm = TRUE
+      )
+      if (child_count == 0L) {
+        is_leaf <- TRUE
+        is_checked <- check_id %in% checked_ids
+      } else if (check_id %in% checked_ids) {
+        child_prefix <- paste0(
+          "chk_l2_",
+          make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1
+          ))
+        )
+        if (!any(grepl(child_prefix, checked_ids, fixed = TRUE))) {
+          is_leaf <- TRUE
+          is_checked <- TRUE
+          override_label <- truncate_label(row$short_label, 3L)
+        }
+      }
+    }
 
-  base
+    if (is_leaf && is_checked) {
+      rows_to_keep <- c(rows_to_keep, i)
+      label_overrides <- c(label_overrides, override_label)
+    }
+  }
+
+  base_full <- base_full[rows_to_keep, ]
+
+  # Apply label overrides
+  for (k in seq_along(label_overrides)) {
+    if (!is.na(label_overrides[k])) {
+      base_full$short_label[k] <- label_overrides[k]
+    }
+  }
+
+  # Drop node_level helper column and level columns beyond detail level
+  base_full <- base_full[, !(names(base_full) %in% "node_level")]
+  cols_to_drop <- setdiff(
+    c("Level_1", "Level_2", "Level_3", "Level_4"),
+    level_cols
+  )
+  base_full <- base_full[, !(names(base_full) %in% cols_to_drop)]
+
+  base_full
 }
 
 # helper function to rename columns with scenario names
 rename_scenario_columns <- function(df, assessment_type, scenario_names_vec) {
-  if (assessment_type == "scenarios" && !is.null(scenario_names_vec) && length(scenario_names_vec) > 0) {
+  if (
+    assessment_type == "scenarios" &&
+      !is.null(scenario_names_vec) &&
+      length(scenario_names_vec) > 0
+  ) {
     cols <- names(df)
 
     for (i in seq_len(length(scenario_names_vec))) {
       scenario <- scenario_names_vec[i]
       cols <- gsub(paste0("Score_", i), paste0(scenario, "_Score"), cols)
-      cols <- gsub(paste0("Policy_", i, "_alignment"), paste0(scenario, "_Alignment"), cols)
-      cols <- gsub(paste0("Source_", i, "_data_adequacy"), paste0(scenario, "_Data_Adequacy"), cols)
+      cols <- gsub(
+        paste0("Policy_", i, "_alignment"),
+        paste0(scenario, "_Alignment"),
+        cols
+      )
+      cols <- gsub(
+        paste0("Source_", i, "_data_adequacy"),
+        paste0(scenario, "_Data_Adequacy"),
+        cols
+      )
     }
     names(df) <- cols
   }
@@ -808,69 +1477,95 @@ rename_scenario_columns <- function(df, assessment_type, scenario_names_vec) {
 
 # UI
 ui <- dashboardPage(
-  dashboardHeader(title = "EBM Framework App",
-                  tags$li(
-                    class = "dropdown",
-                    tags$a(
-                      href = "https://github.com/AtlanticR/EBMapp",
-                      target = "_blank",
-                      icon("github"),
-                      "GitHub",
-                      style = "padding-top: 15px; padding-bottom: 15px;"
-                    )
-                  )
+  dashboardHeader(
+    title = "EBM Framework App",
+    tags$li(
+      class = "dropdown",
+      tags$a(
+        href = "https://github.com/AtlanticR/EBMapp",
+        target = "_blank",
+        icon("github"),
+        "GitHub",
+        style = "padding-top: 15px; padding-bottom: 15px;"
+      )
+    )
   ),
   dashboardSidebar(
     width = 350,
     tags$head(
-      tags$style(HTML("
+      tags$style(HTML(
+        "
       li a[data-value='EBM_in_action'] {
         border: 4px solid green !important;
         border-radius: 4px;
       }
-    "))
+    "
+      ))
     ),
     sidebarMenu(
       id = "sidebar",
-      menuItem("Exploring the EBM Framework", tabName = "home", icon = icon("globe")),
-      menuItem("Exploring the Uses of the EBM Framework", tabName = "useEBM", icon = icon("leanpub")),
-      menuItem("Use the EBM Framework", tabName= 'EBM_in_action', icon=icon("cubes")),
-      menuItem("References", tabName='references', icon=icon('book')),
+      menuItem(
+        "Exploring the EBM Framework",
+        tabName = "home",
+        icon = icon("globe")
+      ),
+      menuItem(
+        "Exploring the Uses of the EBM Framework",
+        tabName = "useEBM",
+        icon = icon("leanpub")
+      ),
+      menuItem(
+        "Use the EBM Framework",
+        tabName = 'EBM_in_action',
+        icon = icon("cubes")
+      ),
+      menuItem("References", tabName = 'references', icon = icon('book')),
       conditionalPanel(
         condition = "input.sidebar == 'EBM_in_action' || input.sidebar == 'select_objectives' || input.sidebar == 'assessment'",
         #condition = "input.sidebar == 'EBM_in_action'",
-      hr(),
-      #h4("EBM Framework Workflow", style = "padding-left: 15px; color: #fff;"),
-      div(class = "indent-step",
-      menuItem("STEP 1: Select Objectives",
-              tabName = "select_objectives",
-              icon = icon("square-check"),
-              badgeLabel = "Start Here",
-              badgeColor = "green"))),
+        hr(),
+        #h4("EBM Framework Workflow", style = "padding-left: 15px; color: #fff;"),
+        div(
+          class = "indent-step",
+          menuItem(
+            "STEP 1: Select Objectives",
+            tabName = "select_objectives",
+            icon = icon("square-check"),
+            badgeLabel = "Start Here",
+            badgeColor = "green"
+          )
+        )
+      ),
       conditionalPanel(
         condition = "input.sidebar == 'select_objectives' || input.sidebar == 'assessment'",
-        div(class = "indent-step",
-      menuItem("STEP 2: Assessment & Comparison",
-              tabName = "assessment",
-              icon = icon("clipboard-list"),
-              badgeLabel = "Optional",
-              badgeColor = "blue"))
-    )
-
+        div(
+          class = "indent-step",
+          menuItem(
+            "STEP 2: Assessment & Comparison",
+            tabName = "assessment",
+            icon = icon("clipboard-list"),
+            badgeLabel = "Optional",
+            badgeColor = "blue"
+          )
+        )
+      )
     )
   ),
   dashboardBody(
     useShinyjs(),
-    tags$script(HTML("
+    tags$script(HTML(
+      "
       document.addEventListener('keydown', function(e) {
         if (e.key === 's' &&
             !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
           Shiny.setInputValue('key_s', Date.now());
         }
       });
-    ")),
-     tags$head(
-         tags$style(HTML("
+    "
+    )),
+    tags$head(
+      tags$style(HTML(
+        "
      /* indent STEP 1 */
      a[data-value='select_objectives'] {
        padding-left: 35px !important;
@@ -880,9 +1575,12 @@ ui <- dashboardPage(
      a[data-value='assessment'] {
        padding-left: 35px !important;
      }
-   "))),
+   "
+      ))
+    ),
     tags$head(
-      tags$style(HTML("
+      tags$style(HTML(
+        "
     /* pin References to bottom of the page */
     .sidebar-menu a[data-value='references'] {
       position: fixed;
@@ -902,15 +1600,17 @@ ui <- dashboardPage(
     .sidebar-menu a[data-value='references']:hover {
       background-color: #ff7700 !important;  /* Darker orange on hover */
     }
-  "))
+  "
+      ))
     ),
 
-
-
     tags$head(
-      tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jQuery-rwdImageMaps/1.6/jquery.rwdImageMaps.min.js"),
+      tags$script(
+        src = "https://cdnjs.cloudflare.com/ajax/libs/jQuery-rwdImageMaps/1.6/jquery.rwdImageMaps.min.js"
+      ),
       tags$script(src = "dataTables.cellEdit.js"),
-      tags$style(HTML("
+      tags$style(HTML(
+        "
         .centered-image {
           display: block; margin-left: auto; margin-right: auto;
           width: 70%; max-width: 1280px; height: auto;
@@ -952,87 +1652,133 @@ ui <- dashboardPage(
     .dashboard-body {
         margin-bottom: 80px;
     }
-      "))
+      "
+      ))
     ),
+
+    tags$head(
+      tags$style(HTML(
+        "
+    /* Partial selection indicator */
+    .checkbox-label input[type='checkbox']:indeterminate {
+      background-color: #FFA500;
+      border-color: #FF8C00;
+    }
+  "
+      ))
+    ),
+
     tabItems(
       # Home: image map
-      tabItem(tabName = "home",
-              fluidRow(
-                box(width = 12, title = "Welcome to the Ecosystem-Based Management Framework Exploration Tool", status = "primary", solidHeader = TRUE,
-                    p("This interactive tool helps you explore and apply the Ecosystem-Based Management (EBM) framework (",
-                      tags$a("Bundy et al. 2025",
-                             href = "https://publications.gc.ca/collections/collection_2025/mpo-dfo/fs97-6/Fs97-6-3716-eng.pdf",
-                             target = "_blank"),
-                      ")."),
-                    p("Fisheries and Oceans Canada (DFO) has a mandate to apply an ecosystem approach to fisheries and oceans management decisions. An ecosystem approach includes",
+      tabItem(
+        tabName = "home",
+        fluidRow(
+          box(
+            width = 12,
+            title = "Welcome to the Ecosystem-Based Management Framework Exploration Tool",
+            status = "primary",
+            solidHeader = TRUE,
+            p(
+              "This interactive tool helps you explore and apply the Ecosystem-Based Management (EBM) framework (",
+              tags$a(
+                "Bundy et al. 2025",
+                href = "https://publications.gc.ca/collections/collection_2025/mpo-dfo/fs97-6/Fs97-6-3716-eng.pdf",
+                target = "_blank"
+              ),
+              ")."
+            ),
+            p(
+              "Fisheries and Oceans Canada (DFO) has a mandate to apply an ecosystem approach to fisheries and oceans management decisions. An ecosystem approach includes",
 
-          tags$a("ecological",
-                 href = "https://drive.google.com/file/d/1QpsQ7kIFCyTs-xCYHLCtXGhQV1rsNRwm/view?usp=drive_link",
-                 target = "_blank"),
-          ", ",
-          tags$a("economic",
-                 href = "https://drive.google.com/file/d/11Zin2bghEokKIJcqDlaEvzsSqQLaYyIx/view?usp=sharing",
-                 target = "_blank"),
-          ", ",
-          tags$a("social and cultural",
-                 href = "https://drive.google.com/file/d/1VLIWfn4lChM1Vzak8zcNgRWHyE0bnX3U/view?usp=sharing",
-                 target = "_blank"),
-          ", and",
-          tags$a("governance",
-                 href = "https://drive.google.com/file/d/1jmW5fo2Dp2thlyg43vgpLyY2nkqoXN5j/view?usp=sharing",
-                 target = "_blank"),
-                    "objectives, which are required in many of DFO's decision-making processes.",
-                      br(),
-                      "The EBM Framework will support DFO decision-making across sectors by providing a broad range of objectives and indicators within a consistent, structured framework to support transparent, evidence-based decision-making.
+              tags$a(
+                "ecological",
+                href = "https://drive.google.com/file/d/1QpsQ7kIFCyTs-xCYHLCtXGhQV1rsNRwm/view?usp=drive_link",
+                target = "_blank"
+              ),
+              ", ",
+              tags$a(
+                "economic",
+                href = "https://drive.google.com/file/d/11Zin2bghEokKIJcqDlaEvzsSqQLaYyIx/view?usp=sharing",
+                target = "_blank"
+              ),
+              ", ",
+              tags$a(
+                "social and cultural",
+                href = "https://drive.google.com/file/d/1VLIWfn4lChM1Vzak8zcNgRWHyE0bnX3U/view?usp=sharing",
+                target = "_blank"
+              ),
+              ", and",
+              tags$a(
+                "governance",
+                href = "https://drive.google.com/file/d/1jmW5fo2Dp2thlyg43vgpLyY2nkqoXN5j/view?usp=sharing",
+                target = "_blank"
+              ),
+              "objectives, which are required in many of DFO's decision-making processes.",
+              br(),
+              "The EBM Framework will support DFO decision-making across sectors by providing a broad range of objectives and indicators within a consistent, structured framework to support transparent, evidence-based decision-making.
 The purpose of the Maritimes EBM Framework is to support a more holistic approach to decision-making.",
-                      br(),
-                      " The Regional EBM framework uses a hierarchical structure which includes:",
-                      br(),
-                      "1.	Pillars (inner circle in figure)",
-                      br(),
-                      "2.	Main Objectives (outer circle in figure)",
-                      br(),
-                      "3.	Sub-Objectives",
-                      br(),
-                      "4.	Indicators (to measure objectives)"
-                      ),
-                    p(
-                      style = "background-color: #fff3cd; padding: 4px 6px;",
-                      strong(
-                        "Click on any section of the framework below to view detailed information or explore the menu to the left for additional tools and resources."
-                      )
-                    )
-                )),
-              fluidRow(
-                box(width = 12, title = "Interactive EBM Framework", status = "info", solidHeader = TRUE,
-                    uiOutput("home_map_content"))
+              br(),
+              " The Regional EBM framework uses a hierarchical structure which includes:",
+              br(),
+              "1.	Pillars (inner circle in figure)",
+              br(),
+              "2.	Main Objectives (outer circle in figure)",
+              br(),
+              "3.	Sub-Objectives",
+              br(),
+              "4.	Indicators (to measure objectives)"
+            ),
+            p(
+              style = "background-color: #fff3cd; padding: 4px 6px;",
+              strong(
+                "Click on any section of the framework below to view detailed information or explore the menu to the left for additional tools and resources."
               )
+            )
+          )
+        ),
+        fluidRow(
+          box(
+            width = 12,
+            title = "Interactive EBM Framework",
+            status = "info",
+            solidHeader = TRUE,
+            uiOutput("home_map_content")
+          )
+        )
       ),
 
       # Using EBM
-      tabItem(tabName='useEBM',
+      tabItem(
+        tabName = 'useEBM',
 
-              box(width = 12, title = "Understanding Uses of EBM Framework", status = "primary", solidHeader = TRUE,
-                  p("Five broad areas of use have been envisioned for the EBM Framework (below). These are premised on DFO's objective/outcomes based approach to management, and provide the candidate objectives to be used in different decision-making contexts. "),
-                  p(
-                    style = "background-color: #fff3cd; padding: 4px 6px;",
-                    strong(
-                      "Click on each of the use cases to learn more about how to apply the EBM Framework"
-                    )
-                  ),
-                  p(
-                    strong(
-                      "Note: Use 1 is always used as the first step of Uses 2-5."
-                    )
-                  ),
+        box(
+          width = 12,
+          title = "Understanding Uses of EBM Framework",
+          status = "primary",
+          solidHeader = TRUE,
+          p(
+            "Five broad areas of use have been envisioned for the EBM Framework (below). These are premised on DFO's objective/outcomes based approach to management, and provide the candidate objectives to be used in different decision-making contexts. "
+          ),
+          p(
+            style = "background-color: #fff3cd; padding: 4px 6px;",
+            strong(
+              "Click on each of the use cases to learn more about how to apply the EBM Framework"
+            )
+          ),
+          p(
+            strong(
+              "Note: Use 1 is always used as the first step of Uses 2-5."
+            )
+          ),
 
-                  tags$img(
-                    src = "EBMuses.png",
-                    width = "1000px",
-                    id = "my_image"
-                  ),
+          tags$img(
+            src = "EBMuses.png",
+            width = "1000px",
+            id = "my_image"
+          ),
 
-                  tags$script(HTML("
+          tags$script(HTML(
+            "
     const img = document.getElementById('my_image');
 
     // define 5 rectangular zones using top-left and bottom-right
@@ -1065,81 +1811,99 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
         }
       }
     });
-  ")))
+  "
+          ))
+        )
       ),
 
-      tabItem(tabName = "EBM_in_action",
-              fluidRow(
-                box(
-                  width = 12, title = "Using this app", status = "primary", solidHeader = TRUE,
-                  p(strong("Check list of Objectives")),
-                  p("Determine what objectives are relevant to your management plan/decision/project development etc."),
-                  p("Responses from Use 1 are applied to all other uses."),
-                  tagList(
-                    tags$style(HTML("
+      tabItem(
+        tabName = "EBM_in_action",
+        fluidRow(
+          box(
+            width = 12,
+            title = "Using this app",
+            status = "primary",
+            solidHeader = TRUE,
+            p(strong("Check list of Objectives")),
+            p(
+              "Determine what objectives are relevant to your management plan/decision/project development etc."
+            ),
+            p("Responses from Use 1 are applied to all other uses."),
+            tagList(
+              tags$style(HTML(
+                "
     .btn-step1 {
       background-color: #fff3cd !important;
       color: #856404 !important;
       border: 1px solid #ffeeba !important;
     }
-  ")),
+  "
+              )),
 
-                    actionButton(
-                      "goto_step1",
-                      "Go to Step 1",
-                      class = "btn btn-step1"
-                    )
-                  ),
-                  #actionButton("goto_step1", "Go to Step 1", class = "btn-primary"),
-                  br(), br(),
+              actionButton(
+                "goto_step1",
+                "Go to Step 1",
+                class = "btn btn-step1"
+              )
+            ),
+            #actionButton("goto_step1", "Go to Step 1", class = "btn-primary"),
+            br(),
+            br(),
 
-                  # Cropped image for Use 1
-                  {
-                    scale <- 1.2
+            # Cropped image for Use 1
+            {
+              scale <- 1.2
 
-                    # Scaled coordinates for Use 1
-                    x1 <- 39 * (1000 / 600)
-                    y1 <- 22 * (1000 / 600)
-                    x2 <- 292 * (1000 / 600)
-                    y2 <- 143 * (1000 / 600)
+              # Scaled coordinates for Use 1
+              x1 <- 39 * (1000 / 600)
+              y1 <- 22 * (1000 / 600)
+              x2 <- 292 * (1000 / 600)
+              y2 <- 143 * (1000 / 600)
 
+              cx <- (x1 + x2) / 2
+              cy <- (y1 + y2) / 2
+              hw <- (x2 - x1) / 2 * scale
+              hh <- (y2 - y1) / 2 * scale
 
-                    cx <- (x1 + x2) / 2
-                    cy <- (y1 + y2) / 2
-                    hw <- (x2 - x1) / 2 * scale
-                    hh <- (y2 - y1) / 2 * scale
+              x1 <- cx - hw
+              x2 <- cx + hw
+              y1 <- cy - hh
+              y2 <- cy + hh
 
-                    x1 <- cx - hw
-                    x2 <- cx + hw
-                    y1 <- cy - hh
-                    y2 <- cy + hh
+              crop_width <- x2 - x1
+              crop_height <- y2 - y1
 
-                    crop_width <- x2 - x1
-                    crop_height <- y2 - y1
-
-                    div(
-                      style = sprintf("
+              div(
+                style = sprintf(
+                  "
             width: %fpx;
             height: %fpx;
             overflow: hidden;
             position: relative;
             border: 2px solid #3c8dbc;  /* optional border */
             margin-top: 15px;
-          ", crop_width, crop_height),
+          ",
+                  crop_width,
+                  crop_height
+                ),
 
-                      tags$img(
-                        src = "EBMuses.png",
-                        style = sprintf("
+                tags$img(
+                  src = "EBMuses.png",
+                  style = sprintf(
+                    "
               position: absolute;
               top: -%fpx;
               left: -%fpx;
               width: 1000px;
-            ", y1, x1)
-                      )
-                    )
-                  }
+            ",
+                    y1,
+                    x1
+                  )
                 )
               )
+            }
+          )
+        )
       ),
 
       tabItem(
@@ -1151,7 +1915,9 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
             status = "primary",
             solidHeader = TRUE,
 
-            p("See relevant Ecosystem Based Management (EBM) references below:"),
+            p(
+              "See relevant Ecosystem Based Management (EBM) references below:"
+            ),
 
             tags$ul(
               tags$li(
@@ -1237,254 +2003,360 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
       ),
 
       # Step 1: full hierarchy checklist
-      tabItem(tabName = "select_objectives",
-              fluidRow(
-                box(width = 12, title = "STEP 1: Select Relevant Objectives", status = "success", solidHeader = TRUE,
-                    "Use filters and the checklist below.")
-              ),
-              fluidRow(
-                column(4,
-                       box(width = NULL, title = "Step A: Filter Options", status = "info", solidHeader = TRUE,
-                           radioButtons(
-                             "detail_level",
-                             label = "Level of Detail",
-                             choices = list(
-                               "Pillars only" = "pillar",
-                               "Pillars + Main Objectives" = "main",
-                               "Pillars + Main Objectives + Main Objectives Text" = "main_text",
-                               "Add Level 1" = "level1",
-                               "Add Level 2" = "level2",
-                               "Add Level 3" = "level3",
-                               "Add Level 4 (all levels)" = "level4"
-                             ),
-                             selected = "main"
-                           ),
-                           h4("Select Pillars"),
-                           checkboxGroupInput("pillar_filter", label = NULL, choices = NULL, selected = NULL),
-                           h4("Select Main Objectives"),
-                           uiOutput("main_objective_checkboxes"),
-                           actionButton("select_all", "Select All", class = "btn-sm"),
-                           actionButton("deselect_all", "Deselect All", class = "btn-sm")
-                       )
+      tabItem(
+        tabName = "select_objectives",
+        fluidRow(
+          box(
+            width = 12,
+            title = "STEP 1: Select Relevant Objectives",
+            status = "success",
+            solidHeader = TRUE,
+            "Use filters and the checklist below."
+          )
+        ),
+        fluidRow(
+          column(
+            4,
+            box(
+              width = NULL,
+              title = "Step A: Filter Options",
+              status = "info",
+              solidHeader = TRUE,
+              radioButtons(
+                "detail_level",
+                label = "Level of Detail",
+                choices = list(
+                  "Pillars only" = "pillar",
+                  "Pillars + Main Objectives" = "main",
+                  "Pillars + Main Objectives + Main Objectives Text" = "main_text",
+                  "Add Level 1" = "level1",
+                  "Add Level 2" = "level2",
+                  "Add Level 3" = "level3",
+                  "Add Level 4 (all levels)" = "level4"
                 ),
-                column(8,
-                       box(width = NULL, title = "Step B: Interactive Checklist", status = "primary", solidHeader = TRUE,
-                           uiOutput("checklist_content")
-                       ),
-                       box(width = NULL, title = "Export Checklist", status = "warning", solidHeader = TRUE,
-                           fluidRow(
-                             column(4, downloadButton("download_checklist_word", "Download as Word (Use landscape view)", class = "btn-primary btn-block")),
-                             column(4, downloadButton("download_checklist_excel", "Download as Excel", class = "btn-success btn-block")),
-                             column(4, downloadButton("download_checklist_csv", "Download as CSV", class = "btn-info btn-block"))
-                           )
-                       ),
-                       div(style = "text-align:center; background-color:#d4edda; padding:15px; border-radius:5px; margin-top:10px;",
-                           h5(icon("arrow-right"), "Ready for Step 2?"),
-                           actionButton("proceed_to_step2", "Go to Step 2: Assessment", class = "btn-success btn-lg",  style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"))
+                selected = "main"
+              ),
+              h4("Select Pillars"),
+              checkboxGroupInput(
+                "pillar_filter",
+                label = NULL,
+                choices = NULL,
+                selected = NULL
+              ),
+              h4("Select Main Objectives"),
+              uiOutput("main_objective_checkboxes"),
+              actionButton("select_all", "Select All", class = "btn-sm"),
+              actionButton("deselect_all", "Deselect All", class = "btn-sm")
+            )
+          ),
+          column(
+            8,
+            box(
+              width = NULL,
+              title = "Step B: Interactive Checklist",
+              status = "primary",
+              solidHeader = TRUE,
+              uiOutput("checklist_content")
+            ),
+            box(
+              width = NULL,
+              title = "Export Checklist",
+              status = "warning",
+              solidHeader = TRUE,
+              fluidRow(
+                column(
+                  4,
+                  downloadButton(
+                    "download_checklist_word",
+                    "Download as Word (Use landscape view)",
+                    class = "btn-primary btn-block"
+                  )
+                ),
+                column(
+                  4,
+                  downloadButton(
+                    "download_checklist_excel",
+                    "Download as Excel",
+                    class = "btn-success btn-block"
+                  )
+                ),
+                column(
+                  4,
+                  downloadButton(
+                    "download_checklist_csv",
+                    "Download as CSV",
+                    class = "btn-info btn-block"
+                  )
                 )
               )
+            ),
+            div(
+              style = "text-align:center; background-color:#d4edda; padding:15px; border-radius:5px; margin-top:10px;",
+              h5(icon("arrow-right"), "Ready for Step 2?"),
+              actionButton(
+                "proceed_to_step2",
+                "Go to Step 2: Assessment",
+                class = "btn-success btn-lg",
+                style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
+              )
+            )
+          )
+        )
       ),
 
       # Step 2: assessment
-      tabItem(tabName = "assessment",
-              fluidRow(
-                box(width = 12, title = "Choose Assessment Type (EBM USE 2–5)", status = "info", solidHeader = TRUE,
-                    p(
-                      tags$span(
-                        strong("Click on the assessment type that meets your needs"),
-                        style = "background-color: #fff3cd; padding: 4px 6px; border-radius: 4px;"
-                      )
-                    ),                    fluidRow(
-                      column(
-                        3,
-                        div(
-                          class = "assessment-type-box", id = "assessment_type_policy",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
-                          onclick = "Shiny.setInputValue('assessment_type', 'policy', {priority: 'event'});",
-                          h4(icon("file-text"), "Evaluating policies and management approaches (USE 2)"),
-                          tags$ul(
-                            tags$li("Evaluate alignment of policy / management approach with EBM objectives."),
-                            tags$li("Evaluate whether advice provision has sufficient data/information."),
-                            p(" ")
-                          ),
-                          {
-
-                            # Scaled coordinates for Use 1
-                            x1 <- 42 * (600 / 600)   # = 42
-                            y1 <- 160 * (600 / 600)  # = 160
-                            x2 <- 285 * (600 / 600)  # = 276
-                            y2 <- 347 * (600 / 600)  # = 314
-
-                            crop_width <- x2 - x1
-                            crop_height <- y2 - y1
-
-                            div(
-                              style = sprintf("
-            width: %fpx;
-            height: %fpx;
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #3c8dbc;  /* optional border */
-            margin-top: 15px;
-          ", crop_width, crop_height),
-
-                              tags$img(
-                                src = "EBMuses.png",
-                                style = sprintf("
-              position: absolute;
-              top: -%fpx;
-              left: -%fpx;
-              width: 600px;
-            ", y1, x1)
-                              )
-                            )
-                          },
-                          p(" ")
-                        )
-                      ),
-                      column(
-                        3,
-                        div(
-                          class = "assessment-type-box", id = "assessment_type_scenarios",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
-                          onclick = "Shiny.setInputValue('assessment_type', 'scenarios', {priority: 'event'});",
-                          h4(icon("copy"), "Scenario Comparison (USE 3)"),
-                          tags$ul(
-                            tags$li("Compare scenarios or options against EBM objectives.")
-                          ),
-                          {
-                            # Scaled coordinates for Use 1
-                            x1 <- 326 * (600 / 600)   # = 326
-                            y1 <- 20  * (600 / 600)   # = 20
-                            x2 <- 550 * (600 / 600)   # = 540
-                            y2 <- 140 * (600 / 600)   # = 124
-
-
-                            crop_width <- x2 - x1
-                            crop_height <- y2 - y1
-
-                            div(
-                              style = sprintf("
-            width: %fpx;
-            height: %fpx;
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #3c8dbc;  /* optional border */
-            margin-top: 15px;
-          ", crop_width, crop_height),
-
-                              tags$img(
-                                src = "EBMuses.png",
-                                style = sprintf("
-              position: absolute;
-              top: -%fpx;
-              left: -%fpx;
-              width: 600px;
-            ", y1, x1)
-                              )
-                            )
-                          },
-                          p(" ")
-                        )
-                      ),
-                      column(
-                        3,
-                        div(
-                          class = "assessment-type-box", id = "assessment_type_performance",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
-                          onclick = "Shiny.setInputValue('assessment_type', 'performance', {priority: 'event'});",
-                          h4(icon("chart-line"), "Management Report Card (USE 4)"),
-                          tags$ul(
-                            tags$li("Are we achieving our management objectives?"),
-                            p(" "),
-
-                          ),
-                          {
-
-                            # Scaled coordinates for Use 1
-                            x1 <- 327 * (600 / 600)   # = 327
-                            y1 <- 135 * (600 / 600)   # = 139
-                            x2 <- 550 * (600 / 600)   # = 541
-                            y2 <- 205 * (600 / 600)   # = 195
-
-
-
-                            crop_width <- x2 - x1
-                            crop_height <- y2 - y1
-
-                            div(
-                              style = sprintf("
-            width: %fpx;
-            height: %fpx;
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #3c8dbc;  /* optional border */
-            margin-top: 15px;
-          ", crop_width, crop_height),
-
-                              tags$img(
-                                src = "EBMuses.png",
-                                style = sprintf("
-              position: absolute;
-              top: -%fpx;
-              left: -%fpx;
-              width: 600px;
-            ", y1, x1)
-                              )
-                            )
-                          },
-                          p(" ")
-
-                        )
-                      ),
-                      column(
-                        3,
-                        div(
-                          class = "assessment-type-box", id = "assessment_type_cumulative",style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
-                          onclick = "Shiny.setInputValue('assessment_type', 'cumulative', {priority: 'event'});",
-                          h4(icon("layer-group"), "Cumulative Effects / Trade‑offs (USE 5)"),
-                          tags$ul(
-                            tags$li("Assess cumulative effects / risks / trade‑offs across activities.")                          ),
-
-                            {
-                              # Scaled coordinates for Use 1
-                              x1 <- 327 * (600 / 600)   # = 327
-                              y1 <- 209 * (600 / 600)   # = 209
-                              x2 <- 560 * (600 / 600)   # = 552
-                              y2 <- 330 * (600 / 600)   # = 325
-
-                              crop_width <- x2 - x1
-                              crop_height <- y2 - y1
-
-                              div(
-                                style = sprintf("
-            width: %fpx;
-            height: %fpx;
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #3c8dbc;  /* optional border */
-            margin-top: 15px;
-          ", crop_width, crop_height),
-
-                                tags$img(
-                                  src = "EBMuses.png",
-                                  style = sprintf("
-              position: absolute;
-              top: -%fpx;
-              left: -%fpx;
-              width: 600px;
-            ", y1, x1)
-                                )
-                              )
-                            },
-                          p(" "),
-
-                          #p(strong("Impacts scored per activity (e.g., 0–3; NA / X where appropriate)."))
-                        )
-                      )
-                    ),
-                    #actionButton("goto_step1", "Back to Step 1", class = "btn-primary"),
-
-                ),
-                uiOutput("assessment_interface")
+      tabItem(
+        tabName = "assessment",
+        fluidRow(
+          box(
+            width = 12,
+            title = "Choose Assessment Type (EBM USE 2–5)",
+            status = "info",
+            solidHeader = TRUE,
+            p(
+              tags$span(
+                strong("Click on the assessment type that meets your needs"),
+                style = "background-color: #fff3cd; padding: 4px 6px; border-radius: 4px;"
               )
+            ),
+            fluidRow(
+              column(
+                3,
+                div(
+                  class = "assessment-type-box",
+                  id = "assessment_type_policy",
+                  style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
+                  onclick = "Shiny.setInputValue('assessment_type', 'policy', {priority: 'event'});",
+                  h4(
+                    icon("file-text"),
+                    "Evaluating policies and management approaches (USE 2)"
+                  ),
+                  tags$ul(
+                    tags$li(
+                      "Evaluate alignment of policy / management approach with EBM objectives."
+                    ),
+                    tags$li(
+                      "Evaluate whether advice provision has sufficient data/information."
+                    ),
+                    p(" ")
+                  ),
+                  {
+                    # Scaled coordinates for Use 1
+                    x1 <- 42 * (600 / 600) # = 42
+                    y1 <- 160 * (600 / 600) # = 160
+                    x2 <- 285 * (600 / 600) # = 276
+                    y2 <- 347 * (600 / 600) # = 314
+
+                    crop_width <- x2 - x1
+                    crop_height <- y2 - y1
+
+                    div(
+                      style = sprintf(
+                        "
+            width: %fpx;
+            height: %fpx;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #3c8dbc;  /* optional border */
+            margin-top: 15px;
+          ",
+                        crop_width,
+                        crop_height
+                      ),
+
+                      tags$img(
+                        src = "EBMuses.png",
+                        style = sprintf(
+                          "
+              position: absolute;
+              top: -%fpx;
+              left: -%fpx;
+              width: 600px;
+            ",
+                          y1,
+                          x1
+                        )
+                      )
+                    )
+                  },
+                  p(" ")
+                )
+              ),
+              column(
+                3,
+                div(
+                  class = "assessment-type-box",
+                  id = "assessment_type_scenarios",
+                  style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
+                  onclick = "Shiny.setInputValue('assessment_type', 'scenarios', {priority: 'event'});",
+                  h4(icon("copy"), "Scenario Comparison (USE 3)"),
+                  tags$ul(
+                    tags$li(
+                      "Compare scenarios or options against EBM objectives."
+                    )
+                  ),
+                  {
+                    # Scaled coordinates for Use 1
+                    x1 <- 326 * (600 / 600) # = 326
+                    y1 <- 20 * (600 / 600) # = 20
+                    x2 <- 550 * (600 / 600) # = 540
+                    y2 <- 140 * (600 / 600) # = 124
+
+                    crop_width <- x2 - x1
+                    crop_height <- y2 - y1
+
+                    div(
+                      style = sprintf(
+                        "
+            width: %fpx;
+            height: %fpx;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #3c8dbc;  /* optional border */
+            margin-top: 15px;
+          ",
+                        crop_width,
+                        crop_height
+                      ),
+
+                      tags$img(
+                        src = "EBMuses.png",
+                        style = sprintf(
+                          "
+              position: absolute;
+              top: -%fpx;
+              left: -%fpx;
+              width: 600px;
+            ",
+                          y1,
+                          x1
+                        )
+                      )
+                    )
+                  },
+                  p(" ")
+                )
+              ),
+              column(
+                3,
+                div(
+                  class = "assessment-type-box",
+                  id = "assessment_type_performance",
+                  style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
+                  onclick = "Shiny.setInputValue('assessment_type', 'performance', {priority: 'event'});",
+                  h4(icon("chart-line"), "Management Report Card (USE 4)"),
+                  tags$ul(
+                    tags$li("Are we achieving our management objectives?"),
+                    p(" "),
+                  ),
+                  {
+                    # Scaled coordinates for Use 1
+                    x1 <- 327 * (600 / 600) # = 327
+                    y1 <- 135 * (600 / 600) # = 139
+                    x2 <- 550 * (600 / 600) # = 541
+                    y2 <- 205 * (600 / 600) # = 195
+
+                    crop_width <- x2 - x1
+                    crop_height <- y2 - y1
+
+                    div(
+                      style = sprintf(
+                        "
+            width: %fpx;
+            height: %fpx;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #3c8dbc;  /* optional border */
+            margin-top: 15px;
+          ",
+                        crop_width,
+                        crop_height
+                      ),
+
+                      tags$img(
+                        src = "EBMuses.png",
+                        style = sprintf(
+                          "
+              position: absolute;
+              top: -%fpx;
+              left: -%fpx;
+              width: 600px;
+            ",
+                          y1,
+                          x1
+                        )
+                      )
+                    )
+                  },
+                  p(" ")
+                )
+              ),
+              column(
+                3,
+                div(
+                  class = "assessment-type-box",
+                  id = "assessment_type_cumulative",
+                  style = "height: 520px; overflow-y: auto; overflow-x: auto; white-space: normal;",
+                  onclick = "Shiny.setInputValue('assessment_type', 'cumulative', {priority: 'event'});",
+                  h4(
+                    icon("layer-group"),
+                    "Cumulative Effects / Trade‑offs (USE 5)"
+                  ),
+                  tags$ul(
+                    tags$li(
+                      "Assess cumulative effects / risks / trade‑offs across activities."
+                    )
+                  ),
+
+                  {
+                    # Scaled coordinates for Use 1
+                    x1 <- 327 * (600 / 600) # = 327
+                    y1 <- 209 * (600 / 600) # = 209
+                    x2 <- 560 * (600 / 600) # = 552
+                    y2 <- 330 * (600 / 600) # = 325
+
+                    crop_width <- x2 - x1
+                    crop_height <- y2 - y1
+
+                    div(
+                      style = sprintf(
+                        "
+            width: %fpx;
+            height: %fpx;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #3c8dbc;  /* optional border */
+            margin-top: 15px;
+          ",
+                        crop_width,
+                        crop_height
+                      ),
+
+                      tags$img(
+                        src = "EBMuses.png",
+                        style = sprintf(
+                          "
+              position: absolute;
+              top: -%fpx;
+              left: -%fpx;
+              width: 600px;
+            ",
+                          y1,
+                          x1
+                        )
+                      )
+                    )
+                  },
+                  p(" "),
+
+                  #p(strong("Impacts scored per activity (e.g., 0–3; NA / X where appropriate)."))
+                )
+              )
+            ),
+            #actionButton("goto_step1", "Back to Step 1", class = "btn-primary"),
+          ),
+          uiOutput("assessment_interface")
+        )
       )
     ),
 
@@ -1499,32 +2371,40 @@ The purpose of the Maritimes EBM Framework is to support a more holistic approac
 )
 
 server <- function(input, output, session) {
+  rv <- reactiveValues()
 
   # Initialize cumulative assessment reactives
   cumu_strategy <- reactiveVal("indicator")
   cumu_activities_stored <- reactiveVal(NULL)
 
   # Navigation
-  observeEvent(input$goto_step1, updateTabItems(session, "sidebar", "select_objectives"))
-  observeEvent(input$goto_step2, updateTabItems(session, "sidebar", "assessment"))
+  observeEvent(
+    input$goto_step1,
+    updateTabItems(session, "sidebar", "select_objectives")
+  )
+  observeEvent(
+    input$goto_step2,
+    updateTabItems(session, "sidebar", "assessment")
+  )
   #observeEvent(input$proceed_to_step2, updateTabItems(session, "sidebar", "assessment"))
-  observeEvent(input$goto_step1_from_step2, updateTabItems(session, "sidebar", "select_objectives"))
+  observeEvent(
+    input$goto_step1_from_step2,
+    updateTabItems(session, "sidebar", "select_objectives")
+  )
 
   observeEvent(input$proceed_to_step2, {
-
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
     ]
 
-
     # 🚫 BLOCK navigation if invalid
     if (!grepl("^level", input$detail_level)) {
-
       showModal(modalDialog(
         title = "Level Adjustment",
         paste0(
-          "You have selected '", input$detail_level,
+          "You have selected '",
+          input$detail_level,
           "' as your level of objectives, but Level 1 or higher is required for a proper assessment. ",
           "Please go back and select the relevant objectives for your assessment."
         ),
@@ -1534,11 +2414,10 @@ server <- function(input, output, session) {
 
       #updateSelectInput(session, "detail_level", selected = "level1")
 
-      return()  # 🔴 STOP HERE → prevents tab switch
+      return() # 🔴 STOP HERE → prevents tab switch
     }
 
     if (length(checked_ids) == 0) {
-
       showModal(modalDialog(
         title = "Select Relevant Objectives",
         paste0(
@@ -1550,9 +2429,8 @@ server <- function(input, output, session) {
 
       #updateSelectInput(session, "detail_level", selected = "level1")
 
-      return()  # 🔴 STOP HERE → prevents tab switch
+      return() # 🔴 STOP HERE → prevents tab switch
     }
-
 
     # ✅ ONLY runs if valid
     updateTabItems(session, "sidebar", "assessment")
@@ -1560,8 +2438,17 @@ server <- function(input, output, session) {
 
   # Pillar choices
   observe({
-    pillars <- ebm_data |> filter(!is.na(Pillar), Pillar != "") |> distinct(Pillar) |> arrange() |> pull()
-    updateCheckboxGroupInput(session, "pillar_filter", choices = pillars, selected = pillars)
+    pillars <- ebm_data |>
+      filter(!is.na(Pillar), Pillar != "") |>
+      distinct(Pillar) |>
+      arrange() |>
+      pull()
+    updateCheckboxGroupInput(
+      session,
+      "pillar_filter",
+      choices = pillars,
+      selected = pillars
+    )
   })
 
   ## DETAIL LEVELS
@@ -1575,15 +2462,14 @@ server <- function(input, output, session) {
     )
 
     if (input$detail_level %in% names(level_map)) {
-    max_level <- level_map[[input$detail_level]]
+      max_level <- level_map[[input$detail_level]]
     } else {
       # Note: this forces at least a Level_1. Write message here
       max_level <- 1
     }
 
-    return(paste0("Level_", 1:max_level))  # 🔴 CHANGED
+    return(paste0("Level_", 1:max_level)) # 🔴 CHANGED
   })
-
 
   ## END DETAIL LEVELS
 
@@ -1634,7 +2520,13 @@ server <- function(input, output, session) {
       fluidRow(
         lapply(seq_len(n), function(i) {
           column(
-            if(n <= 3) 4 else if(n <= 6) 3 else 2,
+            if (n <= 3) {
+              4
+            } else if (n <= 6) {
+              3
+            } else {
+              2
+            },
             textInput(
               inputId = paste0("scenario_name_", i),
               label = paste("Scenario", i),
@@ -1649,8 +2541,12 @@ server <- function(input, output, session) {
   observeEvent(input$zone_click, {
     showModal(
       modalDialog(
-        title = paste("Use", input$zone_click, ":",
-                      names(use_explanations)[input$zone_click]),
+        title = paste(
+          "Use",
+          input$zone_click,
+          ":",
+          names(use_explanations)[input$zone_click]
+        ),
         use_explanations[[input$zone_click]](),
         size = "xl",
         easyClose = TRUE,
@@ -1663,31 +2559,57 @@ server <- function(input, output, session) {
   output$main_objective_checkboxes <- renderUI({
     req(input$pillar_filter)
     main_objs <- ebm_data |>
-      filter(Pillar %in% input$pillar_filter,
-             !is.na(Main_Objective), Main_Objective != "",
-             !(Main_Objective %in% input$pillar_filter)) |>
+      filter(
+        Pillar %in% input$pillar_filter,
+        !is.na(Main_Objective),
+        Main_Objective != "",
+        !(Main_Objective %in% input$pillar_filter)
+      ) |>
       distinct(Main_Objective) |>
       arrange() |>
       pull(Main_Objective)
-    if (!length(main_objs)) return(p("No main objectives for selected pillars."))
-    checkboxGroupInput("main_objective_filter", label = NULL, choices = main_objs, selected = main_objs)
+    if (!length(main_objs)) {
+      return(p("No main objectives for selected pillars."))
+    }
+    checkboxGroupInput(
+      "main_objective_filter",
+      label = NULL,
+      choices = main_objs,
+      selected = main_objs
+    )
   })
 
   observeEvent(input$select_all, {
-    pillars <- ebm_data |> filter(!is.na(Pillar), Pillar != "") |> distinct(Pillar) |> arrange() |> pull()
+    pillars <- ebm_data |>
+      filter(!is.na(Pillar), Pillar != "") |>
+      distinct(Pillar) |>
+      arrange() |>
+      pull()
     updateCheckboxGroupInput(session, "pillar_filter", selected = pillars)
     # Update main objectives after pillars change
     main_objs <- ebm_data |>
-      filter(Pillar %in% pillars, !is.na(Main_Objective), Main_Objective != "") |>
+      filter(
+        Pillar %in% pillars,
+        !is.na(Main_Objective),
+        Main_Objective != ""
+      ) |>
       distinct(Main_Objective) |>
       arrange() |>
       pull(Main_Objective)
-    updateCheckboxGroupInput(session, "main_objective_filter", selected = main_objs)
+    updateCheckboxGroupInput(
+      session,
+      "main_objective_filter",
+      selected = main_objs
+    )
   })
 
   observeEvent(input$deselect_all, {
     updateCheckboxGroupInput(session, "pillar_filter", selected = character(0))
-    updateCheckboxGroupInput(session, "main_objective_filter", selected = character(0))
+    updateCheckboxGroupInput(
+      session,
+      "main_objective_filter",
+      selected = character(0)
+    )
   })
 
   # Checklist UI
@@ -1697,15 +2619,22 @@ server <- function(input, output, session) {
     if (input$detail_level == "pillar") {
       pillar_items <- list()
       for (pillar in input$pillar_filter) {
-        pillar_items <- c(pillar_items, list(
-          div(class = "pillar-section",
-              div(class = "checkbox-label",
-                  checkboxInput(paste0("chk_pillar_", make.names(pillar)),
-                                label = strong(pillar),
-                                value = FALSE)
+        pillar_items <- c(
+          pillar_items,
+          list(
+            div(
+              class = "pillar-section",
+              div(
+                class = "checkbox-label",
+                checkboxInput(
+                  paste0("chk_pillar_", make.names(pillar)),
+                  label = strong(pillar),
+                  value = FALSE
+                )
               )
+            )
           )
-        ))
+        )
       }
       message(do.call(tagList, pillar_items))
       return(do.call(tagList, pillar_items))
@@ -1714,46 +2643,65 @@ server <- function(input, output, session) {
     req(input$main_objective_filter)
 
     filtered_data <- ebm_data %>%
-      filter(Pillar %in% input$pillar_filter,
-             Main_Objective %in% input$main_objective_filter)
+      filter(
+        Pillar %in% input$pillar_filter,
+        Main_Objective %in% input$main_objective_filter
+      )
 
     if (nrow(filtered_data) == 0) {
-      return(p("No objectives selected. Please select at least one Pillar and Main Objective."))
+      return(p(
+        "No objectives selected. Please select at least one Pillar and Main Objective."
+      ))
     }
 
     checklist_items <- list()
 
     for (pillar in input$pillar_filter) {
       pillar_data <- filtered_data %>% filter(Pillar == pillar)
-      if (nrow(pillar_data) == 0) next
+      if (nrow(pillar_data) == 0) {
+        next
+      }
 
       pillar_content <- list(
-        div(class = "pillar-section",
-            div(class = "pillar-header", pillar)
-        )
+        div(class = "pillar-section", div(class = "pillar-header", pillar))
       )
 
       for (main_obj in unique(pillar_data$Main_Objective)) {
-        if (is.na(main_obj) || main_obj == "") next
+        if (is.na(main_obj) || main_obj == "") {
+          next
+        }
 
         main_obj_data <- pillar_data %>% filter(Main_Objective == main_obj)
         main_obj_text <- unique(main_obj_data$Main_Objectives_text)[1]
 
         main_obj_content <- list(
-          div(class = "main-objective-section",
-              div(class = "checkbox-label",
-                  checkboxInput(paste0("chk_main_", make.names(paste(pillar, main_obj))),
-                                label = strong(main_obj),
-                                value = FALSE)
+          div(
+            class = "main-objective-section",
+            div(
+              class = "checkbox-label",
+              checkboxInput(
+                paste0("chk_main_", make.names(paste(pillar, main_obj))),
+                label = strong(main_obj),
+                value = FALSE
               )
+            )
           )
         )
 
-        if (input$detail_level %in% c("main_text", "level1", "level2", "level3", "level4")) {
+        if (
+          input$detail_level %in%
+            c("main_text", "level1", "level2", "level3", "level4")
+        ) {
           if (!is.na(main_obj_text) && main_obj_text != "") {
-            main_obj_content <- c(main_obj_content, list(
-              p(style = "font-style: italic; margin-left: 10px;", main_obj_text)
-            ))
+            main_obj_content <- c(
+              main_obj_content,
+              list(
+                p(
+                  style = "font-style: italic; margin-left: 10px;",
+                  main_obj_text
+                )
+              )
+            )
           }
         }
 
@@ -1765,61 +2713,126 @@ server <- function(input, output, session) {
           if (nrow(level1_items) > 0) {
             for (i in seq_len(nrow(level1_items))) {
               level1_val <- level1_items$Level_1[i]
-              main_obj_content <- c(main_obj_content, list(
-                div(class = "level-1 checkbox-label",
-                    checkboxInput(paste0("chk_l1_", make.names(paste(pillar, main_obj, level1_val))),
-                                  label = level1_val,
-                                  value = FALSE)
+              main_obj_content <- c(
+                main_obj_content,
+                list(
+                  div(
+                    class = "level-1 checkbox-label",
+                    checkboxInput(
+                      paste0(
+                        "chk_l1_",
+                        make.names(paste(pillar, main_obj, level1_val))
+                      ),
+                      label = level1_val,
+                      value = FALSE
+                    )
+                  )
                 )
-              ))
+              )
 
               if (input$detail_level %in% c("level2", "level3", "level4")) {
                 level2_items <- main_obj_data %>%
-                  filter(Level_1 == level1_val, !is.na(Level_2) & Level_2 != "") %>%
+                  filter(
+                    Level_1 == level1_val,
+                    !is.na(Level_2) & Level_2 != ""
+                  ) %>%
                   distinct(Level_2)
 
                 if (nrow(level2_items) > 0) {
                   for (j in seq_len(nrow(level2_items))) {
                     level2_val <- level2_items$Level_2[j]
-                    main_obj_content <- c(main_obj_content, list(
-                      div(class = "level-2 checkbox-label",
-                          checkboxInput(paste0("chk_l2_", make.names(paste(pillar, main_obj, level1_val, level2_val))),
-                                        label = level2_val,
-                                        value = FALSE)
+                    main_obj_content <- c(
+                      main_obj_content,
+                      list(
+                        div(
+                          class = "level-2 checkbox-label",
+                          checkboxInput(
+                            paste0(
+                              "chk_l2_",
+                              make.names(paste(
+                                pillar,
+                                main_obj,
+                                level1_val,
+                                level2_val
+                              ))
+                            ),
+                            label = level2_val,
+                            value = FALSE
+                          )
+                        )
                       )
-                    ))
+                    )
 
                     if (input$detail_level %in% c("level3", "level4")) {
                       level3_items <- main_obj_data %>%
-                        filter(Level_1 == level1_val, Level_2 == level2_val, !is.na(Level_3) & Level_3 != "") %>%
+                        filter(
+                          Level_1 == level1_val,
+                          Level_2 == level2_val,
+                          !is.na(Level_3) & Level_3 != ""
+                        ) %>%
                         distinct(Level_3)
 
                       if (nrow(level3_items) > 0) {
                         for (k in seq_len(nrow(level3_items))) {
                           level3_val <- level3_items$Level_3[k]
-                          main_obj_content <- c(main_obj_content, list(
-                            div(class = "level-3 checkbox-label",
-                                checkboxInput(paste0("chk_l3_", make.names(paste(pillar, main_obj, level1_val, level2_val, level3_val))),
-                                              label = level3_val,
-                                              value = FALSE)
+                          main_obj_content <- c(
+                            main_obj_content,
+                            list(
+                              div(
+                                class = "level-3 checkbox-label",
+                                checkboxInput(
+                                  paste0(
+                                    "chk_l3_",
+                                    make.names(paste(
+                                      pillar,
+                                      main_obj,
+                                      level1_val,
+                                      level2_val,
+                                      level3_val
+                                    ))
+                                  ),
+                                  label = level3_val,
+                                  value = FALSE
+                                )
+                              )
                             )
-                          ))
+                          )
 
                           if (input$detail_level == "level4") {
                             level4_items <- main_obj_data %>%
-                              filter(Level_1 == level1_val, Level_2 == level2_val, Level_3 == level3_val,
-                                     !is.na(Level_4) & Level_4 != "") %>%
+                              filter(
+                                Level_1 == level1_val,
+                                Level_2 == level2_val,
+                                Level_3 == level3_val,
+                                !is.na(Level_4) & Level_4 != ""
+                              ) %>%
                               distinct(Level_4)
 
                             if (nrow(level4_items) > 0) {
                               for (l in seq_len(nrow(level4_items))) {
-                                main_obj_content <- c(main_obj_content, list(
-                                  div(class = "level-4 checkbox-label",
-                                      checkboxInput(paste0("chk_l4_", make.names(paste(pillar, main_obj, level1_val, level2_val, level3_val, level4_items$Level_4[l]))),
-                                                    label = level4_items$Level_4[l],
-                                                    value = FALSE)
+                                main_obj_content <- c(
+                                  main_obj_content,
+                                  list(
+                                    div(
+                                      class = "level-4 checkbox-label",
+                                      checkboxInput(
+                                        paste0(
+                                          "chk_l4_",
+                                          make.names(paste(
+                                            pillar,
+                                            main_obj,
+                                            level1_val,
+                                            level2_val,
+                                            level3_val,
+                                            level4_items$Level_4[l]
+                                          ))
+                                        ),
+                                        label = level4_items$Level_4[l],
+                                        value = FALSE
+                                      )
+                                    )
                                   )
-                                ))
+                                )
                               }
                             }
                           }
@@ -1844,7 +2857,8 @@ server <- function(input, output, session) {
 
   # Get full checklist for Step 1
 
-  get_full_checklist <- reactive({ #JAIM
+  get_full_checklist <- reactive({
+    #JAIM
     req(input$pillar_filter, input$detail_level)
 
     checklist_data <- data.frame(
@@ -1861,17 +2875,32 @@ server <- function(input, output, session) {
       stringsAsFactors = FALSE
     )
 
-
-
     if (input$detail_level == "pillar") {
       for (pillar in input$pillar_filter) {
         checkbox_id <- paste0("chk_pillar_", make.names(pillar))
-        checked <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
-        checklist_data <- rbind(checklist_data, data.frame(
-          Checked = checked, Pillar = pillar, Main_Objective = "", Main_Objectives_text = "",
-          Objective_Label = "", short_label="",
-          Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
-        ))
+        checked <- if (
+          !is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])
+        ) {
+          "X"
+        } else {
+          " "
+        }
+        checklist_data <- rbind(
+          checklist_data,
+          data.frame(
+            Checked = checked,
+            Pillar = pillar,
+            Main_Objective = "",
+            Main_Objectives_text = "",
+            Objective_Label = "",
+            short_label = "",
+            Level_1 = "",
+            Level_2 = "",
+            Level_3 = "",
+            Level_4 = "",
+            stringsAsFactors = FALSE
+          )
+        )
       }
       return(checklist_data[, c("Checked", "Pillar")])
     }
@@ -1879,21 +2908,36 @@ server <- function(input, output, session) {
     req(input$main_objective_filter)
 
     filtered_data <- ebm_data %>%
-      filter(Pillar %in% input$pillar_filter, Main_Objective %in% input$main_objective_filter)
+      filter(
+        Pillar %in% input$pillar_filter,
+        Main_Objective %in% input$main_objective_filter
+      )
 
     for (pillar in input$pillar_filter) {
       pillar_data <- filtered_data %>% filter(Pillar == pillar)
-      if (nrow(pillar_data) == 0) next
+      if (nrow(pillar_data) == 0) {
+        next
+      }
 
       for (main_obj in unique(pillar_data$Main_Objective)) {
-        if (is.na(main_obj) || main_obj == "") next
+        if (is.na(main_obj) || main_obj == "") {
+          next
+        }
 
         main_obj_data <- pillar_data %>% filter(Main_Objective == main_obj)
         main_obj_text <- unique(main_obj_data$Main_Objectives_text)[1]
-        if (is.na(main_obj_text)) main_obj_text <- ""
+        if (is.na(main_obj_text)) {
+          main_obj_text <- ""
+        }
 
         checkbox_id <- paste0("chk_main_", make.names(paste(pillar, main_obj)))
-        checked_main <- if (!is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])) "X" else " "
+        checked_main <- if (
+          !is.null(input[[checkbox_id]]) && isTRUE(input[[checkbox_id]])
+        ) {
+          "X"
+        } else {
+          " "
+        }
 
         obj_label <- paste(pillar, main_obj)
         sl <- unique(main_obj_data$short_label)[1]
@@ -1902,116 +2946,216 @@ server <- function(input, output, session) {
           Checked = checked_main,
           Pillar = pillar,
           Main_Objective = main_obj,
-          Main_Objectives_text = if (input$detail_level %in% c("main_text", "level1", "level2", "level3", "level4")) main_obj_text else "",
-          Objective_Label = obj_label,      short_label = sl,
-          Level_1 = "", Level_2 = "", Level_3 = "", Level_4 = "", stringsAsFactors = FALSE
+          Main_Objectives_text = if (
+            input$detail_level %in%
+              c("main_text", "level1", "level2", "level3", "level4")
+          ) {
+            main_obj_text
+          } else {
+            ""
+          },
+          Objective_Label = obj_label,
+          short_label = sl,
+          Level_1 = "",
+          Level_2 = "",
+          Level_3 = "",
+          Level_4 = "",
+          stringsAsFactors = FALSE
         )
         checklist_data <- rbind(checklist_data, row)
 
         if (input$detail_level %in% c("level1", "level2", "level3", "level4")) {
-          l1s <- main_obj_data %>% filter(!is.na(Level_1), Level_1 != "") %>% distinct(Level_1) %>% pull()
-          for (l1 in l1s) { # L1S
+          l1s <- main_obj_data %>%
+            filter(!is.na(Level_1), Level_1 != "") %>%
+            distinct(Level_1) %>%
+            pull()
+          for (l1 in l1s) {
+            # L1S
             id_l1 <- paste0("chk_l1_", make.names(paste(pillar, main_obj, l1)))
-            checked_l1 <- if (!is.null(input[[id_l1]]) && isTRUE(input[[id_l1]])) "X" else " "
+            checked_l1 <- if (
+              !is.null(input[[id_l1]]) && isTRUE(input[[id_l1]])
+            ) {
+              "X"
+            } else {
+              " "
+            }
             obj_label <- paste(pillar, main_obj, l1)
 
-            sl <- main_obj_data %>%   # 🔴 ADD
-              filter(Level_1 == l1) %>%
-              pull(short_label) %>% unique() %>% .[1]
+            sl <- truncate_label(
+              main_obj_data %>%
+                filter(Level_1 == l1) %>%
+                pull(short_label) %>%
+                unique() %>%
+                .[1],
+              3 # Pillar.Main.L1
+            )
 
-            checklist_data <- rbind(checklist_data, data.frame(
-              Checked = checked_l1,
-              Pillar = pillar,
-              Main_Objective = main_obj,
-              Main_Objectives_text = main_obj_text,
-              Objective_Label = obj_label,
-              short_label = sl,
-              Level_1 = l1,
-              Level_2 = "",
-              Level_3 = "",
-              Level_4 = "",
-              stringsAsFactors = FALSE
-            ))
+            checklist_data <- rbind(
+              checklist_data,
+              data.frame(
+                Checked = checked_l1,
+                Pillar = pillar,
+                Main_Objective = main_obj,
+                Main_Objectives_text = main_obj_text,
+                Objective_Label = obj_label,
+                short_label = sl,
+                Level_1 = l1,
+                Level_2 = "",
+                Level_3 = "",
+                Level_4 = "",
+                stringsAsFactors = FALSE
+              )
+            )
 
             if (input$detail_level %in% c("level2", "level3", "level4")) {
-              l2s <- main_obj_data %>% filter(Level_1 == l1, !is.na(Level_2), Level_2 != "") %>% distinct(Level_2) %>% pull()
-              for (l2 in l2s) { # L2S
-                id_l2 <- paste0("chk_l2_", make.names(paste(pillar, main_obj, l1, l2)))
-                checked_l2 <- if (!is.null(input[[id_l2]]) && isTRUE(input[[id_l2]])) "X" else " "
+              l2s <- main_obj_data %>%
+                filter(Level_1 == l1, !is.na(Level_2), Level_2 != "") %>%
+                distinct(Level_2) %>%
+                pull()
+              for (l2 in l2s) {
+                # L2S
+                id_l2 <- paste0(
+                  "chk_l2_",
+                  make.names(paste(pillar, main_obj, l1, l2))
+                )
+                checked_l2 <- if (
+                  !is.null(input[[id_l2]]) && isTRUE(input[[id_l2]])
+                ) {
+                  "X"
+                } else {
+                  " "
+                }
                 obj_label <- paste(pillar, main_obj, l1, l2)
 
+                sl <- truncate_label(
+                  main_obj_data %>%
+                    filter(Level_1 == l1, Level_2 == l2) %>%
+                    pull(short_label) %>%
+                    unique() %>%
+                    .[1],
+                  4 # Pillar.Main.L1.L2
+                )
 
-                sl <- main_obj_data %>%   # 🔴 ADD
-                  filter(Level_1 == l1, Level_2 == l2) %>%
-                  pull(short_label) %>% unique() %>% .[1]
-
-                checklist_data <- rbind(checklist_data, data.frame(
-                  Checked = checked_l2,
-                  Pillar = pillar,
-                  Main_Objective = main_obj,
-                  Main_Objectives_text = main_obj_text,
-                  Objective_Label = obj_label,
-                  short_label = sl,
-                  Level_1 = l1,
-                  Level_2 = l2,
-                  Level_3 = "",
-                  Level_4 = "",
-                  stringsAsFactors = FALSE
-                ))
-
+                checklist_data <- rbind(
+                  checklist_data,
+                  data.frame(
+                    Checked = checked_l2,
+                    Pillar = pillar,
+                    Main_Objective = main_obj,
+                    Main_Objectives_text = main_obj_text,
+                    Objective_Label = obj_label,
+                    short_label = sl,
+                    Level_1 = l1,
+                    Level_2 = l2,
+                    Level_3 = "",
+                    Level_4 = "",
+                    stringsAsFactors = FALSE
+                  )
+                )
 
                 if (input$detail_level %in% c("level3", "level4")) {
-                  l3s <- main_obj_data %>% filter(Level_1 == l1, Level_2 == l2, !is.na(Level_3), Level_3 != "") %>% distinct(Level_3) %>% pull()
-                  for (l3 in l3s) { #L3S
-                    id_l3 <- paste0("chk_l3_", make.names(paste(pillar, main_obj, l1, l2, l3)))
-                    checked_l3 <- if (!is.null(input[[id_l3]]) && isTRUE(input[[id_l3]])) "X" else " "
+                  l3s <- main_obj_data %>%
+                    filter(
+                      Level_1 == l1,
+                      Level_2 == l2,
+                      !is.na(Level_3),
+                      Level_3 != ""
+                    ) %>%
+                    distinct(Level_3) %>%
+                    pull()
+                  for (l3 in l3s) {
+                    #L3S
+                    id_l3 <- paste0(
+                      "chk_l3_",
+                      make.names(paste(pillar, main_obj, l1, l2, l3))
+                    )
+                    checked_l3 <- if (
+                      !is.null(input[[id_l3]]) && isTRUE(input[[id_l3]])
+                    ) {
+                      "X"
+                    } else {
+                      " "
+                    }
                     obj_label <- paste(pillar, main_obj, l1, l2, l3)
 
-                    sl <- main_obj_data %>%   # 🔴 ADD
-                      filter(Level_1 == l1, Level_2 == l2, Level_3 == l3) %>%
-                      pull(short_label) %>% unique() %>% .[1]
+                    sl <- truncate_label(
+                      main_obj_data %>%
+                        filter(Level_1 == l1, Level_2 == l2, Level_3 == l3) %>%
+                        pull(short_label) %>%
+                        unique() %>%
+                        .[1],
+                      5 # Pillar.Main.L1.L2.L3
+                    )
 
-                    checklist_data <- rbind(checklist_data, data.frame(
-                      Checked = checked_l3,
-                      Pillar = pillar,
-                      Main_Objective = main_obj,
-                      Main_Objectives_text = main_obj_text,
-                      Objective_Label = obj_label,
-                      short_label = sl,
-                      Level_1 = l1,
-                      Level_2 = l2,
-                      Level_3 = l3,
-                      Level_4 = "",
-                      stringsAsFactors = FALSE
-                    ))
+                    checklist_data <- rbind(
+                      checklist_data,
+                      data.frame(
+                        Checked = checked_l3,
+                        Pillar = pillar,
+                        Main_Objective = main_obj,
+                        Main_Objectives_text = main_obj_text,
+                        Objective_Label = obj_label,
+                        short_label = sl,
+                        Level_1 = l1,
+                        Level_2 = l2,
+                        Level_3 = l3,
+                        Level_4 = "",
+                        stringsAsFactors = FALSE
+                      )
+                    )
                     if (input$detail_level == "level4") {
-                      l4s <- main_obj_data %>% filter(Level_1 == l1, Level_2 == l2, Level_3 == l3,
-                                                      !is.na(Level_4), Level_4 != "") %>% distinct(Level_4) %>% pull()
-                      for (l4 in l4s) { # L4S
-                        id_l4 <- paste0("chk_l4_", make.names(paste(pillar, main_obj, l1, l2, l3, l4)))
-                        checked_l4 <- if (!is.null(input[[id_l4]]) && isTRUE(input[[id_l4]])) "X" else " "
+                      l4s <- main_obj_data %>%
+                        filter(
+                          Level_1 == l1,
+                          Level_2 == l2,
+                          Level_3 == l3,
+                          !is.na(Level_4),
+                          Level_4 != ""
+                        ) %>%
+                        distinct(Level_4) %>%
+                        pull()
+                      for (l4 in l4s) {
+                        # L4S
+                        id_l4 <- paste0(
+                          "chk_l4_",
+                          make.names(paste(pillar, main_obj, l1, l2, l3, l4))
+                        )
+                        checked_l4 <- if (
+                          !is.null(input[[id_l4]]) && isTRUE(input[[id_l4]])
+                        ) {
+                          "X"
+                        } else {
+                          " "
+                        }
                         obj_label <- paste(pillar, main_obj, l1, l2, l3, l4)
 
-                        sl <- main_obj_data %>%   # 🔴 ADD
-                          filter(Level_1 == l1, Level_2 == l2, Level_3 == l3, Level_4 == l4) %>%
-                          pull(short_label) %>% unique() %>% .[1]
+                        sl <- main_obj_data %>% # 🔴 ADD
+                          filter(
+                            Level_1 == l1,
+                            Level_2 == l2,
+                            Level_3 == l3,
+                            Level_4 == l4
+                          ) %>%
+                          pull(short_label) %>%
+                          unique() %>%
+                          .[1]
 
-
-                        checklist_data <- rbind(checklist_data, data.frame(
-                          Checked = checked_l4,
-                          Pillar = pillar,
-                          Main_Objective = main_obj,
-                          Main_Objectives_text = main_obj_text,
-                          Objective_Label = obj_label,
-                          short_label = sl,   # 🔴 ADD
-                          Level_1 = l1,
-                          Level_2 = l2,
-                          Level_3 = l3,
-                          Level_4 = l4,
-                          stringsAsFactors = FALSE
-                        ))
-
-
+                        checklist_data <- rbind(
+                          checklist_data,
+                          data.frame(
+                            Checked = checked_l4,
+                            Pillar = pillar,
+                            Main_Objective = main_obj,
+                            Main_Objectives_text = main_obj_text,
+                            Objective_Label = obj_label,
+                            short_label = sl, # 🔴 ADD
+                            Level_1 = l1,
+                            Level_2 = l2,
+                            Level_3 = l3,
+                            Level_4 = l4,
+                            stringsAsFactors = FALSE
+                          )
+                        )
                       }
                     }
                   }
@@ -2024,45 +3168,257 @@ server <- function(input, output, session) {
     }
 
     if (input$detail_level == "main") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label", "short_label")]
+      checklist_data <- checklist_data[, c(
+        "Checked",
+        "Pillar",
+        "Main_Objective",
+        "Objective_Label",
+        "short_label"
+      )]
     } else if (input$detail_level == "main_text") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","short_label", "Main_Objectives_text")]
+      checklist_data <- checklist_data[, c(
+        "Checked",
+        "Pillar",
+        "Main_Objective",
+        "Objective_Label",
+        "short_label",
+        "Main_Objectives_text"
+      )]
     } else if (input$detail_level == "level1") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label","short_label", "Main_Objectives_text", "Level_1")]
+      checklist_data <- checklist_data[, c(
+        "Checked",
+        "Pillar",
+        "Main_Objective",
+        "Objective_Label",
+        "short_label",
+        "Main_Objectives_text",
+        "Level_1"
+      )]
     } else if (input$detail_level == "level2") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label", "short_label", "Main_Objectives_text", "Level_1", "Level_2")]
+      checklist_data <- checklist_data[, c(
+        "Checked",
+        "Pillar",
+        "Main_Objective",
+        "Objective_Label",
+        "short_label",
+        "Main_Objectives_text",
+        "Level_1",
+        "Level_2"
+      )]
     } else if (input$detail_level == "level3") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective","Objective_Label", "short_label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3")]
+      checklist_data <- checklist_data[, c(
+        "Checked",
+        "Pillar",
+        "Main_Objective",
+        "Objective_Label",
+        "short_label",
+        "Main_Objectives_text",
+        "Level_1",
+        "Level_2",
+        "Level_3"
+      )]
     } else if (input$detail_level == "level4") {
-      checklist_data <- checklist_data[, c("Checked", "Pillar", "Main_Objective", "Objective_Label", "short_label", "Main_Objectives_text", "Level_1", "Level_2", "Level_3", "Level_4")]
+      checklist_data <- checklist_data[, c(
+        "Checked",
+        "Pillar",
+        "Main_Objective",
+        "Objective_Label",
+        "short_label",
+        "Main_Objectives_text",
+        "Level_1",
+        "Level_2",
+        "Level_3",
+        "Level_4"
+      )]
     }
 
+    # =====================================================
+    # GET ALL CHECKED CHECKBOXES FROM THE UI
+    # =====================================================
+    all_checked_ids <- names(input)[
+      grepl("^chk_", names(input)) &
+        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+    ]
 
-    level_map <- list(
-      level1 = "Level_1",
-      level2 = "Level_2",
-      level3 = "Level_3",
-      level4 = "Level_4"
-    )
-    target_col <- level_map[[input$detail_level]]
+    if (length(all_checked_ids) > 0) {
+      rows_to_keep <- c()
+      label_overrides <- c()
 
-    if (!(is.null(target_col))) {
+      for (i in seq_len(nrow(checklist_data))) {
+        row <- checklist_data[i, ]
 
-    checklist_data <- checklist_data %>%
-      dplyr::filter(
-        !is.na(.data[[target_col]]),
-        .data[[target_col]] != ""
-      )
+        is_checked <- FALSE
+        is_leaf <- FALSE
+        override_label <- NA_character_
+
+        # -------------------------------------------------------
+        # LEVEL 4 — always a structural leaf
+        # -------------------------------------------------------
+        if (!is.na(row$Level_4) && row$Level_4 != "") {
+          is_leaf <- TRUE
+          check_id <- paste0(
+            "chk_l4_",
+            make.names(paste(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2,
+              row$Level_3,
+              row$Level_4
+            ))
+          )
+          is_checked <- check_id %in% all_checked_ids
+
+          # -------------------------------------------------------
+          # LEVEL 3
+          # -------------------------------------------------------
+        } else if (!is.na(row$Level_3) && row$Level_3 != "") {
+          check_id <- paste0(
+            "chk_l3_",
+            make.names(paste(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2,
+              row$Level_3
+            ))
+          )
+
+          level_4_children <- ebm_data %>%
+            dplyr::filter(
+              Pillar == row$Pillar,
+              Main_Objective == row$Main_Objective,
+              Level_1 == row$Level_1,
+              Level_2 == row$Level_2,
+              Level_3 == row$Level_3,
+              !is.na(Level_4),
+              Level_4 != ""
+            ) %>%
+            nrow()
+
+          if (level_4_children == 0) {
+            is_leaf <- TRUE
+            is_checked <- check_id %in% all_checked_ids
+          } else if (check_id %in% all_checked_ids) {
+            child_prefix <- paste0(
+              "chk_l4_",
+              make.names(paste(
+                row$Pillar,
+                row$Main_Objective,
+                row$Level_1,
+                row$Level_2,
+                row$Level_3
+              ))
+            )
+            if (!any(grepl(child_prefix, all_checked_ids, fixed = TRUE))) {
+              is_leaf <- TRUE
+              is_checked <- TRUE
+              override_label <- truncate_label(row$short_label, 5)
+            }
+          }
+
+          # -------------------------------------------------------
+          # LEVEL 2
+          # -------------------------------------------------------
+        } else if (!is.na(row$Level_2) && row$Level_2 != "") {
+          check_id <- paste0(
+            "chk_l2_",
+            make.names(paste(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2
+            ))
+          )
+
+          level_3_children <- ebm_data %>%
+            dplyr::filter(
+              Pillar == row$Pillar,
+              Main_Objective == row$Main_Objective,
+              Level_1 == row$Level_1,
+              Level_2 == row$Level_2,
+              !is.na(Level_3),
+              Level_3 != ""
+            ) %>%
+            nrow()
+
+          if (level_3_children == 0) {
+            is_leaf <- TRUE
+            is_checked <- check_id %in% all_checked_ids
+          } else if (check_id %in% all_checked_ids) {
+            child_prefix <- paste0(
+              "chk_l3_",
+              make.names(paste(
+                row$Pillar,
+                row$Main_Objective,
+                row$Level_1,
+                row$Level_2
+              ))
+            )
+            if (!any(grepl(child_prefix, all_checked_ids, fixed = TRUE))) {
+              is_leaf <- TRUE
+              is_checked <- TRUE
+              override_label <- truncate_label(row$short_label, 4)
+            }
+          }
+
+          # -------------------------------------------------------
+          # LEVEL 1
+          # -------------------------------------------------------
+        } else if (!is.na(row$Level_1) && row$Level_1 != "") {
+          check_id <- paste0(
+            "chk_l1_",
+            make.names(paste(row$Pillar, row$Main_Objective, row$Level_1))
+          )
+
+          level_2_children <- ebm_data %>%
+            dplyr::filter(
+              Pillar == row$Pillar,
+              Main_Objective == row$Main_Objective,
+              Level_1 == row$Level_1,
+              !is.na(Level_2),
+              Level_2 != ""
+            ) %>%
+            nrow()
+
+          if (level_2_children == 0) {
+            is_leaf <- TRUE
+            is_checked <- check_id %in% all_checked_ids
+          } else if (check_id %in% all_checked_ids) {
+            child_prefix <- paste0(
+              "chk_l2_",
+              make.names(paste(row$Pillar, row$Main_Objective, row$Level_1))
+            )
+            if (!any(grepl(child_prefix, all_checked_ids, fixed = TRUE))) {
+              is_leaf <- TRUE
+              is_checked <- TRUE
+              override_label <- truncate_label(row$short_label, 3)
+            }
+          }
+        }
+
+        if (is_leaf && is_checked) {
+          rows_to_keep <- c(rows_to_keep, i)
+          label_overrides <- c(label_overrides, override_label)
+        }
+      }
+
+      checklist_data <- checklist_data[rows_to_keep, ]
+
+      # Apply label overrides for pseudo-leaves
+      for (k in seq_along(label_overrides)) {
+        if (!is.na(label_overrides[k])) {
+          checklist_data$short_label[k] <- label_overrides[k]
+        }
+      }
+    } else {
+      checklist_data <- checklist_data[0, ]
     }
-    checklist_data$filter <- input$detail_level
-    checklist_data <- filter_short_label(checklist_data)
-    checklist_data$short_label <- checklist_data$filtered_label
-    checklist_data <- checklist_data[, !(names(checklist_data) %in% c("filter", "filtered_label"))]
 
-
-
+    # Labels are already correctly truncated at build time and by override_label.
+    # filter_short_label is NOT called here to avoid overwriting pseudo-leaf labels.
     checklist_data[, names(checklist_data) != "Checked"]
-    })
+  })
 
   # Selected objectives table for Step 2 and exports
   selected_objectives <- reactive({
@@ -2071,20 +3427,32 @@ server <- function(input, output, session) {
     level_cols <- selected_levels()
 
     mos <- ebm_data |>
-      filter(Pillar %in% input$pillar_filter, !is.na(Main_Objective), Main_Objective != "") |>
-      distinct(Main_Objective) |> pull()
-    mos <- if (!is.null(input$main_objective_filter) && length(input$main_objective_filter) > 0) {
+      filter(
+        Pillar %in% input$pillar_filter,
+        !is.na(Main_Objective),
+        Main_Objective != ""
+      ) |>
+      distinct(Main_Objective) |>
+      pull()
+    mos <- if (
+      !is.null(input$main_objective_filter) &&
+        length(input$main_objective_filter) > 0
+    ) {
       intersect(mos, input$main_objective_filter)
-    } else mos
+    } else {
+      mos
+    }
+
     out <- ebm_data |>
-      filter(Pillar %in% input$pillar_filter,
-             Main_Objective %in% mos) |>
+      filter(Pillar %in% input$pillar_filter, Main_Objective %in% mos) |>
       select(Pillar, Main_Objective, all_of(selected_levels()), short_label) |>
       distinct()
 
     out$filter <- input$detail_level
 
-    if (nrow(out) == 0) return(NULL)
+    if (nrow(out) == 0) {
+      return(NULL)
+    }
     return(out)
   })
 
@@ -2093,97 +3461,721 @@ server <- function(input, output, session) {
   })
   outputOptions(output, "objectives_selected", suspendWhenHidden = FALSE)
 
+  ## START TEST (WITH UNCHECK CASCADE)
+
+  observe({
+    req(input$pillar_filter, input$main_objective_filter, input$detail_level)
+
+    # Get ALL currently checked checkboxes
+    all_checked <- names(input)[
+      grepl("^chk_", names(input)) &
+        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
+    ]
+
+    if (is.null(rv$last_checked_state)) {
+      rv$last_checked_state <- character(0)
+    }
+
+    # Find what changed
+    newly_checked <- setdiff(all_checked, rv$last_checked_state)
+    newly_unchecked <- setdiff(rv$last_checked_state, all_checked)
+
+    # Update state
+    rv$last_checked_state <- all_checked
+
+    # =====================================================
+    # HANDLE NEWLY CHECKED (CASCADE DOWN)
+    # =====================================================
+    if (length(newly_checked) > 0) {
+      changed_id <- newly_checked[1]
+      clean_id <- gsub(
+        "^chk_pillar_|^chk_main_|^chk_l1_|^chk_l2_|^chk_l3_|^chk_l4_",
+        "",
+        changed_id
+      )
+
+      if (grepl("^chk_pillar_", changed_id)) {
+        pillar <- gsub("\\.", " ", clean_id)
+        matching_rows <- ebm_data %>%
+          dplyr::filter(
+            Pillar == pillar,
+            !is.na(Main_Objective),
+            Main_Objective != ""
+          )
+        main_objs <- unique(matching_rows$Main_Objective)
+
+        for (mo in main_objs) {
+          updateCheckboxInput(
+            session,
+            paste0("chk_main_", make.names(paste(pillar, mo))),
+            value = TRUE
+          )
+          cascade_from_main(pillar, mo, TRUE)
+        }
+      } else if (grepl("^chk_main_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Main_Objective), Main_Objective != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(row$Pillar, row$Main_Objective))
+
+          if (potential_id == clean_id) {
+            cascade_from_main(row$Pillar, row$Main_Objective, TRUE)
+            break
+          }
+        }
+      } else if (grepl("^chk_l1_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Level_1), Level_1 != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1
+          ))
+
+          if (potential_id == clean_id) {
+            cascade_from_l1(row$Pillar, row$Main_Objective, row$Level_1, TRUE)
+            break
+          }
+        }
+      } else if (grepl("^chk_l2_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Level_2), Level_2 != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1,
+            row$Level_2
+          ))
+
+          if (potential_id == clean_id) {
+            cascade_from_l2(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2,
+              TRUE
+            )
+            break
+          }
+        }
+      } else if (grepl("^chk_l3_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Level_3), Level_3 != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1,
+            row$Level_2,
+            row$Level_3
+          ))
+
+          if (potential_id == clean_id) {
+            cascade_from_l3(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2,
+              row$Level_3,
+              TRUE
+            )
+            break
+          }
+        }
+      }
+    }
+
+    # =====================================================
+    # HANDLE NEWLY UNCHECKED (CASCADE DOWN + UNCHECK PARENTS)
+    # =====================================================
+    if (length(newly_unchecked) > 0) {
+      changed_id <- newly_unchecked[1]
+      clean_id <- gsub(
+        "^chk_pillar_|^chk_main_|^chk_l1_|^chk_l2_|^chk_l3_|^chk_l4_",
+        "",
+        changed_id
+      )
+
+      if (grepl("^chk_pillar_", changed_id)) {
+        pillar <- gsub("\\.", " ", clean_id)
+        matching_rows <- ebm_data %>%
+          dplyr::filter(
+            Pillar == pillar,
+            !is.na(Main_Objective),
+            Main_Objective != ""
+          )
+        main_objs <- unique(matching_rows$Main_Objective)
+
+        for (mo in main_objs) {
+          updateCheckboxInput(
+            session,
+            paste0("chk_main_", make.names(paste(pillar, mo))),
+            value = FALSE
+          )
+          cascade_from_main(pillar, mo, FALSE)
+        }
+      } else if (grepl("^chk_main_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Main_Objective), Main_Objective != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(row$Pillar, row$Main_Objective))
+
+          if (potential_id == clean_id) {
+            # Uncheck all children
+            cascade_from_main(row$Pillar, row$Main_Objective, FALSE)
+            break
+          }
+        }
+      } else if (grepl("^chk_l1_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Level_1), Level_1 != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1
+          ))
+
+          if (potential_id == clean_id) {
+            cascade_from_l1(row$Pillar, row$Main_Objective, row$Level_1, FALSE)
+            break
+          }
+        }
+      } else if (grepl("^chk_l2_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Level_2), Level_2 != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1,
+            row$Level_2
+          ))
+
+          if (potential_id == clean_id) {
+            cascade_from_l2(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2,
+              FALSE
+            )
+            break
+          }
+        }
+      } else if (grepl("^chk_l3_", changed_id)) {
+        matching_rows <- ebm_data %>%
+          dplyr::filter(!is.na(Level_3), Level_3 != "")
+
+        for (i in seq_len(nrow(matching_rows))) {
+          row <- matching_rows[i, ]
+          potential_id <- make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1,
+            row$Level_2,
+            row$Level_3
+          ))
+
+          if (potential_id == clean_id) {
+            cascade_from_l3(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2,
+              row$Level_3,
+              FALSE
+            )
+            break
+          }
+        }
+      }
+    }
+  })
+
+  # =====================================================
+  # CASCADE FUNCTIONS (WITH CHECK/UNCHECK PARAMETER)
+  # =====================================================
+
+  cascade_from_main <- function(pillar, main_obj, check_value) {
+    l1_vals <- ebm_data %>%
+      dplyr::filter(
+        Pillar == pillar,
+        Main_Objective == main_obj,
+        !is.na(Level_1),
+        Level_1 != ""
+      ) %>%
+      dplyr::distinct(Level_1) %>%
+      pull(Level_1)
+
+    for (l1 in l1_vals) {
+      updateCheckboxInput(
+        session,
+        paste0("chk_l1_", make.names(paste(pillar, main_obj, l1))),
+        value = check_value
+      )
+      cascade_from_l1(pillar, main_obj, l1, check_value)
+    }
+  }
+
+  cascade_from_l1 <- function(pillar, main_obj, l1, check_value) {
+    if (input$detail_level %in% c("level2", "level3", "level4")) {
+      l2_vals <- ebm_data %>%
+        dplyr::filter(
+          Pillar == pillar,
+          Main_Objective == main_obj,
+          Level_1 == l1,
+          !is.na(Level_2),
+          Level_2 != ""
+        ) %>%
+        dplyr::distinct(Level_2) %>%
+        pull(Level_2)
+
+      for (l2 in l2_vals) {
+        updateCheckboxInput(
+          session,
+          paste0("chk_l2_", make.names(paste(pillar, main_obj, l1, l2))),
+          value = check_value
+        )
+        cascade_from_l2(pillar, main_obj, l1, l2, check_value)
+      }
+    }
+  }
+
+  cascade_from_l2 <- function(pillar, main_obj, l1, l2, check_value) {
+    if (input$detail_level %in% c("level3", "level4")) {
+      l3_vals <- ebm_data %>%
+        dplyr::filter(
+          Pillar == pillar,
+          Main_Objective == main_obj,
+          Level_1 == l1,
+          Level_2 == l2,
+          !is.na(Level_3),
+          Level_3 != ""
+        ) %>%
+        dplyr::distinct(Level_3) %>%
+        pull(Level_3)
+
+      for (l3 in l3_vals) {
+        updateCheckboxInput(
+          session,
+          paste0("chk_l3_", make.names(paste(pillar, main_obj, l1, l2, l3))),
+          value = check_value
+        )
+        cascade_from_l3(pillar, main_obj, l1, l2, l3, check_value)
+      }
+    }
+  }
+
+  cascade_from_l3 <- function(pillar, main_obj, l1, l2, l3, check_value) {
+    if (input$detail_level == "level4") {
+      l4_vals <- ebm_data %>%
+        dplyr::filter(
+          Pillar == pillar,
+          Main_Objective == main_obj,
+          Level_1 == l1,
+          Level_2 == l2,
+          Level_3 == l3,
+          !is.na(Level_4),
+          Level_4 != ""
+        ) %>%
+        dplyr::distinct(Level_4) %>%
+        pull(Level_4)
+
+      for (l4 in l4_vals) {
+        updateCheckboxInput(
+          session,
+          paste0(
+            "chk_l4_",
+            make.names(paste(pillar, main_obj, l1, l2, l3, l4))
+          ),
+          value = check_value
+        )
+      }
+    }
+  }
+
+  ## END TEST
+
+  # =====================================================
+  # UPDATE CHECKBOX INDETERMINATE STATE FOR PARTIAL SELECTION
+  # =====================================================
+
+  observe({
+    req(input$pillar_filter, input$main_objective_filter, input$detail_level)
+
+    # Function to set indeterminate state
+    set_partial <- function(
+      checkbox_id,
+      pillar,
+      main_obj,
+      l1 = NULL,
+      l2 = NULL,
+      l3 = NULL
+    ) {
+      # Get all children
+      if (is.null(l1)) {
+        # Main objective - check Level 1 children
+        children <- ebm_data %>%
+          dplyr::filter(
+            Pillar == pillar,
+            Main_Objective == main_obj,
+            !is.na(Level_1),
+            Level_1 != ""
+          ) %>%
+          dplyr::distinct(Level_1) %>%
+          pull(Level_1)
+
+        child_checked <- sapply(children, function(l1_val) {
+          isTRUE(input[[paste0(
+            "chk_l1_",
+            make.names(paste(pillar, main_obj, l1_val))
+          )]])
+        })
+      } else if (is.null(l2)) {
+        # Level 1 - check Level 2 children
+        children <- ebm_data %>%
+          dplyr::filter(
+            Pillar == pillar,
+            Main_Objective == main_obj,
+            Level_1 == l1,
+            !is.na(Level_2),
+            Level_2 != ""
+          ) %>%
+          dplyr::distinct(Level_2) %>%
+          pull(Level_2)
+
+        child_checked <- sapply(children, function(l2_val) {
+          isTRUE(input[[paste0(
+            "chk_l2_",
+            make.names(paste(pillar, main_obj, l1, l2_val))
+          )]])
+        })
+      } else if (is.null(l3)) {
+        # Level 2 - check Level 3 children
+        children <- ebm_data %>%
+          dplyr::filter(
+            Pillar == pillar,
+            Main_Objective == main_obj,
+            Level_1 == l1,
+            Level_2 == l2,
+            !is.na(Level_3),
+            Level_3 != ""
+          ) %>%
+          dplyr::distinct(Level_3) %>%
+          pull(Level_3)
+
+        child_checked <- sapply(children, function(l3_val) {
+          isTRUE(input[[paste0(
+            "chk_l3_",
+            make.names(paste(pillar, main_obj, l1, l2, l3_val))
+          )]])
+        })
+      } else {
+        # Level 3 - check Level 4 children
+        children <- ebm_data %>%
+          dplyr::filter(
+            Pillar == pillar,
+            Main_Objective == main_obj,
+            Level_1 == l1,
+            Level_2 == l2,
+            Level_3 == l3,
+            !is.na(Level_4),
+            Level_4 != ""
+          ) %>%
+          dplyr::distinct(Level_4) %>%
+          pull(Level_4)
+
+        child_checked <- sapply(children, function(l4_val) {
+          isTRUE(input[[paste0(
+            "chk_l4_",
+            make.names(paste(pillar, main_obj, l1, l2, l3, l4_val))
+          )]])
+        })
+      }
+
+      # Set indeterminate if some but not all are checked
+      if (length(child_checked) > 0) {
+        is_partial <- any(child_checked) && !all(child_checked)
+        shinyjs::runjs(paste0(
+          "
+        var elem = document.getElementById('",
+          checkbox_id,
+          "');
+        if (elem) {
+          elem.indeterminate = ",
+          tolower(is_partial),
+          ";
+        }
+      "
+        ))
+      }
+    }
+
+    # Check all main objectives
+    for (pillar in input$pillar_filter) {
+      for (main_obj in input$main_objective_filter) {
+        main_id <- paste0("chk_main_", make.names(paste(pillar, main_obj)))
+        set_partial(main_id, pillar, main_obj)
+      }
+    }
+
+    # Check all Level 1
+    if (input$detail_level %in% c("level2", "level3", "level4")) {
+      for (pillar in input$pillar_filter) {
+        for (main_obj in input$main_objective_filter) {
+          l1_items <- ebm_data %>%
+            dplyr::filter(
+              Pillar == pillar,
+              Main_Objective == main_obj,
+              !is.na(Level_1),
+              Level_1 != ""
+            ) %>%
+            dplyr::distinct(Level_1) %>%
+            pull(Level_1)
+
+          for (l1 in l1_items) {
+            l1_id <- paste0("chk_l1_", make.names(paste(pillar, main_obj, l1)))
+            set_partial(l1_id, pillar, main_obj, l1)
+          }
+        }
+      }
+    }
+
+    # Check all Level 2
+    if (input$detail_level %in% c("level3", "level4")) {
+      for (pillar in input$pillar_filter) {
+        for (main_obj in input$main_objective_filter) {
+          l1_items <- ebm_data %>%
+            dplyr::filter(
+              Pillar == pillar,
+              Main_Objective == main_obj,
+              !is.na(Level_1),
+              Level_1 != ""
+            ) %>%
+            dplyr::distinct(Level_1) %>%
+            pull(Level_1)
+
+          for (l1 in l1_items) {
+            l2_items <- ebm_data %>%
+              dplyr::filter(
+                Pillar == pillar,
+                Main_Objective == main_obj,
+                Level_1 == l1,
+                !is.na(Level_2),
+                Level_2 != ""
+              ) %>%
+              dplyr::distinct(Level_2) %>%
+              pull(Level_2)
+
+            for (l2 in l2_items) {
+              l2_id <- paste0(
+                "chk_l2_",
+                make.names(paste(pillar, main_obj, l1, l2))
+              )
+              set_partial(l2_id, pillar, main_obj, l1, l2)
+            }
+          }
+        }
+      }
+    }
+
+    # Check all Level 3
+    if (input$detail_level == "level4") {
+      for (pillar in input$pillar_filter) {
+        for (main_obj in input$main_objective_filter) {
+          l1_items <- ebm_data %>%
+            dplyr::filter(
+              Pillar == pillar,
+              Main_Objective == main_obj,
+              !is.na(Level_1),
+              Level_1 != ""
+            ) %>%
+            dplyr::distinct(Level_1) %>%
+            pull(Level_1)
+
+          for (l1 in l1_items) {
+            l2_items <- ebm_data %>%
+              dplyr::filter(
+                Pillar == pillar,
+                Main_Objective == main_obj,
+                Level_1 == l1,
+                !is.na(Level_2),
+                Level_2 != ""
+              ) %>%
+              dplyr::distinct(Level_2) %>%
+              pull(Level_2)
+
+            for (l2 in l2_items) {
+              l3_items <- ebm_data %>%
+                dplyr::filter(
+                  Pillar == pillar,
+                  Main_Objective == main_obj,
+                  Level_1 == l1,
+                  Level_2 == l2,
+                  !is.na(Level_3),
+                  Level_3 != ""
+                ) %>%
+                dplyr::distinct(Level_3) %>%
+                pull(Level_3)
+
+              for (l3 in l3_items) {
+                l3_id <- paste0(
+                  "chk_l3_",
+                  make.names(paste(pillar, main_obj, l1, l2, l3))
+                )
+                set_partial(l3_id, pillar, main_obj, l1, l2, l3)
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
   # Checklist downloads
 
   output$download_checklist_csv <- downloadHandler(
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
-      dat <- get_full_checklist(); req(dat)
+      dat <- get_full_checklist()
+      req(dat)
       checked_ids <- names(input)[
         grepl("^chk_", names(input)) &
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
       if (length(checked_ids) == 0) {
-
-        write.csv(dat[0, ], file, row.names = FALSE, quote=TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
       } else {
+        patterns <- sub(".*\\.\\.", "", checked_ids)
 
-
-      patterns <- sub(".*\\.\\.", "", checked_ids)
-
-      idx <- which(
-        Reduce("|", lapply(patterns, function(p) {
-          grepl(make.names(p), make.names(dat$Objective_Label))
-        }))
-      )
-
-      if (length(idx) == 0) {
-        # NOT LEVEL 1-4 (e.g. Productivity)
         idx <- which(
-          Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
-            grepl(make.names(p), make.names(dat$Objective_Label))
-          }))
+          Reduce(
+            "|",
+            lapply(patterns, function(p) {
+              grepl(make.names(p), make.names(dat$Objective_Label))
+            })
+          )
         )
 
-      }
-
-
-      dat <- dat[idx,]
-
-      for (i in seq_along(names(dat))) {
-        message(i)
-        NAME_OF_DAT <- names(dat)[i]
-        if (any(grepl('\u2500', dat[[NAME_OF_DAT]]))) {
-          dat[[NAME_OF_DAT]][which(grepl('\u2500', dat[[NAME_OF_DAT]]))] <- gsub('\u2500', '-', dat[[NAME_OF_DAT]][which(grepl('\u2500', dat[[NAME_OF_DAT]]))])
-        }
-        if (any(grepl('\t', dat[[NAME_OF_DAT]]))) {
-          dat[[NAME_OF_DAT]][which(grepl('\t', dat[[NAME_OF_DAT]]))] <- gsub('\t', '', dat[[NAME_OF_DAT]][which(grepl('\t', dat[[NAME_OF_DAT]]))])
-        }
-        if (any(grepl('\u2212', dat[[NAME_OF_DAT]]))) {
-          dat[[NAME_OF_DAT]][which(grepl('\u2212', dat[[NAME_OF_DAT]]))] <- gsub('\u2212', '-', dat[[NAME_OF_DAT]][which(grepl('\u2212', dat[[NAME_OF_DAT]]))])
-        }
-        if (any(grepl("the Crown", dat[[NAME_OF_DAT]]))) {
-          dat[[NAME_OF_DAT]][which(grepl('the Crown', dat[[NAME_OF_DAT]]))] <- "4. Decisions update hte Crown's fiduciary responsibilities to Indigenous Peoples"
+        if (length(idx) == 0) {
+          # NOT LEVEL 1-4 (e.g. Productivity)
+          idx <- which(
+            Reduce(
+              "|",
+              lapply(sub(".*_", "", checked_ids), function(p) {
+                grepl(make.names(p), make.names(dat$Objective_Label))
+              })
+            )
+          )
         }
 
-        if (any(grepl("[\u201C\u201D]", dat[[NAME_OF_DAT]]))) {
-          dat[[NAME_OF_DAT]][which(grepl("[\u201C\u201D]", dat[[NAME_OF_DAT]]))] <- gsub("[\u201C\u201D]", '"', dat[[NAME_OF_DAT]][which(grepl("[\u201C\u201D]", dat[[NAME_OF_DAT]]))])
-        }
+        dat <- dat[idx, ]
 
-        if (any(grepl("\u00A0", dat[[NAME_OF_DAT]]))) {
-          dat[[NAME_OF_DAT]][which(grepl("\u00A0", dat[[NAME_OF_DAT]]))] <- gsub("\u00A0", '', dat[[NAME_OF_DAT]][which(grepl("\u00A0", dat[[NAME_OF_DAT]]))])
-        }
+        for (i in seq_along(names(dat))) {
+          message(i)
+          NAME_OF_DAT <- names(dat)[i]
+          if (any(grepl('\u2500', dat[[NAME_OF_DAT]]))) {
+            dat[[NAME_OF_DAT]][which(grepl(
+              '\u2500',
+              dat[[NAME_OF_DAT]]
+            ))] <- gsub(
+              '\u2500',
+              '-',
+              dat[[NAME_OF_DAT]][which(grepl('\u2500', dat[[NAME_OF_DAT]]))]
+            )
+          }
+          if (any(grepl('\t', dat[[NAME_OF_DAT]]))) {
+            dat[[NAME_OF_DAT]][which(grepl('\t', dat[[NAME_OF_DAT]]))] <- gsub(
+              '\t',
+              '',
+              dat[[NAME_OF_DAT]][which(grepl('\t', dat[[NAME_OF_DAT]]))]
+            )
+          }
+          if (any(grepl('\u2212', dat[[NAME_OF_DAT]]))) {
+            dat[[NAME_OF_DAT]][which(grepl(
+              '\u2212',
+              dat[[NAME_OF_DAT]]
+            ))] <- gsub(
+              '\u2212',
+              '-',
+              dat[[NAME_OF_DAT]][which(grepl('\u2212', dat[[NAME_OF_DAT]]))]
+            )
+          }
+          if (any(grepl("the Crown", dat[[NAME_OF_DAT]]))) {
+            dat[[NAME_OF_DAT]][which(grepl(
+              'the Crown',
+              dat[[NAME_OF_DAT]]
+            ))] <- "4. Decisions update hte Crown's fiduciary responsibilities to Indigenous Peoples"
+          }
 
+          if (any(grepl("[\u201C\u201D]", dat[[NAME_OF_DAT]]))) {
+            dat[[NAME_OF_DAT]][which(grepl(
+              "[\u201C\u201D]",
+              dat[[NAME_OF_DAT]]
+            ))] <- gsub(
+              "[\u201C\u201D]",
+              '"',
+              dat[[NAME_OF_DAT]][which(grepl(
+                "[\u201C\u201D]",
+                dat[[NAME_OF_DAT]]
+              ))]
+            )
+          }
 
-      }
-      dat[] <- lapply(dat, function(x) {
-        if (is.character(x)) {
-          gsub("^([=+@-])", " ", x)
-        } else {
-          x
+          if (any(grepl("\u00A0", dat[[NAME_OF_DAT]]))) {
+            dat[[NAME_OF_DAT]][which(grepl(
+              "\u00A0",
+              dat[[NAME_OF_DAT]]
+            ))] <- gsub(
+              "\u00A0",
+              '',
+              dat[[NAME_OF_DAT]][which(grepl("\u00A0", dat[[NAME_OF_DAT]]))]
+            )
+          }
         }
-      })
-      dat[] <- lapply(dat, function(x) {
+        dat[] <- lapply(dat, function(x) {
+          if (is.character(x)) {
+            gsub("^([=+@-])", " ", x)
+          } else {
+            x
+          }
+        })
+        dat[] <- lapply(dat, function(x) {
           trimws(x, 'both')
+        })
 
-      })
+        dat <- dat[, -which(names(dat) == 'Objective_Label')]
+        names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
+        #browser()
 
-      dat <- dat[, -which(names(dat) == 'Objective_Label')]
-      names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
-
-      #browser()
-
-
-      write.csv(dat, file, row.names = FALSE, quote=TRUE)
-    }
+        write.csv(dat, file, row.names = FALSE, quote = TRUE)
+      }
     }
   )
 
   output$download_checklist_excel <- downloadHandler(
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".xlsx"),
     content = function(file) {
-      dat <- get_full_checklist(); req(dat)
+      dat <- get_full_checklist()
+      req(dat)
 
       ## BELOW WORKS FOR LEVEL_1 BUT NOT FOR E.G. PRODUCTIVITY. I WILL NEED TO FIX EXCEL, CSV, AND WORD.
 
@@ -2193,51 +4185,71 @@ server <- function(input, output, session) {
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
 
-
       if (length(checked_ids) == 0) {
-
-        write.csv(dat[0, ], file, row.names = FALSE, quote=TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
       } else {
+        patterns <- sub(".*\\.\\.", "", checked_ids)
 
-      patterns <- sub(".*\\.\\.", "", checked_ids)
-
-      idx <- which(
-        Reduce("|", lapply(patterns, function(p) {
-          grepl(make.names(p), make.names(dat$Objective_Label))
-        }))
-      )
-
-      if (length(idx) == 0) {
-        # NOT LEVEL 1-4 (e.g. Productivity)
         idx <- which(
-          Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
-            grepl(make.names(p), make.names(dat$Objective_Label))
-          }))
+          Reduce(
+            "|",
+            lapply(patterns, function(p) {
+              grepl(make.names(p), make.names(dat$Objective_Label))
+            })
+          )
         )
 
-      }
+        if (length(idx) == 0) {
+          # NOT LEVEL 1-4 (e.g. Productivity)
+          idx <- which(
+            Reduce(
+              "|",
+              lapply(sub(".*_", "", checked_ids), function(p) {
+                grepl(make.names(p), make.names(dat$Objective_Label))
+              })
+            )
+          )
+        }
 
-      dat <- dat[idx,]
+        dat <- dat[idx, ]
 
-      dat <- dat[, -which(names(dat) == 'Objective_Label')]
-      names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
+        dat <- dat[, -which(names(dat) == 'Objective_Label')]
+        names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
+        # END NEW
+        wb <- createWorkbook()
+        addWorksheet(wb, "Checklist")
+        writeData(wb, "Checklist", dat)
 
-      # END NEW
-      wb <- createWorkbook()
-      addWorksheet(wb, "Checklist")
-      writeData(wb, "Checklist", dat)
+        headerStyle <- createStyle(
+          fontColour = "#ffffff",
+          fgFill = "#4F81BD",
+          halign = "center",
+          valign = "center",
+          textDecoration = "bold",
+          border = "TopBottomLeftRight"
+        )
+        addStyle(
+          wb,
+          "Checklist",
+          headerStyle,
+          rows = 1,
+          cols = 1:ncol(dat),
+          gridExpand = TRUE
+        )
 
-      headerStyle <- createStyle(fontColour = "#ffffff", fgFill = "#4F81BD",
-                                 halign = "center", valign = "center",
-                                 textDecoration = "bold", border = "TopBottomLeftRight")
-      addStyle(wb, "Checklist", headerStyle, rows = 1, cols = 1:ncol(dat), gridExpand = TRUE)
-
-      bodyStyle <- createStyle(border = "TopBottomLeftRight")
-      addStyle(wb, "Checklist", bodyStyle, rows = 2:(nrow(dat) + 1), cols = 1:ncol(dat),
-               gridExpand = TRUE, stack = TRUE)
-      setColWidths(wb, "Checklist", cols = 1:ncol(dat), widths = "auto")
-      saveWorkbook(wb, file, overwrite = TRUE)
+        bodyStyle <- createStyle(border = "TopBottomLeftRight")
+        addStyle(
+          wb,
+          "Checklist",
+          bodyStyle,
+          rows = 2:(nrow(dat) + 1),
+          cols = 1:ncol(dat),
+          gridExpand = TRUE,
+          stack = TRUE
+        )
+        setColWidths(wb, "Checklist", cols = 1:ncol(dat), widths = "auto")
+        saveWorkbook(wb, file, overwrite = TRUE)
       }
     }
   )
@@ -2245,7 +4257,8 @@ server <- function(input, output, session) {
   output$download_checklist_word <- downloadHandler(
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".docx"),
     content = function(file) {
-      dat <- get_full_checklist(); req(dat)
+      dat <- get_full_checklist()
+      req(dat)
       # if ('Checked' %in% names(dat)) {
       #   dat <- dat[, !(names(dat) %in% "Checked")]
       # }
@@ -2256,65 +4269,83 @@ server <- function(input, output, session) {
       ]
 
       if (length(checked_ids) == 0) {
-
-        write.csv(dat[0, ], file, row.names = FALSE, quote=TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
       } else {
-      patterns <- sub(".*\\.\\.", "", checked_ids)
+        patterns <- sub(".*\\.\\.", "", checked_ids)
 
-      idx <- which(
-        Reduce("|", lapply(patterns, function(p) {
-          grepl(make.names(p), make.names(dat$Objective_Label))
-        }))
-      )
-
-      if (length(idx) == 0) {
-        # NOT LEVEL 1-4 (e.g. Productivity)
         idx <- which(
-          Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
-            grepl(make.names(p), make.names(dat$Objective_Label))
-          }))
+          Reduce(
+            "|",
+            lapply(patterns, function(p) {
+              grepl(make.names(p), make.names(dat$Objective_Label))
+            })
+          )
         )
 
-      }
+        if (length(idx) == 0) {
+          # NOT LEVEL 1-4 (e.g. Productivity)
+          idx <- which(
+            Reduce(
+              "|",
+              lapply(sub(".*_", "", checked_ids), function(p) {
+                grepl(make.names(p), make.names(dat$Objective_Label))
+              })
+            )
+          )
+        }
 
-      dat <- dat[idx,]
+        dat <- dat[idx, ]
 
-      dat <- dat[, -which(names(dat) == 'Objective_Label')]
-      names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
+        dat <- dat[, -which(names(dat) == 'Objective_Label')]
+        names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
-      doc <- read_docx()
-      doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
-      doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
-      doc <- body_add_par(doc, "")
+        doc <- read_docx()
+        doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
+        doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
+        doc <- body_add_par(doc, "")
 
-      ft <- flextable(dat)
-      ft <- theme_booktabs(ft)
+        ft <- flextable(dat)
+        ft <- theme_booktabs(ft)
 
-      if ("Main_Objectives_text" %in% names(dat)) {
-        col_widths <- c(0.4)
-        if ("Pillar" %in% names(dat)) col_widths <- c(col_widths, 1.2)
-        if ("Main_Objective" %in% names(dat)) col_widths <- c(col_widths, 1.5)
-        if ("Main_Objectives_text" %in% names(dat)) col_widths <- c(col_widths, 2.5)
-        if ("Level_1" %in% names(dat)) col_widths <- c(col_widths, 1.5)
-        if ("Level_2" %in% names(dat)) col_widths <- c(col_widths, 1.5)
-        if ("Level_3" %in% names(dat)) col_widths <- c(col_widths, 1.5)
-        if ("Level_4" %in% names(dat)) col_widths <- c(col_widths, 1.5)
-        ft <- width(ft, width = col_widths)
-      } else {
-        ft <- autofit(ft)
-      }
+        if ("Main_Objectives_text" %in% names(dat)) {
+          col_widths <- c(0.4)
+          if ("Pillar" %in% names(dat)) {
+            col_widths <- c(col_widths, 1.2)
+          }
+          if ("Main_Objective" %in% names(dat)) {
+            col_widths <- c(col_widths, 1.5)
+          }
+          if ("Main_Objectives_text" %in% names(dat)) {
+            col_widths <- c(col_widths, 2.5)
+          }
+          if ("Level_1" %in% names(dat)) {
+            col_widths <- c(col_widths, 1.5)
+          }
+          if ("Level_2" %in% names(dat)) {
+            col_widths <- c(col_widths, 1.5)
+          }
+          if ("Level_3" %in% names(dat)) {
+            col_widths <- c(col_widths, 1.5)
+          }
+          if ("Level_4" %in% names(dat)) {
+            col_widths <- c(col_widths, 1.5)
+          }
+          ft <- width(ft, width = col_widths)
+        } else {
+          ft <- autofit(ft)
+        }
 
-      ft <- align(ft, j = 1, align = "center", part = "all")
-      ft <- fontsize(ft, j = 1, size = 12, part = "body")
-      if (ncol(dat) > 1) {
-        ft <- align(ft, j = 2:ncol(dat), align = "left", part = "all")
-      }
-      ft <- bold(ft, part = "header")
-      ft <- fontsize(ft, size = 10, part = "header")
-      ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
+        ft <- align(ft, j = 1, align = "center", part = "all")
+        ft <- fontsize(ft, j = 1, size = 12, part = "body")
+        if (ncol(dat) > 1) {
+          ft <- align(ft, j = 2:ncol(dat), align = "left", part = "all")
+        }
+        ft <- bold(ft, part = "header")
+        ft <- fontsize(ft, size = 10, part = "header")
+        ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
 
-      doc <- body_add_flextable(doc, ft)
-      print(doc, target = file)
+        doc <- body_add_flextable(doc, ft)
+        print(doc, target = file)
       }
     }
   )
@@ -2322,30 +4353,37 @@ server <- function(input, output, session) {
   # Assessment type highlighting
   observeEvent(input$assessment_type, {
     shinyjs::removeClass(selector = ".assessment-type-box", class = "selected")
-    shinyjs::addClass(id = paste0("assessment_type_", input$assessment_type), class = "selected")
+    shinyjs::addClass(
+      id = paste0("assessment_type_", input$assessment_type),
+      class = "selected"
+    )
   })
 
   # Step 2: interfaces
   output$assessment_interface <- renderUI({
     req(input$assessment_type)
-    switch(input$assessment_type,
-           policy = policy_ui(),
-           scenarios = performance_ui(),
-           performance = performance_ui(),
-           cumulative = cumulative_ui())
+    switch(
+      input$assessment_type,
+      policy = policy_ui(),
+      scenarios = performance_ui(),
+      performance = performance_ui(),
+      cumulative = cumulative_ui()
+    )
   })
 
   # ========== POLICY/SCENARIO ASSESSMENT ==========
   policy_tbl <- reactiveVal(NULL)
 
-  observeEvent(input$assessment_type, { # KYLO
+  observeEvent(input$assessment_type, {
+    # KYLO
     policy_tbl(NULL)
     perf_tbl(NULL)
     cumu_tbl(NULL)
   })
 
   policy_ui <- function() {
-    so <- selected_objectives(); req(so)
+    so <- selected_objectives()
+    req(so)
 
     tagList(
       fluidRow(
@@ -2371,8 +4409,15 @@ server <- function(input, output, session) {
               4,
               actionButton(
                 "policy_make_template",
-                ifelse(input$assessment_type == 'policy', "Step B: Create / Reset Template to begin",
-                       ifelse(input$assessment_type == 'scenarios', "Step D: Create / Reset Template to begin", "Step B: Create / Reset Template to begin")),
+                ifelse(
+                  input$assessment_type == 'policy',
+                  "Step B: Create / Reset Template to begin",
+                  ifelse(
+                    input$assessment_type == 'scenarios',
+                    "Step D: Create / Reset Template to begin",
+                    "Step B: Create / Reset Template to begin"
+                  )
+                ),
                 class = "btn-primary",
                 style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
               )
@@ -2403,7 +4448,7 @@ server <- function(input, output, session) {
   }
 
   output$policy_template_ui <- renderUI({
-    req(input$policy_make_template)  # only show if TRUE
+    req(input$policy_make_template) # only show if TRUE
     fluidRow(
       column(
         3,
@@ -2424,196 +4469,340 @@ server <- function(input, output, session) {
     )
   })
 
+  observeEvent(
+    list(
+      input$policy_make_template,
+      input$key_s,
+      input$perf_make_template,
+      input$cumu_make_template
+    ),
+    {
+      #req(input$policy_make_template > 0 || input$perf_make_template > 0 || input$cumu_make_template > 0)
 
-  observeEvent(list(input$policy_make_template, input$key_s, input$perf_make_template, input$cumu_make_template), {
-    #req(input$policy_make_template > 0 || input$perf_make_template > 0 || input$cumu_make_template > 0)
+      req(
+        (input$policy_make_template %||% 0) > 0 ||
+          (input$perf_make_template %||% 0) > 0 ||
+          (input$cumu_make_template %||% 0) > 0 ||
+          !is.null(input$key_s)
+      )
 
-    req(
-      (input$policy_make_template %||% 0) > 0 ||
-        (input$perf_make_template %||% 0) > 0 ||
-        (input$cumu_make_template %||% 0) > 0 ||
-        !is.null(input$key_s)
-    )
+      # Determine which assessment type is active
+      assessment <- if (!is.null(input$assessment_type)) {
+        input$assessment_type
+      } else {
+        "policy"
+      }
 
+      # Get strategy for cumulative (only if cumulative)
+      strategy <- if (assessment == "cumulative") cumu_strategy() else NULL
 
-    # Determine which assessment type is active
-    assessment <- if(!is.null(input$assessment_type)) input$assessment_type else "policy"
-
-    # Get strategy for cumulative (only if cumulative)
-    strategy <- if(assessment == "cumulative") cumu_strategy() else NULL
-
-    # Conditional scoring table
-    scoring_ui <- if (assessment == "cumulative") {
-      # CUMULATIVE ASSESSMENTS
-      if(strategy == "risk") {
-        # Risk assessment scoring table
-        tagList(
-          tags$h4("Risk Assessment Scoring"),
-          tags$table(
-            style = "width:100%; border-collapse: collapse; border:1px solid #ccc;",
-            tags$thead(
-              tags$tr(
-                tags$th("Level", style = "border:1px solid #ccc; padding:4px;"),
-                tags$th("Description", style = "border:1px solid #ccc; padding:4px;")
+      # Conditional scoring table
+      scoring_ui <- if (assessment == "cumulative") {
+        # CUMULATIVE ASSESSMENTS
+        if (strategy == "risk") {
+          # Risk assessment scoring table
+          tagList(
+            tags$h4("Risk Assessment Scoring"),
+            tags$table(
+              style = "width:100%; border-collapse: collapse; border:1px solid #ccc;",
+              tags$thead(
+                tags$tr(
+                  tags$th(
+                    "Level",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  ),
+                  tags$th(
+                    "Description",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                )
+              ),
+              tags$tbody(
+                tags$tr(
+                  tags$td("L", style = "border:1px solid #ccc; padding:4px;"),
+                  tags$td(
+                    "Low risk - minimal concern; limited interaction potential",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                ),
+                tags$tr(
+                  tags$td("M", style = "border:1px solid #ccc; padding:4px;"),
+                  tags$td(
+                    "Moderate risk - notable concern; some interaction potential",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                ),
+                tags$tr(
+                  tags$td("H", style = "border:1px solid #ccc; padding:4px;"),
+                  tags$td(
+                    "High risk - significant concern; substantial interaction potential",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                )
               )
             ),
-            tags$tbody(
-              tags$tr(tags$td("L", style = "border:1px solid #ccc; padding:4px;"),
-                      tags$td("Low risk - minimal concern; limited interaction potential", style = "border:1px solid #ccc; padding:4px;")),
-              tags$tr(tags$td("M", style = "border:1px solid #ccc; padding:4px;"),
-                      tags$td("Moderate risk - notable concern; some interaction potential", style = "border:1px solid #ccc; padding:4px;")),
-              tags$tr(tags$td("H", style = "border:1px solid #ccc; padding:4px;"),
-                      tags$td("High risk - significant concern; substantial interaction potential", style = "border:1px solid #ccc; padding:4px;"))
+            tags$br(),
+            tags$p(
+              tags$strong("Cumulative Tallies (automatically calculated):"),
+              style = "margin-top: 10px;"
+            ),
+            tags$ul(
+              tags$li("Total_L: Count of Low risk impacts across activities"),
+              tags$li(
+                "Total_M: Count of Moderate risk impacts across activities"
+              ),
+              tags$li("Total_H: Count of High risk impacts across activities")
             )
-          ),
-          tags$br(),
-          tags$p(tags$strong("Cumulative Tallies (automatically calculated):"), style = "margin-top: 10px;"),
-          tags$ul(
-            tags$li("Total_L: Count of Low risk impacts across activities"),
-            tags$li("Total_M: Count of Moderate risk impacts across activities"),
-            tags$li("Total_H: Count of High risk impacts across activities")
           )
-        )
-      } else {
-        # Indicator-based scoring
+        } else {
+          # Indicator-based scoring
+          tagList(
+            tags$h4("Indicator-Based Impact Scoring"),
+            tags$table(
+              style = "width:100%; border-collapse: collapse; border:1px solid #ccc;",
+              tags$thead(
+                tags$tr(
+                  tags$th(
+                    "Value",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  ),
+                  tags$th(
+                    "Description",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                )
+              ),
+              tags$tbody(
+                tags$tr(
+                  tags$td("0", style = "border:1px solid #ccc; padding:4px;"),
+                  tags$td(
+                    "Not met target",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                ),
+                tags$tr(
+                  tags$td("1", style = "border:1px solid #ccc; padding:4px;"),
+                  tags$td(
+                    "Met target",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                ),
+                tags$tr(
+                  tags$td("2", style = "border:1px solid #ccc; padding:4px;"),
+                  tags$td(
+                    "Exceeded target",
+                    style = "border:1px solid #ccc; padding:4px;"
+                  )
+                )
+              )
+            ),
+            tags$br(),
+            tags$p(
+              tags$strong("Tallying Guidance:"),
+              style = "margin-top: 10px; color: #d9534f;"
+            ),
+            tags$ul(
+              tags$li(
+                "Use the 'Tallying_Method' column to document your approach (e.g., Sum, Average, Maximum, Custom threshold)"
+              ),
+              tags$li(
+                "Complete the 'Cumulative_Impact' column with your calculated result"
+              ),
+              tags$li(
+                "Consider using an external worksheet to determine: should impacts be summed? Averaged? Use maximum? Apply custom logic?"
+              ),
+              tags$li(
+                "Document your rationale for transparency and reproducibility"
+              ),
+              tags$li(
+                "Download your completed template and apply your chosen tallying methodology"
+              )
+            )
+          )
+        }
+      } else if (!(assessment %in% c("policy"))) {
+        # Performance scoring table ONLY
         tagList(
-          tags$h4("Indicator-Based Impact Scoring"),
+          tags$h4("Performance Scoring"),
           tags$table(
             style = "width:100%; border-collapse: collapse; border:1px solid #ccc;",
             tags$thead(
               tags$tr(
                 tags$th("Value", style = "border:1px solid #ccc; padding:4px;"),
-                tags$th("Description", style = "border:1px solid #ccc; padding:4px;")
+                tags$th(
+                  "Description",
+                  style = "border:1px solid #ccc; padding:4px;"
+                )
               )
             ),
             tags$tbody(
-              tags$tr(tags$td("0", style = "border:1px solid #ccc; padding:4px;"),
-                      tags$td("Not met target", style = "border:1px solid #ccc; padding:4px;")),
-              tags$tr(tags$td("1", style = "border:1px solid #ccc; padding:4px;"),
-                      tags$td("Met target", style = "border:1px solid #ccc; padding:4px;")),
-              tags$tr(tags$td("2", style = "border:1px solid #ccc; padding:4px;"),
-                      tags$td("Exceeded target", style = "border:1px solid #ccc; padding:4px;"))
+              tags$tr(
+                tags$td("0", style = "border:1px solid #ccc; padding:4px;"),
+                tags$td(
+                  "Not met target",
+                  style = "border:1px solid #ccc; padding:4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("1", style = "border:1px solid #ccc; padding:4px;"),
+                tags$td(
+                  "Met target",
+                  style = "border:1px solid #ccc; padding:4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("2", style = "border:1px solid #ccc; padding:4px;"),
+                tags$td(
+                  "Exceeded target",
+                  style = "border:1px solid #ccc; padding:4px;"
+                )
+              )
+            )
+          )
+        )
+      } else {
+        # Policy/Scenarios - Existing qualitative + quantitative tables
+        tagList(
+          tags$h4("Policy Language Alignment Scoring"),
+          tags$table(
+            style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
+            tags$thead(
+              tags$tr(
+                tags$th(
+                  "Value",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                ),
+                tags$th(
+                  "Description",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              )
+            ),
+            tags$tbody(
+              tags$tr(
+                tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Not relevant/ applicable - dependent on context, case study, purview, department, jurisdiction, etc.",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "No mention - the objective of the EBM framework is not present within this unit of analysis",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Implicit Content mention - the phrase/terms used in the unit of analysis generally or vaguely aligns with, or alludes to, the intended meaning in the EBM Framework (e.g., high-level concepts)",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Explicit Content mention - the phrase/terms used in the unit of analysis partially aligns with, or alludes to, the meaning intended in the EBM framework, but may appear slightly different.",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Content & Context alignment - the phrase/terms used in the unit of analysis explicitly matches the intended content as well as the context of the EBM framework objectives",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              )
             )
           ),
           tags$br(),
-          tags$p(tags$strong("Tallying Guidance:"), style = "margin-top: 10px; color: #d9534f;"),
-          tags$ul(
-            tags$li("Use the 'Tallying_Method' column to document your approach (e.g., Sum, Average, Maximum, Custom threshold)"),
-            tags$li("Complete the 'Cumulative_Impact' column with your calculated result"),
-            tags$li("Consider using an external worksheet to determine: should impacts be summed? Averaged? Use maximum? Apply custom logic?"),
-            tags$li("Document your rationale for transparency and reproducibility"),
-            tags$li("Download your completed template and apply your chosen tallying methodology")
+          tags$h4("Data/Information Scoring"),
+          tags$table(
+            style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
+            tags$thead(
+              tags$tr(
+                tags$th(
+                  "Value",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                ),
+                tags$th(
+                  "Description",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              )
+            ),
+            tags$tbody(
+              tags$tr(
+                tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Not relevant/ applicable – Objective is not relevant to policy/management approach or plan.",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "ZERO – No data or information to address this objective of the EBM framework",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Weak - Some data or information to address this objective, but it is inconsistent temporally and/or spatially",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Moderate - Some data or information with reasonable temporal and spatial coverage to address this objective",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              ),
+              tags$tr(
+                tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"),
+                tags$td(
+                  "Strong - Good information and long term data with temporal and/or spatial coverage to address this objective",
+                  style = "border: 1px solid #ccc; padding: 4px;"
+                )
+              )
+            )
           )
         )
       }
-    } else if (!(assessment %in% c("policy"))) {
-      # Performance scoring table ONLY
-      tagList(
-        tags$h4("Performance Scoring"),
-        tags$table(
-          style = "width:100%; border-collapse: collapse; border:1px solid #ccc;",
-          tags$thead(
-            tags$tr(
-              tags$th("Value", style = "border:1px solid #ccc; padding:4px;"),
-              tags$th("Description", style = "border:1px solid #ccc; padding:4px;")
-            )
-          ),
-          tags$tbody(
-            tags$tr(tags$td("0", style = "border:1px solid #ccc; padding:4px;"), tags$td("Not met target", style = "border:1px solid #ccc; padding:4px;")),
-            tags$tr(tags$td("1", style = "border:1px solid #ccc; padding:4px;"), tags$td("Met target", style = "border:1px solid #ccc; padding:4px;")),
-            tags$tr(tags$td("2", style = "border:1px solid #ccc; padding:4px;"), tags$td("Exceeded target", style = "border:1px solid #ccc; padding:4px;"))
-          )
-        )
-      )
-    } else {
-      # Policy/Scenarios - Existing qualitative + quantitative tables
-      tagList(
-        tags$h4("Policy Language Alignment Scoring"),
-        tags$table(
-          style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
-          tags$thead(
-            tags$tr(
-              tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-              tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
-            )
-          ),
-          tags$tbody(
-            tags$tr(tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Not relevant/ applicable - dependent on context, case study, purview, department, jurisdiction, etc.", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("No mention - the objective of the EBM framework is not present within this unit of analysis", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Implicit Content mention - the phrase/terms used in the unit of analysis generally or vaguely aligns with, or alludes to, the intended meaning in the EBM Framework (e.g., high-level concepts)", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Explicit Content mention - the phrase/terms used in the unit of analysis partially aligns with, or alludes to, the meaning intended in the EBM framework, but may appear slightly different.", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Content & Context alignment - the phrase/terms used in the unit of analysis explicitly matches the intended content as well as the context of the EBM framework objectives", style = "border: 1px solid #ccc; padding: 4px;"))
-          )
-        ),
-        tags$br(),
-        tags$h4("Data/Information Scoring"),
-        tags$table(
-          style = "width: 100%; border-collapse: collapse; border: 1px solid #ccc;",
-          tags$thead(
-            tags$tr(
-              tags$th("Value", style = "border: 1px solid #ccc; padding: 4px;"),
-              tags$th("Description", style = "border: 1px solid #ccc; padding: 4px;")
-            )
-          ),
-          tags$tbody(
-            tags$tr(tags$td("X", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Not relevant/ applicable – Objective is not relevant to policy/management approach or plan.", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("0", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("ZERO – No data or information to address this objective of the EBM framework", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("1", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Weak - Some data or information to address this objective, but it is inconsistent temporally and/or spatially", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("2", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Moderate - Some data or information with reasonable temporal and spatial coverage to address this objective", style = "border: 1px solid #ccc; padding: 4px;")),
-            tags$tr(tags$td("3", style = "border: 1px solid #ccc; padding: 4px;"), tags$td("Strong - Good information and long term data with temporal and/or spatial coverage to address this objective", style = "border: 1px solid #ccc; padding: 4px;"))
-          )
-        )
-      )
-    }
 
-    # Show modal
-    showModal(modalDialog(
-      title = "Scoring Criteria",
-      tagList(
-        tags$br(), tags$br(),
-        scoring_ui
-      ),
-      easyClose = TRUE,
-      footer = modalButton("Close"),
-      size = "l"
-    ))
-  })
+      # Show modal
+      showModal(modalDialog(
+        title = "Scoring Criteria",
+        tagList(
+          tags$br(),
+          tags$br(),
+          scoring_ui
+        ),
+        easyClose = TRUE,
+        footer = modalButton("Close"),
+        size = "l"
+      ))
+    }
+  )
 
   observeEvent(input$policy_make_template, {
     # Creates policy_tbl, which is a filtered Pillar from step 1.
-    so <- selected_objectives(); req(so) # Filtering the relevant Pillars
+    so <- selected_objectives()
+    req(so) # Filtering the relevant Pillars
 
-    base <- make_objective_table(so, selected_levels())
-
-    # NEW: keep only rows where the corresponding checkbox is checked 🔴
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
     ]
-    patterns <- sub(".*\\.\\.", "", checked_ids)
-
-    idx <- which(
-      Reduce("|", lapply(patterns, function(p) {
-        grepl(make.names(p), make.names(base$Objective_Label))
-      }))
-    )
-
-    if (length(idx) == 0) {
-      # NOT LEVEL 1-4 (e.g. Productivity)
-      idx <- which(
-        Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
-          grepl(make.names(p), make.names(base$Objective_Label))
-        }))
-      )
-
-    }
-    base <- base[idx,]
+    base <- make_objective_table(so, selected_levels(), checked_ids)
 
     base <- base[, -which(names(base) == 'Objective_Label')]
     names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
 
     base <- unique(base)
-
 
     # END NEW: 🔴
 
@@ -2628,7 +4817,10 @@ server <- function(input, output, session) {
       # Check if scenario names are complete for scenarios
       if (input$assessment_type == "scenarios") {
         names_provided <- scenario_names()
-        if (length(names_provided) != n || any(names_provided == "" | is.na(names_provided))) {
+        if (
+          length(names_provided) != n ||
+            any(names_provided == "" | is.na(names_provided))
+        ) {
           showModal(modalDialog(
             title = "Incomplete Scenario Names",
             "You must provide names for all scenarios before creating the template.",
@@ -2677,16 +4869,25 @@ server <- function(input, output, session) {
 
   output$policy_editor <- renderDT({
     df <- policy_tbl()
-    if (is.null(df)) return(datatable(data.frame(Note = "Complete above steps to begin.")))
+    if (is.null(df)) {
+      return(datatable(data.frame(Note = "Complete above steps to begin.")))
+    }
 
     # Rename columns if scenarios
     df <- rename_scenario_columns(df, input$assessment_type, scenario_names())
 
     score_cols <- grep("Score", names(df)) - 1
-    align_cols <- grep("alignment$|Alignment$|adequacy$|Adequacy$", names(df)) - 1
-    lock_cols  <- which(names(df) %in% c(
-      "Pillar","Main_Objective",all_of(selected_levels())
-    )) - 1
+    align_cols <- grep("alignment$|Alignment$|adequacy$|Adequacy$", names(df)) -
+      1
+    lock_cols <- which(
+      names(df) %in%
+        c(
+          "Pillar",
+          "Main_Objective",
+          all_of(selected_levels())
+        )
+    ) -
+      1
 
     # only non-Score, non-locked columns are editable
     editable_cols <- setdiff(seq_len(ncol(df)) - 1, c(lock_cols, score_cols))
@@ -2694,10 +4895,10 @@ server <- function(input, output, session) {
     datatable(
       df,
       rownames = FALSE,
-      colnames = gsub("_"," ", names(df)),
+      colnames = gsub("_", " ", names(df)),
       editable = list(
         target = "cell",
-        disable = list(columns = c(lock_cols, score_cols))  # 🔹 completely prevent native editing on Score
+        disable = list(columns = c(lock_cols, score_cols)) # 🔹 completely prevent native editing on Score
       ),
       options = list(
         scrollX = TRUE,
@@ -2711,14 +4912,18 @@ server <- function(input, output, session) {
 
         # 🔹 disable clicks entirely on locked columns
         paste0(
-          "if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
+          "if ([",
+          paste(lock_cols, collapse = ","),
+          "].includes(colIndex)) {",
           "  $(this).css('pointer-events','none');",
           "}"
         ),
 
         # 🔹 Score dropdown on single click, stays until selection
         paste0(
-          "if ([", paste(score_cols, collapse=","), "].includes(colIndex)) {",
+          "if ([",
+          paste(score_cols, collapse = ","),
+          "].includes(colIndex)) {",
           "  $(this).off('click').on('click', function(){",
           "    if($(this).find('select').length > 0) return;",
           "    var val = $(this).text();",
@@ -2748,36 +4953,51 @@ server <- function(input, output, session) {
       )
     ) %>%
       formatStyle(
-        columns = c("Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"),
-        backgroundColor='#d3d3d3'
+        columns = c(
+          "Pillar",
+          "Main_Objective",
+          all_of(selected_levels()),
+          "Objective_Label"
+        ),
+        backgroundColor = '#d3d3d3'
       ) %>%
-      formatStyle(columns = align_cols+1, backgroundColor='#ffc0cb') %>%
-      formatStyle(columns = score_cols+1, backgroundColor='#add8e6') %>%
-      formatStyle(columns = c("Rationale"), backgroundColor='white')
+      formatStyle(columns = align_cols + 1, backgroundColor = '#ffc0cb') %>%
+      formatStyle(columns = score_cols + 1, backgroundColor = '#add8e6') %>%
+      formatStyle(columns = c("Rationale"), backgroundColor = 'white')
   })
-
 
   observeEvent(input$policy_editor_cell_edit, {
     info <- input$policy_editor_cell_edit
-    df <- policy_tbl(); req(df)
-    i <- info$row; j <- info$col; v <- info$value
-    if (is.null(v)) return()
-    if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
-    if (is.numeric(df[[j+1]])) v <- as.numeric(v)
-    df[i, j+1] <- v
+    df <- policy_tbl()
+    req(df)
+    i <- info$row
+    j <- info$col
+    v <- info$value
+    if (is.null(v)) {
+      return()
+    }
+    if (is.factor(df[[j + 1]])) {
+      df[[j + 1]] <- as.character(df[[j + 1]])
+    }
+    if (is.numeric(df[[j + 1]])) {
+      v <- as.numeric(v)
+    }
+    df[i, j + 1] <- v
     policy_tbl(df)
   })
-
 
   output$policy_download_excel <- downloadHandler(
     filename = function() paste0("Policy_Assessment_", Sys.Date(), ".xlsx"),
     content = function(file) {
-      df <- policy_tbl(); req(df)
+      df <- policy_tbl()
+      req(df)
 
       # Rename columns for scenarios before saving
       df <- rename_scenario_columns(df, input$assessment_type, scenario_names())
 
-      wb <- createWorkbook(); addWorksheet(wb, "Policy"); writeData(wb, "Policy", df)
+      wb <- createWorkbook()
+      addWorksheet(wb, "Policy")
+      writeData(wb, "Policy", df)
       saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
@@ -2785,7 +5005,8 @@ server <- function(input, output, session) {
   output$policy_download_csv <- downloadHandler(
     filename = function() paste0("Policy_Assessment_", Sys.Date(), ".csv"),
     content = function(file) {
-      df <- policy_tbl(); req(df)
+      df <- policy_tbl()
+      req(df)
 
       # Rename columns for scenarios before saving
       df <- rename_scenario_columns(df, input$assessment_type, scenario_names())
@@ -2797,17 +5018,21 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote=TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE)
     }
   )
 
   output$policy_summary_ui <- renderUI({
     df <- policy_tbl()
-    if (is.null(df)) return(NULL)
+    if (is.null(df)) {
+      return(NULL)
+    }
 
-    score_cols  <- grep("alignment$|data_adequacy$", names(df), value = TRUE)
+    score_cols <- grep("alignment$|data_adequacy$", names(df), value = TRUE)
     if (!length(score_cols)) {
-      return(p("No scoring columns yet. Click 'Create / Reset Template' to begin."))
+      return(p(
+        "No scoring columns yet. Click 'Create / Reset Template' to begin."
+      ))
     }
 
     # Map factor labels to numeric 0–3 where possible
@@ -2834,10 +5059,15 @@ server <- function(input, output, session) {
   })
 
   output$policy_bar_per_scenario <- renderPlot({
-    df <- policy_tbl(); if (is.null(df)) return(NULL)
+    df <- policy_tbl()
+    if (is.null(df)) {
+      return(NULL)
+    }
 
     score_cols <- grep("alignment$|data_adequacy$", names(df), value = TRUE)
-    if (!length(score_cols)) return(NULL)
+    if (!length(score_cols)) {
+      return(NULL)
+    }
 
     to_num <- function(x) {
       x <- as.character(x)
@@ -2847,11 +5077,17 @@ server <- function(input, output, session) {
     }
 
     tall <- df |>
-      pivot_longer(all_of(score_cols), names_to = "Scenario", values_to = "ScoreLabel") |>
+      pivot_longer(
+        all_of(score_cols),
+        names_to = "Scenario",
+        values_to = "ScoreLabel"
+      ) |>
       mutate(Score = to_num(ScoreLabel)) |>
       filter(!is.na(Score))
 
-    if (nrow(tall) == 0) return(NULL)
+    if (nrow(tall) == 0) {
+      return(NULL)
+    }
 
     ggplot(tall, aes(x = Scenario, y = Score, fill = Scenario)) +
       stat_summary(fun = mean, geom = "bar", width = 0.7) +
@@ -2861,14 +5097,22 @@ server <- function(input, output, session) {
         y = "Average score"
       ) +
       theme_minimal() +
-      theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))
+      theme(
+        legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1)
+      )
   })
 
   output$policy_heat_per_objective <- renderPlot({
-    df <- policy_tbl(); if (is.null(df)) return(NULL)
+    df <- policy_tbl()
+    if (is.null(df)) {
+      return(NULL)
+    }
 
     score_cols <- grep("alignment$|data_adequacy$", names(df), value = TRUE)
-    if (!length(score_cols)) return(NULL)
+    if (!length(score_cols)) {
+      return(NULL)
+    }
 
     to_num <- function(x) {
       x <- as.character(x)
@@ -2879,15 +5123,23 @@ server <- function(input, output, session) {
 
     tall <- df |>
       mutate(Objective = Objective_Label) |>
-      pivot_longer(all_of(score_cols), names_to = "Scenario", values_to = "ScoreLabel") |>
+      pivot_longer(
+        all_of(score_cols),
+        names_to = "Scenario",
+        values_to = "ScoreLabel"
+      ) |>
       mutate(Score = to_num(ScoreLabel))
 
-    if (all(is.na(tall$Score))) return(NULL)
+    if (all(is.na(tall$Score))) {
+      return(NULL)
+    }
 
     ggplot(tall, aes(x = Scenario, y = Objective, fill = Score)) +
       geom_tile(color = "#ddd") +
       scale_fill_gradient(
-        low = "#f0f9ff", high = "#084081", na.value = "#eee",
+        low = "#f0f9ff",
+        high = "#084081",
+        na.value = "#eee",
         name = "Score (0–3)"
       ) +
       labs(
@@ -2903,7 +5155,8 @@ server <- function(input, output, session) {
   perf_tbl <- reactiveVal(NULL)
 
   performance_ui <- function() {
-    so <- selected_objectives(); req(so)
+    so <- selected_objectives()
+    req(so)
 
     tagList(
       fluidRow(
@@ -2942,7 +5195,10 @@ server <- function(input, output, session) {
                 numericInput(
                   "num_scenarios",
                   "Step B. Select Number of policies / advice sources / scenarios:",
-                  value = 2, min = 2, max = 10, step = 1
+                  value = 2,
+                  min = 2,
+                  max = 10,
+                  step = 1
                 )
               )
             ),
@@ -2975,7 +5231,8 @@ server <- function(input, output, session) {
             style = "background-color:#fff3cd; color:#000; border-color:#ffe69c;"
           ),
 
-          br(), br(),
+          br(),
+          br(),
 
           # ---------------------------
           # Instructions (after Step D)
@@ -3019,61 +5276,54 @@ server <- function(input, output, session) {
   output$perf_download_ui <- renderUI({
     req(show_dl())
     fluidRow(
-      column(3, downloadButton("perf_download_excel", "Download (Excel)", class = "btn-success btn-block")),
-      column(3, downloadButton("perf_download_csv", "Download (CSV)", class = "btn-info btn-block"))
+      column(
+        3,
+        downloadButton(
+          "perf_download_excel",
+          "Download (Excel)",
+          class = "btn-success btn-block"
+        )
+      ),
+      column(
+        3,
+        downloadButton(
+          "perf_download_csv",
+          "Download (CSV)",
+          class = "btn-info btn-block"
+        )
+      )
       #column(6, fileInput("perf_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
     )
   })
 
-
-
   observeEvent(input$perf_make_template, {
-
-    so <- selected_objectives(); req(so)
-    base <- make_objective_table(so, selected_levels())
-
-    # ---------------------------
-    # Filter selected objectives
-    # ---------------------------
+    so <- selected_objectives()
+    req(so)
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
     ]
+    base <- make_objective_table(so, selected_levels(), checked_ids)
 
-    patterns <- sub(".*\\.\\.", "", checked_ids)
+    base <- base[, -which(names(base) == 'Objective_Label')]
+    names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
 
-    idx <- which(
-      Reduce("|", lapply(patterns, function(p) {
-        grepl(make.names(p), make.names(base$Objective_Label))
-      }))
-    )
-
-    if (length(idx) == 0) {
-      idx <- which(
-        Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
-          grepl(make.names(p), make.names(base$Objective_Label))
-        }))
-      )
-    }
-
-    base <- base[idx,]
     base <- unique(base)
-
-    base <- base[, -which(names(base) == "Objective_Label")]
-    names(base)[which(names(base) == "short_label")] <- "Objective_Label"
 
     # ---------------------------
     # SCENARIOS
     # ---------------------------
     if (input$assessment_type == "scenarios") {
-
       n <- input$num_scenarios %||% 1
       method <- isolate(input$scenario_method)
       method <- method %||% "qual"
 
       names_provided <- scenario_names()
 
-      if (length(names_provided) != n || any(names_provided == "" | is.na(names_provided))) {
+      if (
+        length(names_provided) != n ||
+          any(names_provided == "" | is.na(names_provided))
+      ) {
         showModal(modalDialog(
           title = "Incomplete Scenario Names",
           "You must provide names for all scenarios before creating the template.",
@@ -3087,9 +5337,7 @@ server <- function(input, output, session) {
       # QUALITATIVE: ONLY SCORE PER SCENARIO
       # =========================================================
       if (method == "qual") {
-
         for (i in seq_len(n)) {
-
           scen_name <- names_provided[i]
 
           base[[paste0(scen_name, "_Score")]] <- NA_real_
@@ -3105,9 +5353,7 @@ server <- function(input, output, session) {
         # FULL SCENARIO STRUCTURE
         # =========================================================
       } else {
-
         for (i in seq_len(n)) {
-
           scen_name <- names_provided[i]
 
           base[[paste0(scen_name, "_Indicator")]] <- ""
@@ -3123,7 +5369,6 @@ server <- function(input, output, session) {
       # PERFORMANCE (UNCHANGED)
       # ---------------------------
     } else {
-
       base[["Indicator"]] <- ""
       base[["Indicator Value"]] <- ""
       base[["Target"]] <- ""
@@ -3132,12 +5377,11 @@ server <- function(input, output, session) {
     }
 
     perf_tbl(base)
-
   })
 
   output$perf_editor <- renderDT({
-
-    df <- perf_tbl(); req(df)
+    df <- perf_tbl()
+    req(df)
 
     is_scenarios <- input$assessment_type == "scenarios"
     method <- isolate(input$scenario_method) %||% "qual"
@@ -3145,33 +5389,35 @@ server <- function(input, output, session) {
     # ---------------------------
     # Locked columns
     # ---------------------------
-    lock_cols <- which(names(df) %in% c(
-      "Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"
-    )) - 1
+    lock_cols <- which(
+      names(df) %in%
+        c(
+          "Pillar",
+          "Main_Objective",
+          all_of(selected_levels()),
+          "Objective_Label"
+        )
+    ) -
+      1
 
     # ---------------------------
     # COLUMN MODE LOGIC
     # ---------------------------
 
     if (is_scenarios && method == "qual") {
-
       # ONLY SCORE COLUMNS EXIST
       score_cols <- grep("_Score$", names(df)) - 1
 
       indicator_cols <- c()
       value_cols <- c()
       target_cols <- c()
-
     } else if (is_scenarios && method != "qual") {
-
       # FULL SCENARIO STRUCTURE
       score_cols <- grep("_Score$", names(df)) - 1
       indicator_cols <- grep("_Indicator$", names(df))
       value_cols <- grep("_Indicator Value$", names(df))
       target_cols <- grep("_Target$", names(df))
-
     } else {
-
       # PERFORMANCE MODE
       score_cols <- which(names(df) == "Score") - 1
       indicator_cols <- which(names(df) == "Indicator")
@@ -3185,7 +5431,7 @@ server <- function(input, output, session) {
     datatable(
       df,
       rownames = FALSE,
-      colnames = gsub("_"," ", names(df)),
+      colnames = gsub("_", " ", names(df)),
       editable = list(
         target = "cell",
         disable = list(columns = c(lock_cols, score_cols))
@@ -3202,7 +5448,9 @@ server <- function(input, output, session) {
         # LOCKED COLUMNS
         # ---------------------------
         paste0(
-          "if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
+          "if ([",
+          paste(lock_cols, collapse = ","),
+          "].includes(colIndex)) {",
           "  $(this).css('pointer-events','none');",
           "}"
         ),
@@ -3211,7 +5459,9 @@ server <- function(input, output, session) {
         # SCORE DROPDOWNS
         # ---------------------------
         paste0(
-          "if ([", paste(score_cols, collapse=","), "].includes(colIndex)) {",
+          "if ([",
+          paste(score_cols, collapse = ","),
+          "].includes(colIndex)) {",
           "  $(this).off('click').on('click', function(){",
           "    if($(this).find('select').length > 0) return;",
           "    var val = $(this).text();",
@@ -3241,38 +5491,53 @@ server <- function(input, output, session) {
     ) %>%
 
       # ---------------------------
-    # STYLING (SAFE ACROSS MODES)
-    # ---------------------------
-    formatStyle(
-      columns = c("Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"),
-      backgroundColor = '#d3d3d3'
-    ) %>%
+      # STYLING (SAFE ACROSS MODES)
+      # ---------------------------
+      formatStyle(
+        columns = c(
+          "Pillar",
+          "Main_Objective",
+          all_of(selected_levels()),
+          "Objective_Label"
+        ),
+        backgroundColor = '#d3d3d3'
+      ) %>%
 
       formatStyle(columns = indicator_cols, backgroundColor = '#ffc0cb') %>%
       formatStyle(columns = value_cols, backgroundColor = '#ffc0cb') %>%
       formatStyle(columns = target_cols, backgroundColor = '#add8e6') %>%
 
       formatStyle(columns = score_cols + 1, backgroundColor = '#add8e6')
-
   })
 
   observeEvent(input$perf_editor_cell_edit, {
     info <- input$perf_editor_cell_edit
-    df <- perf_tbl(); req(df)
-    i <- info$row; j <- info$col; v <- info$value
-    if (is.null(v)) return()
-    if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
-    if (is.numeric(df[[j+1]])) v <- as.numeric(v)
-    df[i, j+1] <- v
+    df <- perf_tbl()
+    req(df)
+    i <- info$row
+    j <- info$col
+    v <- info$value
+    if (is.null(v)) {
+      return()
+    }
+    if (is.factor(df[[j + 1]])) {
+      df[[j + 1]] <- as.character(df[[j + 1]])
+    }
+    if (is.numeric(df[[j + 1]])) {
+      v <- as.numeric(v)
+    }
+    df[i, j + 1] <- v
     perf_tbl(df)
   })
-
 
   output$perf_download_excel <- downloadHandler(
     filename = function() paste0("Performance_", Sys.Date(), ".xlsx"),
     content = function(file) {
-      df <- perf_tbl(); req(df)
-      wb <- createWorkbook(); addWorksheet(wb, "Performance"); writeData(wb, "Performance", df)
+      df <- perf_tbl()
+      req(df)
+      wb <- createWorkbook()
+      addWorksheet(wb, "Performance")
+      writeData(wb, "Performance", df)
       saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
@@ -3280,7 +5545,6 @@ server <- function(input, output, session) {
     filename = function() paste0("Performance_", Sys.Date(), ".csv"),
     content = function(file) {
       df <- perf_tbl()
-
 
       req(df)
       df[] <- lapply(df, function(x) {
@@ -3291,15 +5555,20 @@ server <- function(input, output, session) {
         }
       })
 
-
-      write.csv(df, file, row.names = FALSE, quote=TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE)
     }
   )
 
   output$perf_summary_ui <- renderUI({
-    df <- perf_tbl(); if (is.null(df) || !"Score" %in% names(df)) return(NULL)
-    sc <- suppressWarnings(as.numeric(df$Score)); sc <- sc[!is.na(sc)]
-    if (!length(sc)) return(p("No scores yet."))
+    df <- perf_tbl()
+    if (is.null(df) || !"Score" %in% names(df)) {
+      return(NULL)
+    }
+    sc <- suppressWarnings(as.numeric(df$Score))
+    sc <- sc[!is.na(sc)]
+    if (!length(sc)) {
+      return(p("No scores yet."))
+    }
     tagList(
       h4("Summary"),
       p("Objectives scored: ", length(sc)),
@@ -3310,22 +5579,48 @@ server <- function(input, output, session) {
     )
   })
   output$perf_bar_objective <- renderPlot({
-    df <- perf_tbl(); if (is.null(df) || !"Score" %in% names(df)) return(NULL)
+    df <- perf_tbl()
+    if (is.null(df) || !"Score" %in% names(df)) {
+      return(NULL)
+    }
     df$Score <- suppressWarnings(as.numeric(df$Score))
-    ggplot(df |> filter(!is.na(Score)), aes(x = Objective_Label, y = Score, fill = factor(Score))) +
-      geom_bar(stat = "identity") + coord_flip() +
-      scale_fill_manual(values = c("0" = "#e74c3c", "1" = "#f9ca24", "2" = "#27ae60"),
-                        name = "Score", labels = c("0 Not met", "1 Met", "2 Exceeded")) +
+    ggplot(
+      df |> filter(!is.na(Score)),
+      aes(x = Objective_Label, y = Score, fill = factor(Score))
+    ) +
+      geom_bar(stat = "identity") +
+      coord_flip() +
+      scale_fill_manual(
+        values = c("0" = "#e74c3c", "1" = "#f9ca24", "2" = "#27ae60"),
+        name = "Score",
+        labels = c("0 Not met", "1 Met", "2 Exceeded")
+      ) +
       labs(title = "Performance per objective", x = "Objective", y = "Score") +
-      theme_minimal() + theme(legend.position = "bottom")
+      theme_minimal() +
+      theme(legend.position = "bottom")
   })
   output$perf_bar_pillar <- renderPlot({
-    df <- perf_tbl(); if (is.null(df) || !"Score" %in% names(df)) return(NULL)
+    df <- perf_tbl()
+    if (is.null(df) || !"Score" %in% names(df)) {
+      return(NULL)
+    }
     df$Score <- suppressWarnings(as.numeric(df$Score))
-    pdat <- df |> filter(!is.na(Score)) |> group_by(Pillar) |> summarise(Avg = mean(Score), .groups = "drop")
-    ggplot(pdat, aes(x = Pillar, y = Avg, fill = Pillar)) + geom_bar(stat = "identity") +
-      labs(title = "Average performance by pillar", x = "Pillar", y = "Average score (0–2)") +
-      theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
+    pdat <- df |>
+      filter(!is.na(Score)) |>
+      group_by(Pillar) |>
+      summarise(Avg = mean(Score), .groups = "drop")
+    ggplot(pdat, aes(x = Pillar, y = Avg, fill = Pillar)) +
+      geom_bar(stat = "identity") +
+      labs(
+        title = "Average performance by pillar",
+        x = "Pillar",
+        y = "Average score (0–2)"
+      ) +
+      theme_minimal() +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none"
+      )
   })
 
   # ========== CUMULATIVE ==========
@@ -3340,14 +5635,20 @@ server <- function(input, output, session) {
   output$cumu_strategy_description <- renderUI({
     strategy <- input$cumu_strategy %||% "indicator"
 
-    strat_text <- if(strategy == "indicator") {
+    strat_text <- if (strategy == "indicator") {
       "Quantify impacts using indicators with targets. Determine appropriate tallying method using the provided worksheet."
     } else {
       "Quick risk-based scoring across activities using a simplified Likert scale (L/M/H)."
     }
 
     tagList(
-      tags$strong(if(strategy == "indicator") "Indicator-Based Assessment" else "Coarse Risk Assessment"),
+      tags$strong(
+        if (strategy == "indicator") {
+          "Indicator-Based Assessment"
+        } else {
+          "Coarse Risk Assessment"
+        }
+      ),
       tags$br(),
       tags$p(strat_text, style = "font-size: 0.9em; margin-top: 5px;")
     )
@@ -3356,16 +5657,29 @@ server <- function(input, output, session) {
   output$cum_download_ui <- renderUI({
     req(show_dl_cum())
     fluidRow(
-      column(3, downloadButton("cumu_download_excel", "Download (Excel)", class = "btn-success btn-block")),
-      column(3, downloadButton("cumu_download_csv", "Download (CSV)", class = "btn-info btn-block"))
+      column(
+        3,
+        downloadButton(
+          "cumu_download_excel",
+          "Download (Excel)",
+          class = "btn-success btn-block"
+        )
+      ),
+      column(
+        3,
+        downloadButton(
+          "cumu_download_csv",
+          "Download (CSV)",
+          class = "btn-info btn-block"
+        )
+      )
       #column(6, fileInput("cumu_upload", "Upload completed (CSV / XLSX)", accept = c(".csv", ".xlsx")))
     )
-
   })
 
-
   cumulative_ui <- function() {
-    so <- selected_objectives(); req(so)
+    so <- selected_objectives()
+    req(so)
 
     tagList(
       fluidRow(
@@ -3396,7 +5710,10 @@ server <- function(input, output, session) {
               numericInput(
                 "num_activities",
                 "Step B: Select Number of Activities:",
-                value = 2, min = 1, max = 10, step = 1
+                value = 2,
+                min = 1,
+                max = 10,
+                step = 1
               ),
               conditionalPanel(
                 condition = "input.num_activities > 0",
@@ -3431,7 +5748,7 @@ server <- function(input, output, session) {
                 "Make sure you double click to edit the table. A single click in a column will not work."
               )
             )
-            ),
+          ),
           tags$hr(),
           DTOutput("cumu_editor"),
           br(),
@@ -3444,7 +5761,10 @@ server <- function(input, output, session) {
   observeEvent(input$cumu_make_template, {
     strategy <- input$cumu_strategy %||% "indicator"
 
-    if (length(cumu_activity_names()) != input$num_activities || any(cumu_activity_names() == "")) {
+    if (
+      length(cumu_activity_names()) != input$num_activities ||
+        any(cumu_activity_names() == "")
+    ) {
       showModal(modalDialog(
         title = "Incomplete Activity Names",
         "You must provide names for all activities.",
@@ -3454,38 +5774,18 @@ server <- function(input, output, session) {
       return()
     }
 
-    so <- selected_objectives(); req(so)
-    base <- make_objective_table(so, selected_levels())
+    so <- selected_objectives()
+    req(so)
 
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
     ]
-    patterns <- sub(".*\\.\\.", "", checked_ids)
+    base <- make_objective_table(so, selected_levels(), checked_ids)
 
-    idx <- which(
-      Reduce("|", lapply(patterns, function(p) {
-        grepl(make.names(p), make.names(base$Objective_Label))
-      }))
-    )
-
-    if (length(idx) == 0) {
-      # NOT LEVEL 1-4 (e.g. Productivity)
-      idx <- which(
-        Reduce("|", lapply(sub(".*_", "", checked_ids), function(p) {
-          grepl(make.names(p), make.names(base$Objective_Label))
-        }))
-      )
-
-    }
-
-    base <- base[idx,]
     base <- base[, -which(names(base) == 'Objective_Label')]
     names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
     base <- unique(base)
-
-
-
 
     n <- input$num_activities %||% 2
     activities <- cumu_activity_names()
@@ -3504,7 +5804,6 @@ server <- function(input, output, session) {
       }
       base[["Tallying_Method"]] <- ""
       base[["Cumulative_Impact"]] <- ""
-
     } else if (strategy == "risk") {
       # STRATEGY 2: Risk-based (L/M/H scale)
       for (i in seq_len(n)) {
@@ -3518,24 +5817,37 @@ server <- function(input, output, session) {
     cumu_tbl(base)
   })
 
-
   output$cumu_editor <- renderDT({
     df <- cumu_tbl()
     if (is.null(df)) {
-      return(datatable(data.frame(Note = "Complete steps A-C to begin."), rownames = FALSE))
+      return(datatable(
+        data.frame(Note = "Complete steps A-C to begin."),
+        rownames = FALSE
+      ))
     }
 
     strategy <- cumu_strategy()
 
     # Locked columns (same for both strategies)
-    lock_cols <- which(names(df) %in% c(
-      "Pillar","Main_Objective",all_of(selected_levels()),"Objective_Label"
-    )) - 1
+    lock_cols <- which(
+      names(df) %in%
+        c(
+          "Pillar",
+          "Main_Objective",
+          all_of(selected_levels()),
+          "Objective_Label"
+        )
+    ) -
+      1
 
     if (strategy == "indicator") {
       # INDICATOR-BASED STRATEGY
       impact_cols <- grep("_Impact$", names(df)) - 1
-      indicator_cols <- c(grep("_Indicator$", names(df)) - 1, grep("_Target$", names(df)), grep("_Value$", names(df)) - 1)
+      indicator_cols <- c(
+        grep("_Indicator$", names(df)) - 1,
+        grep("_Target$", names(df)),
+        grep("_Value$", names(df)) - 1
+      )
 
       datatable(
         df,
@@ -3548,35 +5860,47 @@ server <- function(input, output, session) {
           "  table.rows().every(function(){",
           "    var row = this.node();",
           "    $('td', row).each(function(colIndex){",
-          paste0("if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
-                 "$(this).css('pointer-events','none'); }"),
-          paste0("if ([", paste(impact_cols, collapse=","), "].includes(colIndex)) {",
-                 "$(this).off('click').on('click', function(){",
-                 "if($(this).find('select').length > 0) return;",
-                 "var val = $(this).text();",
-                 "var opts = ['0','1','2'];",
-                 "var sel = $('<select></select>').css({",
-                 "'color':'black','background-color':'white','width':'100%'});",
-                 "$.each(opts, function(i,v){ ",
-                 "sel.append($('<option></option>').val(v).html(v)); });",
-                 "sel.val(val); $(this).html(sel); sel.focus();",
-                 "sel.on('change', function(){",
-                 "var newVal = $(this).val();",
-                 "$(this).parent().text(newVal);",
-                 "Shiny.setInputValue('cumu_editor_cell_edit',",
-                 "{row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
-                 "}); }); }"),
+          paste0(
+            "if ([",
+            paste(lock_cols, collapse = ","),
+            "].includes(colIndex)) {",
+            "$(this).css('pointer-events','none'); }"
+          ),
+          paste0(
+            "if ([",
+            paste(impact_cols, collapse = ","),
+            "].includes(colIndex)) {",
+            "$(this).off('click').on('click', function(){",
+            "if($(this).find('select').length > 0) return;",
+            "var val = $(this).text();",
+            "var opts = ['0','1','2'];",
+            "var sel = $('<select></select>').css({",
+            "'color':'black','background-color':'white','width':'100%'});",
+            "$.each(opts, function(i,v){ ",
+            "sel.append($('<option></option>').val(v).html(v)); });",
+            "sel.val(val); $(this).html(sel); sel.focus();",
+            "sel.on('change', function(){",
+            "var newVal = $(this).val();",
+            "$(this).parent().text(newVal);",
+            "Shiny.setInputValue('cumu_editor_cell_edit',",
+            "{row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+            "}); }); }"
+          ),
           "    });",
           "  });",
           "});"
         )
       ) %>%
-        formatStyle(columns = lock_cols + 1, backgroundColor='#d3d3d3') %>%
-        formatStyle(columns = indicator_cols + 1, backgroundColor='#ffc0cb') %>%
-        formatStyle(columns = impact_cols + 1, backgroundColor='#add8e6') %>%
-        formatStyle(columns = grep("Tallying_Method|Cumulative_Impact", names(df)) + 1,
-                    backgroundColor='#e6f3ff')
-
+        formatStyle(columns = lock_cols + 1, backgroundColor = '#d3d3d3') %>%
+        formatStyle(
+          columns = indicator_cols + 1,
+          backgroundColor = '#ffc0cb'
+        ) %>%
+        formatStyle(columns = impact_cols + 1, backgroundColor = '#add8e6') %>%
+        formatStyle(
+          columns = grep("Tallying_Method|Cumulative_Impact", names(df)) + 1,
+          backgroundColor = '#e6f3ff'
+        )
     } else {
       # RISK-BASED STRATEGY
       risk_cols <- grep("_Risk$", names(df)) - 1
@@ -3586,79 +5910,105 @@ server <- function(input, output, session) {
         df,
         rownames = FALSE,
         colnames = gsub("_", " ", names(df)),
-        editable = list(target = "cell", disable = list(columns = c(lock_cols, summary_cols))),
+        editable = list(
+          target = "cell",
+          disable = list(columns = c(lock_cols, summary_cols))
+        ),
         options = list(scrollX = TRUE, pageLength = 10),
         callback = JS(
           "table.on('draw.dt', function(){",
           "  table.rows().every(function(){",
           "    var row = this.node();",
           "    $('td', row).each(function(colIndex){",
-          paste0("if ([", paste(lock_cols, collapse=","), "].includes(colIndex)) {",
-                 "$(this).css('pointer-events','none'); }"),
-          paste0("if ([", paste(summary_cols, collapse=","), "].includes(colIndex)) {",
-                 "$(this).css('pointer-events','none'); }"),
-          paste0("if ([", paste(risk_cols, collapse=","), "].includes(colIndex)) {",
-                 "$(this).off('click').on('click', function(){",
-                 "if($(this).find('select').length > 0) return;",
-                 "var val = $(this).text();",
-                 "var opts = ['L','M','H'];",
-                 "var sel = $('<select></select>').css({",
-                 "'color':'black','background-color':'white','width':'100%'});",
-                 "$.each(opts, function(i,v){ ",
-                 "sel.append($('<option></option>').val(v).html(v)); });",
-                 "sel.val(val); $(this).html(sel); sel.focus();",
-                 "sel.on('change', function(){",
-                 "var newVal = $(this).val();",
-                 "$(this).parent().text(newVal);",
-                 "Shiny.setInputValue('cumu_editor_cell_edit',",
-                 "{row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
-                 "}); }); }"),
+          paste0(
+            "if ([",
+            paste(lock_cols, collapse = ","),
+            "].includes(colIndex)) {",
+            "$(this).css('pointer-events','none'); }"
+          ),
+          paste0(
+            "if ([",
+            paste(summary_cols, collapse = ","),
+            "].includes(colIndex)) {",
+            "$(this).css('pointer-events','none'); }"
+          ),
+          paste0(
+            "if ([",
+            paste(risk_cols, collapse = ","),
+            "].includes(colIndex)) {",
+            "$(this).off('click').on('click', function(){",
+            "if($(this).find('select').length > 0) return;",
+            "var val = $(this).text();",
+            "var opts = ['L','M','H'];",
+            "var sel = $('<select></select>').css({",
+            "'color':'black','background-color':'white','width':'100%'});",
+            "$.each(opts, function(i,v){ ",
+            "sel.append($('<option></option>').val(v).html(v)); });",
+            "sel.val(val); $(this).html(sel); sel.focus();",
+            "sel.on('change', function(){",
+            "var newVal = $(this).val();",
+            "$(this).parent().text(newVal);",
+            "Shiny.setInputValue('cumu_editor_cell_edit',",
+            "{row: row.rowIndex, col: colIndex, value: newVal}, {priority:'event'});",
+            "}); }); }"
+          ),
           "    });",
           "  });",
           "});"
         )
       ) %>%
-        formatStyle(columns = lock_cols + 1, backgroundColor='#d3d3d3') %>%
-        formatStyle(columns = risk_cols + 1, backgroundColor='#ffcccc') %>%
-        formatStyle(columns = summary_cols + 1, backgroundColor='#e6f3ff')
+        formatStyle(columns = lock_cols + 1, backgroundColor = '#d3d3d3') %>%
+        formatStyle(columns = risk_cols + 1, backgroundColor = '#ffcccc') %>%
+        formatStyle(columns = summary_cols + 1, backgroundColor = '#e6f3ff')
     }
   })
 
   observeEvent(input$cumu_editor_cell_edit, {
     info <- input$cumu_editor_cell_edit
-    df <- cumu_tbl(); req(df)
+    df <- cumu_tbl()
+    req(df)
     strategy <- cumu_strategy()
 
-    i <- info$row; j <- info$col; v <- info$value
-    if (is.null(v)) return()
+    i <- info$row
+    j <- info$col
+    v <- info$value
+    if (is.null(v)) {
+      return()
+    }
 
-    if (is.factor(df[[j+1]])) df[[j+1]] <- as.character(df[[j+1]])
-    if (is.numeric(df[[j+1]])) v <- suppressWarnings(as.numeric(v))
-    df[i, j+1] <- v
+    if (is.factor(df[[j + 1]])) {
+      df[[j + 1]] <- as.character(df[[j + 1]])
+    }
+    if (is.numeric(df[[j + 1]])) {
+      v <- suppressWarnings(as.numeric(v))
+    }
+    df[i, j + 1] <- v
 
     if (strategy == "risk") {
       # Calculate risk tallies for risk-based strategy
       risk_cols <- grep("_Risk$", names(df))
 
       if (length(risk_cols) > 0) {
-        df$Total_L <- apply(df[, risk_cols, drop = FALSE], 1, function(x) sum(x == "L", na.rm = TRUE))
-        df$Total_M <- apply(df[, risk_cols, drop = FALSE], 1, function(x) sum(x == "M", na.rm = TRUE))
-        df$Total_H <- apply(df[, risk_cols, drop = FALSE], 1, function(x) sum(x == "H", na.rm = TRUE))
+        df$Total_L <- apply(df[, risk_cols, drop = FALSE], 1, function(x) {
+          sum(x == "L", na.rm = TRUE)
+        })
+        df$Total_M <- apply(df[, risk_cols, drop = FALSE], 1, function(x) {
+          sum(x == "M", na.rm = TRUE)
+        })
+        df$Total_H <- apply(df[, risk_cols, drop = FALSE], 1, function(x) {
+          sum(x == "H", na.rm = TRUE)
+        })
       }
     }
 
     cumu_tbl(df)
   })
 
-
-
-
-
-
   output$cumu_download_excel <- downloadHandler(
     filename = function() paste0("Cumulative_", Sys.Date(), ".xlsx"),
     content = function(file) {
-      df <- cumu_tbl(); req(df)
+      df <- cumu_tbl()
+      req(df)
       strategy <- cumu_strategy()
 
       wb <- createWorkbook()
@@ -3670,17 +6020,33 @@ server <- function(input, output, session) {
       info_data <- data.frame(
         Setting = c("Strategy Used", "Generated"),
         Value = c(
-          if(strategy == "indicator") "Indicator-Based Assessment (0-2 scale)" else "Coarse Risk Assessment (L/M/H scale)",
+          if (strategy == "indicator") {
+            "Indicator-Based Assessment (0-2 scale)"
+          } else {
+            "Coarse Risk Assessment (L/M/H scale)"
+          },
           as.character(Sys.Date())
         )
       )
       writeData(wb, "Info", info_data)
 
       # Style headers
-      headerStyle <- createStyle(fontColour = "#ffffff", fgFill = "#4F81BD",
-                                 halign = "center", valign = "center",
-                                 textDecoration = "bold", border = "TopBottomLeftRight")
-      addStyle(wb, "Cumulative", headerStyle, rows = 1, cols = 1:ncol(df), gridExpand = TRUE)
+      headerStyle <- createStyle(
+        fontColour = "#ffffff",
+        fgFill = "#4F81BD",
+        halign = "center",
+        valign = "center",
+        textDecoration = "bold",
+        border = "TopBottomLeftRight"
+      )
+      addStyle(
+        wb,
+        "Cumulative",
+        headerStyle,
+        rows = 1,
+        cols = 1:ncol(df),
+        gridExpand = TRUE
+      )
       addStyle(wb, "Info", headerStyle, rows = 1, cols = 1:2, gridExpand = TRUE)
 
       setColWidths(wb, "Cumulative", cols = 1:ncol(df), widths = "auto")
@@ -3705,15 +6071,22 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote=TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE)
     }
   )
 
   output$cumu_summary_ui <- renderUI({
-    df <- cumu_tbl(); if (is.null(df)) return(NULL)
+    df <- cumu_tbl()
+    if (is.null(df)) {
+      return(NULL)
+    }
     imp_cols <- grep("^A\\d+_impact$", names(df), value = TRUE)
-    if (!length(imp_cols)) return(NULL)
-    vals <- unlist(lapply(imp_cols, function(cn) suppressWarnings(as.numeric(df[[cn]]))))
+    if (!length(imp_cols)) {
+      return(NULL)
+    }
+    vals <- unlist(lapply(imp_cols, function(cn) {
+      suppressWarnings(as.numeric(df[[cn]]))
+    }))
     vals <- vals[!is.na(vals)]
     tagList(
       h4("Summary"),
@@ -3723,33 +6096,67 @@ server <- function(input, output, session) {
   })
 
   output$cumu_bar_per_activity <- renderPlot({
-    df <- cumu_tbl(); if (is.null(df)) return(NULL)
+    df <- cumu_tbl()
+    if (is.null(df)) {
+      return(NULL)
+    }
     imp_cols <- grep("^A\\d+_impact$", names(df), value = TRUE)
-    if (!length(imp_cols)) return(NULL)
+    if (!length(imp_cols)) {
+      return(NULL)
+    }
     tall <- df |>
-      pivot_longer(all_of(imp_cols), names_to = "Activity", values_to = "Impact") |>
+      pivot_longer(
+        all_of(imp_cols),
+        names_to = "Activity",
+        values_to = "Impact"
+      ) |>
       mutate(Impact = suppressWarnings(as.numeric(Impact))) |>
       filter(!is.na(Impact))
-    if (nrow(tall) == 0) return(NULL)
+    if (nrow(tall) == 0) {
+      return(NULL)
+    }
     ggplot(tall, aes(x = Activity, y = Impact, fill = Activity)) +
       stat_summary(fun = mean, geom = "bar", width = 0.7) +
-      labs(title = "Average impact per activity (0–3)", x = "Activity", y = "Avg impact") +
-      theme_minimal() + theme(legend.position = "none")
+      labs(
+        title = "Average impact per activity (0–3)",
+        x = "Activity",
+        y = "Avg impact"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "none")
   })
 
   output$cumu_heat_objective_activity <- renderPlot({
-    df <- cumu_tbl(); if (is.null(df)) return(NULL)
+    df <- cumu_tbl()
+    if (is.null(df)) {
+      return(NULL)
+    }
     imp_cols <- grep("^A\\d+_impact$", names(df), value = TRUE)
-    if (!length(imp_cols)) return(NULL)
+    if (!length(imp_cols)) {
+      return(NULL)
+    }
     tall <- df |>
       mutate(Objective = Objective_Label) |>
-      pivot_longer(all_of(imp_cols), names_to = "Activity", values_to = "Impact") |>
+      pivot_longer(
+        all_of(imp_cols),
+        names_to = "Activity",
+        values_to = "Impact"
+      ) |>
       mutate(Impact = suppressWarnings(as.numeric(Impact)))
     ggplot(tall, aes(x = Activity, y = Objective, fill = Impact)) +
       geom_tile(color = "#ddd") +
-      scale_fill_gradient(low = "#fff5f0", high = "#a50f15", na.value = "#eee") +
-      labs(title = "Objective × Activity heatmap (impact 0–3)", x = "Activity", y = "Objective") +
-      theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+      scale_fill_gradient(
+        low = "#fff5f0",
+        high = "#a50f15",
+        na.value = "#eee"
+      ) +
+      labs(
+        title = "Objective × Activity heatmap (impact 0–3)",
+        x = "Activity",
+        y = "Objective"
+      ) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
   })
 
   # -------- HOME IMAGE MAP (restored) --------
@@ -3759,83 +6166,171 @@ server <- function(input, output, session) {
   output$home_map_content <- renderUI({
     if (home_view() == "map") {
       tagList(
-        tags$img(src = "EBM.png", usemap = "#puzzle-map", width = "1280", class = "centered-image"),
+        tags$img(
+          src = "EBM.png",
+          usemap = "#puzzle-map",
+          width = "1280",
+          class = "centered-image"
+        ),
         tags$map(
           name = "puzzle-map",
-          tags$area(shape = "circle", coords = "633,627,243", href = "#", alt = "EBM Framework",
-                    title = "EBM Framework - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'EBM Framework', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly",
-                    coords = "224,624,370,622,382,550,406,498,454,438,526,394,606,368,636,370,632,220,504,242,382,302,292,408,242,516,228,572",
-                    href = "#", alt = "Ecological",
-                    title = "Ecological - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Ecological', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "62,618,137,338,259,411,212,619", href = "#",
-                    alt = "Habitat", title = "Habitat - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Habitat', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "147,329,345,128,424,256,272,406", href = "#",
-                    alt = "Biodiversity", title = "Biodiversity - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Biodiversity', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "360,120,434,247,638,204,632,46", href = "#",
-                    alt = "Productivity", title = "Productivity - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Productivity', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly",
-                    coords = "648,224,648,372,724,384,776,412,828,458,868,528,886,604,886,624,1036,622,1018,508,966,402,906,332,788,252",
-                    href = "#", alt = "Economic",
-                    title = "Economic - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Economic', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "647,47,648,207,846,263,927,118", href = "#",
-                    alt = "Economic Efficiency", title = "Economic Efficiency - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Efficiency', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "938,125,859,271,993,413,1139,332", href = "#",
-                    alt = "Economic Equity", title = "Economic Equity - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Equity', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "1141,346,1000,427,1049,620,1219,620", href = "#",
-                    alt = "Economic Sustainability", title = "Economic Sustainability - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Sustainability', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly",
-                    coords = "888,636,1030,634,1018,742,966,850,868,952,746,1010,638,1028,644,886,730,864,794,822,836,778,866,732,882,676",
-                    href = "#", alt = "Governance",
-                    title = "Governance - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Governance', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "650,1048,649,1206,924,1128,844,991", href = "#",
-                    alt = "Legal Obligations & Other Commitments",
-                    title = "Legal Obligations & Other Commitments - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Legal Obligations and other commitments', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "858,976,936,1124,1135,924,989,836", href = "#",
-                    alt = "Governance Structure & Processes",
-                    title = "Governance Structure & Processes - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Governance Structures and Processes', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "1005,824,1143,910,1216,639,1056,637", href = "#",
-                    alt = "Governance Outcomes", title = "Governance Outcomes - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Governance Outcomes', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly",
-                    coords = "227,632,372,630,394,727,485,835,559,870,636,880,637,1031,500,1008,376,940,283,825,237,720",
-                    href = "#", alt = "Social & Cultural",
-                    title = "Social & Cultural - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Social & Cultural', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "212,633,244,780,101,844,62,631", href = "#",
-                    alt = "Sustainable Communities", title = "Sustainable Communities - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Sustainable Communities', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "250,793,339,920,229,1039,105,850", href = "#",
-                    alt = "Health & Well-being", title = "Health & Well-being - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Health and Well-being', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "349,932,483,1014,424,1160,241,1043", href = "#",
-                    alt = "Ethical & Just Activities", title = "Ethical & Just Activities - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'Ethical and Just Activities', {priority: 'event'}); return false;"),
-          tags$area(shape = "poly", coords = "497,1016,434,1168,633,1203,639,1041", href = "#",
-                    alt = "culture", title = "Culture - Click for details",
-                    onclick = "Shiny.setInputValue('home_area_clicked', 'culture', {priority: 'event'}); return false;")
+          tags$area(
+            shape = "circle",
+            coords = "633,627,243",
+            href = "#",
+            alt = "EBM Framework",
+            title = "EBM Framework - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'EBM Framework', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "224,624,370,622,382,550,406,498,454,438,526,394,606,368,636,370,632,220,504,242,382,302,292,408,242,516,228,572",
+            href = "#",
+            alt = "Ecological",
+            title = "Ecological - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Ecological', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "62,618,137,338,259,411,212,619",
+            href = "#",
+            alt = "Habitat",
+            title = "Habitat - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Habitat', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "147,329,345,128,424,256,272,406",
+            href = "#",
+            alt = "Biodiversity",
+            title = "Biodiversity - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Biodiversity', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "360,120,434,247,638,204,632,46",
+            href = "#",
+            alt = "Productivity",
+            title = "Productivity - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Productivity', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "648,224,648,372,724,384,776,412,828,458,868,528,886,604,886,624,1036,622,1018,508,966,402,906,332,788,252",
+            href = "#",
+            alt = "Economic",
+            title = "Economic - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "647,47,648,207,846,263,927,118",
+            href = "#",
+            alt = "Economic Efficiency",
+            title = "Economic Efficiency - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Efficiency', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "938,125,859,271,993,413,1139,332",
+            href = "#",
+            alt = "Economic Equity",
+            title = "Economic Equity - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Equity', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "1141,346,1000,427,1049,620,1219,620",
+            href = "#",
+            alt = "Economic Sustainability",
+            title = "Economic Sustainability - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Economic Sustainability', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "888,636,1030,634,1018,742,966,850,868,952,746,1010,638,1028,644,886,730,864,794,822,836,778,866,732,882,676",
+            href = "#",
+            alt = "Governance",
+            title = "Governance - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Governance', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "650,1048,649,1206,924,1128,844,991",
+            href = "#",
+            alt = "Legal Obligations & Other Commitments",
+            title = "Legal Obligations & Other Commitments - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Legal Obligations and other commitments', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "858,976,936,1124,1135,924,989,836",
+            href = "#",
+            alt = "Governance Structure & Processes",
+            title = "Governance Structure & Processes - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Governance Structures and Processes', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "1005,824,1143,910,1216,639,1056,637",
+            href = "#",
+            alt = "Governance Outcomes",
+            title = "Governance Outcomes - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Governance Outcomes', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "227,632,372,630,394,727,485,835,559,870,636,880,637,1031,500,1008,376,940,283,825,237,720",
+            href = "#",
+            alt = "Social & Cultural",
+            title = "Social & Cultural - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Social & Cultural', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "212,633,244,780,101,844,62,631",
+            href = "#",
+            alt = "Sustainable Communities",
+            title = "Sustainable Communities - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Sustainable Communities', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "250,793,339,920,229,1039,105,850",
+            href = "#",
+            alt = "Health & Well-being",
+            title = "Health & Well-being - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Health and Well-being', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "349,932,483,1014,424,1160,241,1043",
+            href = "#",
+            alt = "Ethical & Just Activities",
+            title = "Ethical & Just Activities - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'Ethical and Just Activities', {priority: 'event'}); return false;"
+          ),
+          tags$area(
+            shape = "poly",
+            coords = "497,1016,434,1168,633,1203,639,1041",
+            href = "#",
+            alt = "culture",
+            title = "Culture - Click for details",
+            onclick = "Shiny.setInputValue('home_area_clicked', 'culture', {priority: 'event'}); return false;"
+          )
         ),
-        tags$script(HTML("
+        tags$script(HTML(
+          "
           $(document).ready(function() {
             $('img[usemap]').rwdImageMaps();
           });
-        "))
+        "
+        ))
       )
     } else {
       tagList(
-        tags$style(HTML("
+        tags$style(HTML(
+          "
     .back-button {
       background-color: #fff3cd !important;
       color: #856404 !important;
@@ -3845,7 +6340,8 @@ server <- function(input, output, session) {
       text-align: center;
       margin-bottom: 15px;
     }
-  ")),
+  "
+        )),
 
         div(
           class = "back-button-container",
@@ -3864,10 +6360,38 @@ server <- function(input, output, session) {
           DTOutput("home_data_table"),
           br(),
           fluidRow(
-            column(3, downloadButton("home_download_excel", "Download as Excel", class = "btn-success btn-block")),
-            column(3, downloadButton("home_download_csv", "Download as CSV", class = "btn-info btn-block")),
-            column(3, downloadButton("home_download_word", "Download as Word (Use landscape view)", class = "btn-primary btn-block")),
-            column(3, downloadButton("home_download_pillar_pdf", "Download Pillar PDF", class = "btn-info btn-block"))
+            column(
+              3,
+              downloadButton(
+                "home_download_excel",
+                "Download as Excel",
+                class = "btn-success btn-block"
+              )
+            ),
+            column(
+              3,
+              downloadButton(
+                "home_download_csv",
+                "Download as CSV",
+                class = "btn-info btn-block"
+              )
+            ),
+            column(
+              3,
+              downloadButton(
+                "home_download_word",
+                "Download as Word (Use landscape view)",
+                class = "btn-primary btn-block"
+              )
+            ),
+            column(
+              3,
+              downloadButton(
+                "home_download_pillar_pdf",
+                "Download Pillar PDF",
+                class = "btn-info btn-block"
+              )
+            )
           )
         )
       )
@@ -3883,17 +6407,29 @@ server <- function(input, output, session) {
   output$home_data_table <- renderDT({
     req(home_filter())
     filter_value <- home_filter()
-    pillar_search <- ""; objective_search <- ""
-    if (filter_value %in% c("Ecological", "Economic", "Governance", "Social & Cultural")) {
+    pillar_search <- ""
+    objective_search <- ""
+    if (
+      filter_value %in%
+        c("Ecological", "Economic", "Governance", "Social & Cultural")
+    ) {
       pillar_search <- filter_value
     } else if (filter_value != "EBM Framework") {
       objective_search <- filter_value
     }
-    datatable(ebm_data,
-              filter = "top",
-              options = list(pageLength = 25, scrollX = TRUE,
-                             searchCols = list(list(search = pillar_search), list(search = objective_search))),
-              rownames = FALSE)
+    datatable(
+      ebm_data,
+      filter = "top",
+      options = list(
+        pageLength = 25,
+        scrollX = TRUE,
+        searchCols = list(
+          list(search = pillar_search),
+          list(search = objective_search)
+        )
+      ),
+      rownames = FALSE
+    )
   })
 
   # Download handlers for home page table
@@ -3903,7 +6439,10 @@ server <- function(input, output, session) {
 
     if (filter_value == "EBM Framework") {
       return(ebm_data)
-    } else if (filter_value %in% c("Ecological", "Economic", "Governance", "Social & Cultural")) {
+    } else if (
+      filter_value %in%
+        c("Ecological", "Economic", "Governance", "Social & Cultural")
+    ) {
       return(ebm_data %>% filter(Pillar == filter_value))
     } else {
       return(ebm_data %>% filter(Main_Objective == filter_value))
@@ -3919,20 +6458,30 @@ server <- function(input, output, session) {
       #req(input$home_area_clicked)
       # ---- 1. CLASSIFY INPUT INTO GROUP ----
       word <- dplyr::case_when(
-        input$home_area_clicked %in% c("Habitat", "Biodiversity", "Productivity") ~ "Ecological",
+        input$home_area_clicked %in%
+          c("Habitat", "Biodiversity", "Productivity") ~ "Ecological",
 
-        input$home_area_clicked %in% c("Economic Efficiency",
-                                       "Economic Equity",
-                                       "Economic Sustainability") ~ "Economic",
+        input$home_area_clicked %in%
+          c(
+            "Economic Efficiency",
+            "Economic Equity",
+            "Economic Sustainability"
+          ) ~ "Economic",
 
-        input$home_area_clicked %in% c("Sustainable Communities",
-                                       "Health & Well-being",
-                                       "Ethical & Just Activities",
-                                       "Culture") ~ "Social",
+        input$home_area_clicked %in%
+          c(
+            "Sustainable Communities",
+            "Health & Well-being",
+            "Ethical & Just Activities",
+            "Culture"
+          ) ~ "Social",
 
-        input$home_area_clicked %in% c("Legal Obligations & Other Commitments",
-                                       "Governance Structure & Processes",
-                                       "Governance Outcomes") ~ "Governance",
+        input$home_area_clicked %in%
+          c(
+            "Legal Obligations & Other Commitments",
+            "Governance Structure & Processes",
+            "Governance Outcomes"
+          ) ~ "Governance",
 
         TRUE ~ NA_character_
       )
@@ -3959,8 +6508,6 @@ server <- function(input, output, session) {
     }
   )
 
-
-
   output$home_download_csv <- downloadHandler(
     filename = function() {
       paste0("EBM_", gsub(" ", "_", home_filter()), "_", Sys.Date(), ".csv")
@@ -3976,8 +6523,7 @@ server <- function(input, output, session) {
         }
       })
 
-
-      write.csv(dat, file, row.names = FALSE, quote=TRUE)
+      write.csv(dat, file, row.names = FALSE, quote = TRUE)
     }
   )
 
@@ -3992,14 +6538,33 @@ server <- function(input, output, session) {
       writeData(wb, "EBM Data", dat)
 
       # Styling
-      headerStyle <- createStyle(fontColour = "#ffffff", fgFill = "#4F81BD",
-                                 halign = "center", valign = "center",
-                                 textDecoration = "bold", border = "TopBottomLeftRight")
-      addStyle(wb, "EBM Data", headerStyle, rows = 1, cols = 1:ncol(dat), gridExpand = TRUE)
+      headerStyle <- createStyle(
+        fontColour = "#ffffff",
+        fgFill = "#4F81BD",
+        halign = "center",
+        valign = "center",
+        textDecoration = "bold",
+        border = "TopBottomLeftRight"
+      )
+      addStyle(
+        wb,
+        "EBM Data",
+        headerStyle,
+        rows = 1,
+        cols = 1:ncol(dat),
+        gridExpand = TRUE
+      )
 
       bodyStyle <- createStyle(border = "TopBottomLeftRight")
-      addStyle(wb, "EBM Data", bodyStyle, rows = 2:(nrow(dat) + 1), cols = 1:ncol(dat),
-               gridExpand = TRUE, stack = TRUE)
+      addStyle(
+        wb,
+        "EBM Data",
+        bodyStyle,
+        rows = 2:(nrow(dat) + 1),
+        cols = 1:ncol(dat),
+        gridExpand = TRUE,
+        stack = TRUE
+      )
       setColWidths(wb, "EBM Data", cols = 1:ncol(dat), widths = "auto")
 
       saveWorkbook(wb, file, overwrite = TRUE)
@@ -4014,7 +6579,11 @@ server <- function(input, output, session) {
       dat <- home_filtered_data()
       doc <- read_docx()
 
-      doc <- body_add_par(doc, paste("EBM Framework -", home_filter()), style = "heading 1")
+      doc <- body_add_par(
+        doc,
+        paste("EBM Framework -", home_filter()),
+        style = "heading 1"
+      )
       doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
       doc <- body_add_par(doc, "")
 
@@ -4026,7 +6595,7 @@ server <- function(input, output, session) {
       ft <- fontsize(ft, size = 12, part = "all")
 
       # 🔴 THIS IS THE MAIN FIX
-      ft <- fit_to_width(ft, max_width = 12.5)  # keeps table within page width
+      ft <- fit_to_width(ft, max_width = 12.5) # keeps table within page width
 
       # 🔴 OPTIONAL: reduce padding so columns shrink better
       ft <- padding(ft, padding = 2)
@@ -4037,8 +6606,8 @@ server <- function(input, output, session) {
       doc <- body_set_default_section(
         doc,
         prop_section(
-          page_size = page_size(orient = "landscape"),  # 🔴 wider page
-          page_margins = page_mar(left = 0.5, right = 0.5)  # 🔴 smaller margins
+          page_size = page_size(orient = "landscape"), # 🔴 wider page
+          page_margins = page_mar(left = 0.5, right = 0.5) # 🔴 smaller margins
         )
       )
       print(doc, target = file)
