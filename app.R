@@ -839,9 +839,12 @@ filter_short_label <- function(base) {
   base
 }
 
-
-# Load data
-library(dplyr)
+# Truncate a short_label to a given number of segments
+# e.g. truncate_label("Ec.C.2.a.i", 4) -> "Ec.C.2.a"
+truncate_label <- function(label, n_parts) {
+  parts <- strsplit(label, "\\.")[[1]]
+  paste(parts[1:min(n_parts, length(parts))], collapse = ".")
+}
 
 ebm_data <- read.csv(
   "data/EBM Framework Spreadsheet 3-Nov-2025.csv",
@@ -1183,49 +1186,111 @@ cumu_impact_levels <- c(
 
 # Template constructors used by Step 2
 make_objective_table <- function(so, level_cols, checked_ids = NULL) {
-  # Ensure stable base columns
-  base <- so |>
+  if (is.null(checked_ids) || length(checked_ids) == 0) {
+    empty <- so |>
+      dplyr::select(
+        Pillar,
+        Main_Objective,
+        all_of(level_cols),
+        short_label,
+        filter
+      ) |>
+      dplyr::distinct()
+    empty$Objective_Label <- ""
+    empty <- filter_short_label(empty)
+    empty$short_label <- empty$filtered_label
+    empty <- empty[, !(names(empty) %in% c("filter", "filtered_label"))]
+    return(empty[0, ])
+  }
+
+  # Get scope
+  scope <- so |>
+    dplyr::select(Pillar, Main_Objective) |>
+    dplyr::distinct()
+
+  detail_level <- so$filter[1]
+
+  # Build one row per unique node at each level from ebm_data
+  # Level 4 rows
+  l4_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_4), Level_4 != "") |>
     dplyr::select(
       Pillar,
       Main_Objective,
-      all_of(level_cols),
-      short_label,
-      filter
-    )
+      Level_1,
+      Level_2,
+      Level_3,
+      Level_4,
+      short_label
+    ) |>
+    dplyr::distinct() |>
+    dplyr::mutate(node_level = 4L)
 
-  # Build label from non‑NA levels for each row
-  label_mat <- base |>
-    dplyr::select(Pillar, Main_Objective, all_of(level_cols)) |>
-    as.data.frame()
+  # Level 3 rows (unique L1+L2+L3 combinations, L4 blank)
+  l3_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_3), Level_3 != "") |>
+    dplyr::select(
+      Pillar,
+      Main_Objective,
+      Level_1,
+      Level_2,
+      Level_3,
+      short_label
+    ) |>
+    dplyr::distinct() |>
+    dplyr::mutate(Level_4 = "", node_level = 3L)
 
-  base$Objective_Label <- apply(
-    label_mat,
-    1,
-    function(r) paste0(stats::na.omit(r), collapse = "/")
+  # Level 2 rows (unique L1+L2 combinations, L3/L4 blank)
+  l2_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_2), Level_2 != "") |>
+    dplyr::select(Pillar, Main_Objective, Level_1, Level_2, short_label) |>
+    dplyr::distinct() |>
+    dplyr::mutate(Level_3 = "", Level_4 = "", node_level = 2L)
+
+  # Level 1 rows
+  l1_rows <- ebm_data |>
+    dplyr::semi_join(scope, by = c("Pillar", "Main_Objective")) |>
+    dplyr::filter(!is.na(Level_1), Level_1 != "") |>
+    dplyr::select(Pillar, Main_Objective, Level_1, short_label) |>
+    dplyr::distinct() |>
+    dplyr::mutate(Level_2 = "", Level_3 = "", Level_4 = "", node_level = 1L)
+
+  # Bind all levels together
+  base_full <- dplyr::bind_rows(l4_rows, l3_rows, l2_rows, l1_rows)
+  base_full$filter <- detail_level
+
+  # Fix short_label for each node level by truncating to correct depth
+  # Pillar=1, Main=2, L1=3, L2=4, L3=5, L4=6 parts
+  base_full$short_label <- mapply(
+    function(lbl, nl) {
+      truncate_label(lbl, nl + 2L)
+    },
+    base_full$short_label,
+    base_full$node_level
   )
 
-  base <- filter_short_label(base)
-  base$short_label <- base$filtered_label
-  base <- base[, !(names(base) %in% c("filter", "filtered_label"))]
-
-  # =====================================================
-  # FILTER TO ONLY LEAF ROWS AND CHECKED ITEMS
-  # =====================================================
-
-  if (is.null(checked_ids) || length(checked_ids) == 0) {
-    return(base[0, ]) # Return empty if nothing checked
-  }
+  # Build Objective_Label
+  label_mat <- base_full |>
+    dplyr::select(Pillar, Main_Objective, Level_1, Level_2, Level_3, Level_4) |>
+    as.data.frame()
+  base_full$Objective_Label <- apply(label_mat, 1, function(r) {
+    paste0(r[r != "" & !is.na(r)], collapse = "/")
+  })
 
   rows_to_keep <- c()
+  label_overrides <- c()
 
-  for (i in seq_len(nrow(base))) {
-    row <- base[i, ]
-
+  for (i in seq_len(nrow(base_full))) {
+    row <- base_full[i, ]
+    nl <- row$node_level
     is_leaf <- FALSE
     is_checked <- FALSE
+    override_label <- NA_character_
 
-    # Check if this is a leaf
-    if (!is.na(row$Level_4) && row$Level_4 != "") {
+    if (nl == 4L) {
       is_leaf <- TRUE
       check_id <- paste0(
         "chk_l4_",
@@ -1239,8 +1304,17 @@ make_objective_table <- function(so, level_cols, checked_ids = NULL) {
         ))
       )
       is_checked <- check_id %in% checked_ids
-    } else if (!is.na(row$Level_3) && row$Level_3 != "") {
-      # Check if has L4 children
+    } else if (nl == 3L) {
+      check_id <- paste0(
+        "chk_l3_",
+        make.names(paste(
+          row$Pillar,
+          row$Main_Objective,
+          row$Level_1,
+          row$Level_2,
+          row$Level_3
+        ))
+      )
       child_count <- sum(
         ebm_data$Pillar == row$Pillar &
           ebm_data$Main_Objective == row$Main_Objective &
@@ -1251,10 +1325,12 @@ make_objective_table <- function(so, level_cols, checked_ids = NULL) {
           ebm_data$Level_4 != "",
         na.rm = TRUE
       )
-      if (child_count == 0) {
+      if (child_count == 0L) {
         is_leaf <- TRUE
-        check_id <- paste0(
-          "chk_l3_",
+        is_checked <- check_id %in% checked_ids
+      } else if (check_id %in% checked_ids) {
+        child_prefix <- paste0(
+          "chk_l4_",
           make.names(paste(
             row$Pillar,
             row$Main_Objective,
@@ -1263,10 +1339,22 @@ make_objective_table <- function(so, level_cols, checked_ids = NULL) {
             row$Level_3
           ))
         )
-        is_checked <- check_id %in% checked_ids
+        if (!any(grepl(child_prefix, checked_ids, fixed = TRUE))) {
+          is_leaf <- TRUE
+          is_checked <- TRUE
+          override_label <- truncate_label(row$short_label, 5L)
+        }
       }
-    } else if (!is.na(row$Level_2) && row$Level_2 != "") {
-      # Check if has L3 children
+    } else if (nl == 2L) {
+      check_id <- paste0(
+        "chk_l2_",
+        make.names(paste(
+          row$Pillar,
+          row$Main_Objective,
+          row$Level_1,
+          row$Level_2
+        ))
+      )
       child_count <- sum(
         ebm_data$Pillar == row$Pillar &
           ebm_data$Main_Objective == row$Main_Objective &
@@ -1276,10 +1364,12 @@ make_objective_table <- function(so, level_cols, checked_ids = NULL) {
           ebm_data$Level_3 != "",
         na.rm = TRUE
       )
-      if (child_count == 0) {
+      if (child_count == 0L) {
         is_leaf <- TRUE
-        check_id <- paste0(
-          "chk_l2_",
+        is_checked <- check_id %in% checked_ids
+      } else if (check_id %in% checked_ids) {
+        child_prefix <- paste0(
+          "chk_l3_",
           make.names(paste(
             row$Pillar,
             row$Main_Objective,
@@ -1287,10 +1377,21 @@ make_objective_table <- function(so, level_cols, checked_ids = NULL) {
             row$Level_2
           ))
         )
-        is_checked <- check_id %in% checked_ids
+        if (!any(grepl(child_prefix, checked_ids, fixed = TRUE))) {
+          is_leaf <- TRUE
+          is_checked <- TRUE
+          override_label <- truncate_label(row$short_label, 4L)
+        }
       }
-    } else if (!is.na(row$Level_1) && row$Level_1 != "") {
-      # Check if has L2 children
+    } else if (nl == 1L) {
+      check_id <- paste0(
+        "chk_l1_",
+        make.names(paste(
+          row$Pillar,
+          row$Main_Objective,
+          row$Level_1
+        ))
+      )
       child_count <- sum(
         ebm_data$Pillar == row$Pillar &
           ebm_data$Main_Objective == row$Main_Objective &
@@ -1299,24 +1400,50 @@ make_objective_table <- function(so, level_cols, checked_ids = NULL) {
           ebm_data$Level_2 != "",
         na.rm = TRUE
       )
-      if (child_count == 0) {
+      if (child_count == 0L) {
         is_leaf <- TRUE
-        check_id <- paste0(
-          "chk_l1_",
-          make.names(paste(row$Pillar, row$Main_Objective, row$Level_1))
-        )
         is_checked <- check_id %in% checked_ids
+      } else if (check_id %in% checked_ids) {
+        child_prefix <- paste0(
+          "chk_l2_",
+          make.names(paste(
+            row$Pillar,
+            row$Main_Objective,
+            row$Level_1
+          ))
+        )
+        if (!any(grepl(child_prefix, checked_ids, fixed = TRUE))) {
+          is_leaf <- TRUE
+          is_checked <- TRUE
+          override_label <- truncate_label(row$short_label, 3L)
+        }
       }
     }
 
     if (is_leaf && is_checked) {
       rows_to_keep <- c(rows_to_keep, i)
+      label_overrides <- c(label_overrides, override_label)
     }
   }
 
-  base <- base[rows_to_keep, ]
+  base_full <- base_full[rows_to_keep, ]
 
-  base
+  # Apply label overrides
+  for (k in seq_along(label_overrides)) {
+    if (!is.na(label_overrides[k])) {
+      base_full$short_label[k] <- label_overrides[k]
+    }
+  }
+
+  # Drop node_level helper column and level columns beyond detail level
+  base_full <- base_full[, !(names(base_full) %in% "node_level")]
+  cols_to_drop <- setdiff(
+    c("Level_1", "Level_2", "Level_3", "Level_4"),
+    level_cols
+  )
+  base_full <- base_full[, !(names(base_full) %in% cols_to_drop)]
+
+  base_full
 }
 
 # helper function to rename columns with scenario names
@@ -2854,11 +2981,14 @@ server <- function(input, output, session) {
             }
             obj_label <- paste(pillar, main_obj, l1)
 
-            sl <- main_obj_data %>% # 🔴 ADD
-              filter(Level_1 == l1) %>%
-              pull(short_label) %>%
-              unique() %>%
-              .[1]
+            sl <- truncate_label(
+              main_obj_data %>%
+                filter(Level_1 == l1) %>%
+                pull(short_label) %>%
+                unique() %>%
+                .[1],
+              3 # Pillar.Main.L1
+            )
 
             checklist_data <- rbind(
               checklist_data,
@@ -2897,11 +3027,14 @@ server <- function(input, output, session) {
                 }
                 obj_label <- paste(pillar, main_obj, l1, l2)
 
-                sl <- main_obj_data %>% # 🔴 ADD
-                  filter(Level_1 == l1, Level_2 == l2) %>%
-                  pull(short_label) %>%
-                  unique() %>%
-                  .[1]
+                sl <- truncate_label(
+                  main_obj_data %>%
+                    filter(Level_1 == l1, Level_2 == l2) %>%
+                    pull(short_label) %>%
+                    unique() %>%
+                    .[1],
+                  4 # Pillar.Main.L1.L2
+                )
 
                 checklist_data <- rbind(
                   checklist_data,
@@ -2945,11 +3078,14 @@ server <- function(input, output, session) {
                     }
                     obj_label <- paste(pillar, main_obj, l1, l2, l3)
 
-                    sl <- main_obj_data %>% # 🔴 ADD
-                      filter(Level_1 == l1, Level_2 == l2, Level_3 == l3) %>%
-                      pull(short_label) %>%
-                      unique() %>%
-                      .[1]
+                    sl <- truncate_label(
+                      main_obj_data %>%
+                        filter(Level_1 == l1, Level_2 == l2, Level_3 == l3) %>%
+                        pull(short_label) %>%
+                        unique() %>%
+                        .[1],
+                      5 # Pillar.Main.L1.L2.L3
+                    )
 
                     checklist_data <- rbind(
                       checklist_data,
@@ -3106,16 +3242,20 @@ server <- function(input, output, session) {
 
     if (length(all_checked_ids) > 0) {
       rows_to_keep <- c()
+      label_overrides <- c()
 
       for (i in seq_len(nrow(checklist_data))) {
         row <- checklist_data[i, ]
 
         is_checked <- FALSE
-        is_leaf <- TRUE # Assume it's a leaf until proven otherwise
+        is_leaf <- FALSE
+        override_label <- NA_character_
 
-        # Determine which level this row is at
+        # -------------------------------------------------------
+        # LEVEL 4 — always a structural leaf
+        # -------------------------------------------------------
         if (!is.na(row$Level_4) && row$Level_4 != "") {
-          # Row is at Level 4 - always a leaf
+          is_leaf <- TRUE
           check_id <- paste0(
             "chk_l4_",
             make.names(paste(
@@ -3127,11 +3267,23 @@ server <- function(input, output, session) {
               row$Level_4
             ))
           )
-          if (check_id %in% all_checked_ids) {
-            is_checked <- TRUE
-          }
+          is_checked <- check_id %in% all_checked_ids
+
+          # -------------------------------------------------------
+          # LEVEL 3
+          # -------------------------------------------------------
         } else if (!is.na(row$Level_3) && row$Level_3 != "") {
-          # Row is at Level 3 - check if it has Level 4 children in the data
+          check_id <- paste0(
+            "chk_l3_",
+            make.names(paste(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2,
+              row$Level_3
+            ))
+          )
+
           level_4_children <- ebm_data %>%
             dplyr::filter(
               Pillar == row$Pillar,
@@ -3144,12 +3296,12 @@ server <- function(input, output, session) {
             ) %>%
             nrow()
 
-          if (level_4_children > 0) {
-            is_leaf <- FALSE # This is a branch, has children
-          } else {
-            # No Level 4 children, so this is a leaf
-            check_id <- paste0(
-              "chk_l3_",
+          if (level_4_children == 0) {
+            is_leaf <- TRUE
+            is_checked <- check_id %in% all_checked_ids
+          } else if (check_id %in% all_checked_ids) {
+            child_prefix <- paste0(
+              "chk_l4_",
               make.names(paste(
                 row$Pillar,
                 row$Main_Objective,
@@ -3158,12 +3310,27 @@ server <- function(input, output, session) {
                 row$Level_3
               ))
             )
-            if (check_id %in% all_checked_ids) {
+            if (!any(grepl(child_prefix, all_checked_ids, fixed = TRUE))) {
+              is_leaf <- TRUE
               is_checked <- TRUE
+              override_label <- truncate_label(row$short_label, 5)
             }
           }
+
+          # -------------------------------------------------------
+          # LEVEL 2
+          # -------------------------------------------------------
         } else if (!is.na(row$Level_2) && row$Level_2 != "") {
-          # Row is at Level 2 - check if it has Level 3 or Level 4 children
+          check_id <- paste0(
+            "chk_l2_",
+            make.names(paste(
+              row$Pillar,
+              row$Main_Objective,
+              row$Level_1,
+              row$Level_2
+            ))
+          )
+
           level_3_children <- ebm_data %>%
             dplyr::filter(
               Pillar == row$Pillar,
@@ -3175,12 +3342,12 @@ server <- function(input, output, session) {
             ) %>%
             nrow()
 
-          if (level_3_children > 0) {
-            is_leaf <- FALSE # This is a branch, has children
-          } else {
-            # No Level 3 children, so this is a leaf
-            check_id <- paste0(
-              "chk_l2_",
+          if (level_3_children == 0) {
+            is_leaf <- TRUE
+            is_checked <- check_id %in% all_checked_ids
+          } else if (check_id %in% all_checked_ids) {
+            child_prefix <- paste0(
+              "chk_l3_",
               make.names(paste(
                 row$Pillar,
                 row$Main_Objective,
@@ -3188,12 +3355,22 @@ server <- function(input, output, session) {
                 row$Level_2
               ))
             )
-            if (check_id %in% all_checked_ids) {
+            if (!any(grepl(child_prefix, all_checked_ids, fixed = TRUE))) {
+              is_leaf <- TRUE
               is_checked <- TRUE
+              override_label <- truncate_label(row$short_label, 4)
             }
           }
+
+          # -------------------------------------------------------
+          # LEVEL 1
+          # -------------------------------------------------------
         } else if (!is.na(row$Level_1) && row$Level_1 != "") {
-          # Row is at Level 1 - check if it has Level 2 or deeper children
+          check_id <- paste0(
+            "chk_l1_",
+            make.names(paste(row$Pillar, row$Main_Objective, row$Level_1))
+          )
+
           level_2_children <- ebm_data %>%
             dplyr::filter(
               Pillar == row$Pillar,
@@ -3204,39 +3381,42 @@ server <- function(input, output, session) {
             ) %>%
             nrow()
 
-          if (level_2_children > 0) {
-            is_leaf <- FALSE # This is a branch, has children
-          } else {
-            # No Level 2 children, so this is a leaf
-            check_id <- paste0(
-              "chk_l1_",
+          if (level_2_children == 0) {
+            is_leaf <- TRUE
+            is_checked <- check_id %in% all_checked_ids
+          } else if (check_id %in% all_checked_ids) {
+            child_prefix <- paste0(
+              "chk_l2_",
               make.names(paste(row$Pillar, row$Main_Objective, row$Level_1))
             )
-            if (check_id %in% all_checked_ids) {
+            if (!any(grepl(child_prefix, all_checked_ids, fixed = TRUE))) {
+              is_leaf <- TRUE
               is_checked <- TRUE
+              override_label <- truncate_label(row$short_label, 3)
             }
           }
         }
 
-        # Only keep this row if it's a LEAF and it's CHECKED
         if (is_leaf && is_checked) {
           rows_to_keep <- c(rows_to_keep, i)
+          label_overrides <- c(label_overrides, override_label)
         }
       }
 
       checklist_data <- checklist_data[rows_to_keep, ]
+
+      # Apply label overrides for pseudo-leaves
+      for (k in seq_along(label_overrides)) {
+        if (!is.na(label_overrides[k])) {
+          checklist_data$short_label[k] <- label_overrides[k]
+        }
+      }
     } else {
-      # If nothing is checked, return empty
       checklist_data <- checklist_data[0, ]
     }
 
-    checklist_data$filter <- input$detail_level
-    checklist_data <- filter_short_label(checklist_data)
-    checklist_data$short_label <- checklist_data$filtered_label
-    checklist_data <- checklist_data[,
-      !(names(checklist_data) %in% c("filter", "filtered_label"))
-    ]
-
+    # Labels are already correctly truncated at build time and by override_label.
+    # filter_short_label is NOT called here to avoid overwriting pseudo-leaf labels.
     checklist_data[, names(checklist_data) != "Checked"]
   })
 
@@ -4619,35 +4799,6 @@ server <- function(input, output, session) {
     ]
     base <- make_objective_table(so, selected_levels(), checked_ids)
 
-    # NEW: keep only rows where the corresponding checkbox is checked 🔴
-    checked_ids <- names(input)[
-      grepl("^chk_", names(input)) &
-        vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
-    ]
-    patterns <- sub(".*\\.\\.", "", checked_ids)
-
-    idx <- which(
-      Reduce(
-        "|",
-        lapply(patterns, function(p) {
-          grepl(make.names(p), make.names(base$Objective_Label))
-        })
-      )
-    )
-
-    if (length(idx) == 0) {
-      # NOT LEVEL 1-4 (e.g. Productivity)
-      idx <- which(
-        Reduce(
-          "|",
-          lapply(sub(".*_", "", checked_ids), function(p) {
-            grepl(make.names(p), make.names(base$Objective_Label))
-          })
-        )
-      )
-    }
-    base <- base[idx, ]
-
     base <- base[, -which(names(base) == 'Objective_Label')]
     names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
 
@@ -5148,43 +5299,16 @@ server <- function(input, output, session) {
   observeEvent(input$perf_make_template, {
     so <- selected_objectives()
     req(so)
-    base <- make_objective_table(so, selected_levels())
-
-    # ---------------------------
-    # Filter selected objectives
-    # ---------------------------
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
     ]
+    base <- make_objective_table(so, selected_levels(), checked_ids)
 
-    patterns <- sub(".*\\.\\.", "", checked_ids)
+    base <- base[, -which(names(base) == 'Objective_Label')]
+    names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
 
-    idx <- which(
-      Reduce(
-        "|",
-        lapply(patterns, function(p) {
-          grepl(make.names(p), make.names(base$Objective_Label))
-        })
-      )
-    )
-
-    if (length(idx) == 0) {
-      idx <- which(
-        Reduce(
-          "|",
-          lapply(sub(".*_", "", checked_ids), function(p) {
-            grepl(make.names(p), make.names(base$Objective_Label))
-          })
-        )
-      )
-    }
-
-    base <- base[idx, ]
     base <- unique(base)
-
-    base <- base[, -which(names(base) == "Objective_Label")]
-    names(base)[which(names(base) == "short_label")] <- "Objective_Label"
 
     # ---------------------------
     # SCENARIOS
@@ -5652,36 +5776,13 @@ server <- function(input, output, session) {
 
     so <- selected_objectives()
     req(so)
-    base <- make_objective_table(so, selected_levels())
 
     checked_ids <- names(input)[
       grepl("^chk_", names(input)) &
         vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
     ]
-    patterns <- sub(".*\\.\\.", "", checked_ids)
+    base <- make_objective_table(so, selected_levels(), checked_ids)
 
-    idx <- which(
-      Reduce(
-        "|",
-        lapply(patterns, function(p) {
-          grepl(make.names(p), make.names(base$Objective_Label))
-        })
-      )
-    )
-
-    if (length(idx) == 0) {
-      # NOT LEVEL 1-4 (e.g. Productivity)
-      idx <- which(
-        Reduce(
-          "|",
-          lapply(sub(".*_", "", checked_ids), function(p) {
-            grepl(make.names(p), make.names(base$Objective_Label))
-          })
-        )
-      )
-    }
-
-    base <- base[idx, ]
     base <- base[, -which(names(base) == 'Objective_Label')]
     names(base)[which(names(base) == 'short_label')] <- 'Objective_Label'
     base <- unique(base)
