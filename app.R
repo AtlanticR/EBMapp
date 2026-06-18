@@ -1556,10 +1556,10 @@ ui <- dashboardPage(
     tags$script(HTML(
       "
       document.addEventListener('keydown', function(e) {
-        if (e.key === 's' &&
-            !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
-          Shiny.setInputValue('key_s', Date.now());
-        }
+       if (e.key.toLowerCase() === 's' &&
+    !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
+  Shiny.setInputValue('key_s', Date.now());
+}
       });
     "
     )),
@@ -2858,7 +2858,6 @@ server <- function(input, output, session) {
   # Get full checklist for Step 1
 
   get_full_checklist <- reactive({
-    #JAIM
     req(input$pillar_filter, input$detail_level)
 
     checklist_data <- data.frame(
@@ -3254,6 +3253,7 @@ server <- function(input, output, session) {
         # -------------------------------------------------------
         # LEVEL 4 — always a structural leaf
         # -------------------------------------------------------
+        #browser()
         if (!is.na(row$Level_4) && row$Level_4 != "") {
           is_leaf <- TRUE
           check_id <- paste0(
@@ -4061,7 +4061,7 @@ server <- function(input, output, session) {
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
       } else {
         patterns <- sub(".*\\.\\.", "", checked_ids)
 
@@ -4163,10 +4163,7 @@ server <- function(input, output, session) {
 
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
-
-        #browser()
-
-        write.csv(dat, file, row.names = FALSE, quote = TRUE)
+        write.csv(dat, file, row.names = FALSE, quote = TRUE, na="")
       }
     }
   )
@@ -4186,7 +4183,7 @@ server <- function(input, output, session) {
       ]
 
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
       } else {
         patterns <- sub(".*\\.\\.", "", checked_ids)
 
@@ -4257,6 +4254,7 @@ server <- function(input, output, session) {
   output$download_checklist_word <- downloadHandler(
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".docx"),
     content = function(file) {
+      #browser()
       dat <- get_full_checklist()
       req(dat)
       # if ('Checked' %in% names(dat)) {
@@ -4269,7 +4267,7 @@ server <- function(input, output, session) {
       ]
 
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
       } else {
         patterns <- sub(".*\\.\\.", "", checked_ids)
 
@@ -4298,7 +4296,6 @@ server <- function(input, output, session) {
 
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
-
         doc <- read_docx()
         doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
         doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
@@ -4428,7 +4425,7 @@ server <- function(input, output, session) {
             p(
               style = "background-color: #fff3cd; padding: 4px 6px;",
               strong(
-                "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+                "If the relevant template is generated, you can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
             ),
             br(),
@@ -5018,7 +5015,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote = TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
@@ -5242,7 +5239,7 @@ server <- function(input, output, session) {
             p(
               style = "background-color: #fff3cd; padding: 4px 6px;",
               strong(
-                "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+                "If the relevant template is generated, you can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
             ),
             br(),
@@ -5465,7 +5462,7 @@ server <- function(input, output, session) {
           "  $(this).off('click').on('click', function(){",
           "    if($(this).find('select').length > 0) return;",
           "    var val = $(this).text();",
-          "    var opts = ['','0','1','2','3'];",
+          "    var opts = ['','0','1','2'];",
           "    var sel = $('<select></select>').css({",
           "      'color':'black','background-color':'white','width':'100%'",
           "    });",
@@ -5541,7 +5538,7 @@ server <- function(input, output, session) {
       saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
-  output$perf_download_csv <- downloadHandler(
+  output$perf_download_csv <- downloadHandler( # JAIM
     filename = function() paste0("Performance_", Sys.Date(), ".csv"),
     content = function(file) {
       df <- perf_tbl()
@@ -5555,7 +5552,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote = TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
@@ -5737,7 +5734,7 @@ server <- function(input, output, session) {
             p(
               style = "background-color: #fff3cd; padding: 4px 6px;",
               strong(
-                "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+                "If the relevant template is generated, you can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
             ),
 
@@ -6071,7 +6068,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote = TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
@@ -6523,7 +6520,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(dat, file, row.names = FALSE, quote = TRUE)
+      write.csv(dat, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
