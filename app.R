@@ -1556,10 +1556,10 @@ ui <- dashboardPage(
     tags$script(HTML(
       "
       document.addEventListener('keydown', function(e) {
-        if (e.key === 's' &&
-            !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
-          Shiny.setInputValue('key_s', Date.now());
-        }
+       if (e.key.toLowerCase() === 's' &&
+    !['INPUT','TEXTAREA'].includes(e.target.tagName)) {
+  Shiny.setInputValue('key_s', Date.now());
+}
       });
     "
     )),
@@ -2857,8 +2857,14 @@ server <- function(input, output, session) {
 
   # Get full checklist for Step 1
 
+  has_value <- function(x) {
+    length(x) == 1 &&
+      !is.na(x) &&
+      nzchar(x)
+  }
+
+
   get_full_checklist <- reactive({
-    #JAIM
     req(input$pillar_filter, input$detail_level)
 
     checklist_data <- data.frame(
@@ -3244,6 +3250,7 @@ server <- function(input, output, session) {
       rows_to_keep <- c()
       label_overrides <- c()
 
+      if (grepl('level', input$detail_level, ignore.case=TRUE)) {
       for (i in seq_len(nrow(checklist_data))) {
         row <- checklist_data[i, ]
 
@@ -3254,7 +3261,7 @@ server <- function(input, output, session) {
         # -------------------------------------------------------
         # LEVEL 4 — always a structural leaf
         # -------------------------------------------------------
-        if (!is.na(row$Level_4) && row$Level_4 != "") {
+        if (has_value(row$Level_4)) {
           is_leaf <- TRUE
           check_id <- paste0(
             "chk_l4_",
@@ -3272,7 +3279,7 @@ server <- function(input, output, session) {
           # -------------------------------------------------------
           # LEVEL 3
           # -------------------------------------------------------
-        } else if (!is.na(row$Level_3) && row$Level_3 != "") {
+        } else if (has_value(row$Level_3)) {
           check_id <- paste0(
             "chk_l3_",
             make.names(paste(
@@ -3320,7 +3327,7 @@ server <- function(input, output, session) {
           # -------------------------------------------------------
           # LEVEL 2
           # -------------------------------------------------------
-        } else if (!is.na(row$Level_2) && row$Level_2 != "") {
+        } else if (has_value(row$Level_2)) {
           check_id <- paste0(
             "chk_l2_",
             make.names(paste(
@@ -3365,7 +3372,7 @@ server <- function(input, output, session) {
           # -------------------------------------------------------
           # LEVEL 1
           # -------------------------------------------------------
-        } else if (!is.na(row$Level_1) && row$Level_1 != "") {
+        } else if (has_value(row$Level_1)) {
           check_id <- paste0(
             "chk_l1_",
             make.names(paste(row$Pillar, row$Main_Objective, row$Level_1))
@@ -3403,14 +3410,20 @@ server <- function(input, output, session) {
         }
       }
 
-      checklist_data <- checklist_data[rows_to_keep, ]
+        checklist_data <- checklist_data[rows_to_keep, ]
 
-      # Apply label overrides for pseudo-leaves
-      for (k in seq_along(label_overrides)) {
-        if (!is.na(label_overrides[k])) {
-          checklist_data$short_label[k] <- label_overrides[k]
+        # Apply label overrides for pseudo-leaves
+        for (k in seq_along(label_overrides)) {
+          if (!is.na(label_overrides[k])) {
+            checklist_data$short_label[k] <- label_overrides[k]
+          }
         }
-      }
+
+      } else {
+      # JAIM HERE
+        checklist_data <- checklist_data[which(checklist_data$Checked == "X"),]
+    }
+
     } else {
       checklist_data <- checklist_data[0, ]
     }
@@ -4061,7 +4074,7 @@ server <- function(input, output, session) {
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
       } else {
         patterns <- sub(".*\\.\\.", "", checked_ids)
 
@@ -4163,10 +4176,7 @@ server <- function(input, output, session) {
 
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
-
-        #browser()
-
-        write.csv(dat, file, row.names = FALSE, quote = TRUE)
+        write.csv(dat, file, row.names = FALSE, quote = TRUE, na="")
       }
     }
   )
@@ -4186,7 +4196,7 @@ server <- function(input, output, session) {
       ]
 
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
       } else {
         patterns <- sub(".*\\.\\.", "", checked_ids)
 
@@ -4254,9 +4264,10 @@ server <- function(input, output, session) {
     }
   )
 
-  output$download_checklist_word <- downloadHandler(
+  output$download_checklist_word <- downloadHandler( # JAIM
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".docx"),
     content = function(file) {
+      #browser()
       dat <- get_full_checklist()
       req(dat)
       # if ('Checked' %in% names(dat)) {
@@ -4269,7 +4280,7 @@ server <- function(input, output, session) {
       ]
 
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE)
+        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
       } else {
         patterns <- sub(".*\\.\\.", "", checked_ids)
 
@@ -4298,7 +4309,6 @@ server <- function(input, output, session) {
 
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
-
         doc <- read_docx()
         doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
         doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
@@ -4307,6 +4317,8 @@ server <- function(input, output, session) {
         ft <- flextable(dat)
         ft <- theme_booktabs(ft)
 
+
+        col_widths <- c(0.4)
         if ("Main_Objectives_text" %in% names(dat)) {
           col_widths <- c(0.4)
           if ("Pillar" %in% names(dat)) {
@@ -4342,7 +4354,7 @@ server <- function(input, output, session) {
         }
         ft <- bold(ft, part = "header")
         ft <- fontsize(ft, size = 10, part = "header")
-        ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
+        #ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
 
         doc <- body_add_flextable(doc, ft)
         print(doc, target = file)
@@ -4428,7 +4440,7 @@ server <- function(input, output, session) {
             p(
               style = "background-color: #fff3cd; padding: 4px 6px;",
               strong(
-                "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+                "If the relevant template is generated, you can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
             ),
             br(),
@@ -5018,7 +5030,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote = TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
@@ -5242,7 +5254,7 @@ server <- function(input, output, session) {
             p(
               style = "background-color: #fff3cd; padding: 4px 6px;",
               strong(
-                "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+                "If the relevant template is generated, you can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
             ),
             br(),
@@ -5465,7 +5477,7 @@ server <- function(input, output, session) {
           "  $(this).off('click').on('click', function(){",
           "    if($(this).find('select').length > 0) return;",
           "    var val = $(this).text();",
-          "    var opts = ['','0','1','2','3'];",
+          "    var opts = ['','0','1','2'];",
           "    var sel = $('<select></select>').css({",
           "      'color':'black','background-color':'white','width':'100%'",
           "    });",
@@ -5555,7 +5567,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote = TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
@@ -5737,7 +5749,7 @@ server <- function(input, output, session) {
             p(
               style = "background-color: #fff3cd; padding: 4px 6px;",
               strong(
-                "You can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
+                "If the relevant template is generated, you can click 's' on your keyboard at anytime to for a reminder of how to (s)core"
               )
             ),
 
@@ -6071,7 +6083,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(df, file, row.names = FALSE, quote = TRUE)
+      write.csv(df, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
@@ -6523,7 +6535,7 @@ server <- function(input, output, session) {
         }
       })
 
-      write.csv(dat, file, row.names = FALSE, quote = TRUE)
+      write.csv(dat, file, row.names = FALSE, quote = TRUE, na="")
     }
   )
 
