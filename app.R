@@ -2857,6 +2857,13 @@ server <- function(input, output, session) {
 
   # Get full checklist for Step 1
 
+  has_value <- function(x) {
+    length(x) == 1 &&
+      !is.na(x) &&
+      nzchar(x)
+  }
+
+
   get_full_checklist <- reactive({
     req(input$pillar_filter, input$detail_level)
 
@@ -3243,6 +3250,7 @@ server <- function(input, output, session) {
       rows_to_keep <- c()
       label_overrides <- c()
 
+      if (grepl('level', input$detail_level, ignore.case=TRUE)) {
       for (i in seq_len(nrow(checklist_data))) {
         row <- checklist_data[i, ]
 
@@ -3253,8 +3261,7 @@ server <- function(input, output, session) {
         # -------------------------------------------------------
         # LEVEL 4 — always a structural leaf
         # -------------------------------------------------------
-        #browser()
-        if (!is.na(row$Level_4) && row$Level_4 != "") {
+        if (has_value(row$Level_4)) {
           is_leaf <- TRUE
           check_id <- paste0(
             "chk_l4_",
@@ -3272,7 +3279,7 @@ server <- function(input, output, session) {
           # -------------------------------------------------------
           # LEVEL 3
           # -------------------------------------------------------
-        } else if (!is.na(row$Level_3) && row$Level_3 != "") {
+        } else if (has_value(row$Level_3)) {
           check_id <- paste0(
             "chk_l3_",
             make.names(paste(
@@ -3320,7 +3327,7 @@ server <- function(input, output, session) {
           # -------------------------------------------------------
           # LEVEL 2
           # -------------------------------------------------------
-        } else if (!is.na(row$Level_2) && row$Level_2 != "") {
+        } else if (has_value(row$Level_2)) {
           check_id <- paste0(
             "chk_l2_",
             make.names(paste(
@@ -3365,7 +3372,7 @@ server <- function(input, output, session) {
           # -------------------------------------------------------
           # LEVEL 1
           # -------------------------------------------------------
-        } else if (!is.na(row$Level_1) && row$Level_1 != "") {
+        } else if (has_value(row$Level_1)) {
           check_id <- paste0(
             "chk_l1_",
             make.names(paste(row$Pillar, row$Main_Objective, row$Level_1))
@@ -3403,14 +3410,20 @@ server <- function(input, output, session) {
         }
       }
 
-      checklist_data <- checklist_data[rows_to_keep, ]
+        checklist_data <- checklist_data[rows_to_keep, ]
 
-      # Apply label overrides for pseudo-leaves
-      for (k in seq_along(label_overrides)) {
-        if (!is.na(label_overrides[k])) {
-          checklist_data$short_label[k] <- label_overrides[k]
+        # Apply label overrides for pseudo-leaves
+        for (k in seq_along(label_overrides)) {
+          if (!is.na(label_overrides[k])) {
+            checklist_data$short_label[k] <- label_overrides[k]
+          }
         }
-      }
+
+      } else {
+      # JAIM HERE
+        checklist_data <- checklist_data[which(checklist_data$Checked == "X"),]
+    }
+
     } else {
       checklist_data <- checklist_data[0, ]
     }
@@ -4251,7 +4264,7 @@ server <- function(input, output, session) {
     }
   )
 
-  output$download_checklist_word <- downloadHandler(
+  output$download_checklist_word <- downloadHandler( # JAIM
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".docx"),
     content = function(file) {
       #browser()
@@ -4304,6 +4317,8 @@ server <- function(input, output, session) {
         ft <- flextable(dat)
         ft <- theme_booktabs(ft)
 
+
+        col_widths <- c(0.4)
         if ("Main_Objectives_text" %in% names(dat)) {
           col_widths <- c(0.4)
           if ("Pillar" %in% names(dat)) {
@@ -4339,7 +4354,7 @@ server <- function(input, output, session) {
         }
         ft <- bold(ft, part = "header")
         ft <- fontsize(ft, size = 10, part = "header")
-        ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
+        #ft <- bg(ft, bg = "#F0F0F0", part = "body", i = seq(2, nrow(dat), 2))
 
         doc <- body_add_flextable(doc, ft)
         print(doc, target = file)
@@ -5538,7 +5553,7 @@ server <- function(input, output, session) {
       saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
-  output$perf_download_csv <- downloadHandler( # JAIM
+  output$perf_download_csv <- downloadHandler(
     filename = function() paste0("Performance_", Sys.Date(), ".csv"),
     content = function(file) {
       df <- perf_tbl()
