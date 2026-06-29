@@ -2908,7 +2908,8 @@ server <- function(input, output, session) {
           )
         )
       }
-      return(checklist_data[, c("Checked", "Pillar")])
+
+      return(checklist_data[, c("Checked", "Pillar", "Main_Objectives_text", 'Objective_Label')])
     }
 
     req(input$main_objective_filter)
@@ -3420,7 +3421,6 @@ server <- function(input, output, session) {
         }
 
       } else {
-      # JAIM HERE
         checklist_data <- checklist_data[which(checklist_data$Checked == "X"),]
     }
 
@@ -4068,38 +4068,47 @@ server <- function(input, output, session) {
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".csv"),
     content = function(file) {
       dat <- get_full_checklist()
+      if (input$detail_level %in% c('pillar', 'main')) {
+        dat <- dat %>% select(-any_of("Main_Objectives_text"))
+      }
+
       req(dat)
       checked_ids <- names(input)[
         grepl("^chk_", names(input)) &
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
+       dat <- dat[0, ]
       } else {
-        patterns <- sub(".*\\.\\.", "", checked_ids)
+         patterns <- sub(".*\\.\\.", "", checked_ids)
 
-        idx <- which(
-          Reduce(
-            "|",
-            lapply(patterns, function(p) {
-              grepl(make.names(p), make.names(dat$Objective_Label))
-            })
-          )
-        )
+         idx <- which(
+           Reduce(
+             "|",
+             lapply(patterns, function(p) {
+               grepl(make.names(p), make.names(dat$Objective_Label))
+             })
+           )
+         )
 
-        if (length(idx) == 0) {
-          # NOT LEVEL 1-4 (e.g. Productivity)
-          idx <- which(
-            Reduce(
-              "|",
-              lapply(sub(".*_", "", checked_ids), function(p) {
-                grepl(make.names(p), make.names(dat$Objective_Label))
-              })
-            )
-          )
-        }
+         if (length(idx) == 0) {
+           # NOT LEVEL 1-4 (e.g. Productivity)
+           idx <- which(
+             Reduce(
+               "|",
+               lapply(sub(".*_", "", checked_ids), function(p) {
+                 grepl(make.names(p), make.names(dat$Objective_Label))
+               })
+             )
+           )
+         }
 
-        dat <- dat[idx, ]
+         if (length(idx) == 0) {
+           ## Pillars only
+           idx <- 1:nrow(dat)
+         }
+
+         dat <- dat[idx, ]
 
         for (i in seq_along(names(dat))) {
           message(i)
@@ -4173,11 +4182,11 @@ server <- function(input, output, session) {
         dat[] <- lapply(dat, function(x) {
           trimws(x, 'both')
         })
+      }
 
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
         write.csv(dat, file, row.names = FALSE, quote = TRUE, na="")
-      }
     }
   )
 
@@ -4186,9 +4195,11 @@ server <- function(input, output, session) {
     content = function(file) {
       dat <- get_full_checklist()
       req(dat)
+      if (input$detail_level %in% c('pillar', 'main')) {
+        dat <- dat %>% select(-any_of("Main_Objectives_text"))
+      }
 
       ## BELOW WORKS FOR LEVEL_1 BUT NOT FOR E.G. PRODUCTIVITY. I WILL NEED TO FIX EXCEL, CSV, AND WORD.
-
       # NEW
       checked_ids <- names(input)[
         grepl("^chk_", names(input)) &
@@ -4196,32 +4207,38 @@ server <- function(input, output, session) {
       ]
 
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
+        dat <- dat[0, ]
       } else {
-        patterns <- sub(".*\\.\\.", "", checked_ids)
+         patterns <- sub(".*\\.\\.", "", checked_ids)
 
-        idx <- which(
-          Reduce(
-            "|",
-            lapply(patterns, function(p) {
-              grepl(make.names(p), make.names(dat$Objective_Label))
-            })
-          )
-        )
+         idx <- which(
+           Reduce(
+             "|",
+             lapply(patterns, function(p) {
+               grepl(make.names(p), make.names(dat$Objective_Label))
+             })
+           )
+         )
 
-        if (length(idx) == 0) {
-          # NOT LEVEL 1-4 (e.g. Productivity)
-          idx <- which(
-            Reduce(
-              "|",
-              lapply(sub(".*_", "", checked_ids), function(p) {
-                grepl(make.names(p), make.names(dat$Objective_Label))
-              })
-            )
-          )
-        }
+         if (length(idx) == 0) {
+           # NOT LEVEL 1-4 (e.g. Productivity)
+           idx <- which(
+             Reduce(
+               "|",
+               lapply(sub(".*_", "", checked_ids), function(p) {
+                 grepl(make.names(p), make.names(dat$Objective_Label))
+               })
+             )
+           )
+         }
 
-        dat <- dat[idx, ]
+          if (length(idx) == 0) {
+           ## Pillars only
+           idx <- 1:nrow(dat)
+         }
+
+         dat <- dat[idx, ]
+      }
 
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
@@ -4260,27 +4277,24 @@ server <- function(input, output, session) {
         )
         setColWidths(wb, "Checklist", cols = 1:ncol(dat), widths = "auto")
         saveWorkbook(wb, file, overwrite = TRUE)
-      }
     }
   )
 
   output$download_checklist_word <- downloadHandler( # JAIM
     filename = function() paste0("EBM_Checklist_", Sys.Date(), ".docx"),
     content = function(file) {
-      #browser()
       dat <- get_full_checklist()
       req(dat)
       # if ('Checked' %in% names(dat)) {
       #   dat <- dat[, !(names(dat) %in% "Checked")]
       # }
-
       checked_ids <- names(input)[
         grepl("^chk_", names(input)) &
           vapply(names(input), function(x) isTRUE(input[[x]]), logical(1))
       ]
 
       if (length(checked_ids) == 0) {
-        write.csv(dat[0, ], file, row.names = FALSE, quote = TRUE, na="")
+        dat <- dat[0, ]
       } else {
         patterns <- sub(".*\\.\\.", "", checked_ids)
 
@@ -4305,9 +4319,22 @@ server <- function(input, output, session) {
           )
         }
 
-        dat <- dat[idx, ]
+        if (length(idx) == 0) {
+          ## Pillars only
+          idx <- 1:nrow(dat)
+        }
 
+        dat <- dat[idx, ]
+      }
+
+        if ('Objective_Label' %in% names(dat)) {
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
+        }
+
+        if (input$detail_level %in% c('pillar', 'main')) {
+          dat <- dat %>% select(-any_of("Main_Objectives_text"))
+        }
+
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
         doc <- read_docx()
         doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
@@ -4318,8 +4345,6 @@ server <- function(input, output, session) {
         ft <- theme_booktabs(ft)
 
 
-        col_widths <- c(0.4)
-        if ("Main_Objectives_text" %in% names(dat)) {
           col_widths <- c(0.4)
           if ("Pillar" %in% names(dat)) {
             col_widths <- c(col_widths, 1.2)
@@ -4343,9 +4368,7 @@ server <- function(input, output, session) {
             col_widths <- c(col_widths, 1.5)
           }
           ft <- width(ft, width = col_widths)
-        } else {
-          ft <- autofit(ft)
-        }
+
 
         ft <- align(ft, j = 1, align = "center", part = "all")
         ft <- fontsize(ft, j = 1, size = 12, part = "body")
@@ -4358,7 +4381,6 @@ server <- function(input, output, session) {
 
         doc <- body_add_flextable(doc, ft)
         print(doc, target = file)
-      }
     }
   )
 
