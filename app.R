@@ -4080,7 +4080,8 @@ server <- function(input, output, session) {
       if (length(checked_ids) == 0) {
        dat <- dat[0, ]
       } else {
-         patterns <- sub(".*\\.\\.", "", checked_ids)
+         #patterns <- sub(".*\\.\\.", "", checked_ids)
+        patterns <- sub("^chk_main_", "", checked_ids)
 
          idx <- which(
            Reduce(
@@ -4195,6 +4196,8 @@ server <- function(input, output, session) {
     content = function(file) {
       dat <- get_full_checklist()
       req(dat)
+
+      #browser()
       if (input$detail_level %in% c('pillar', 'main')) {
         dat <- dat %>% select(-any_of("Main_Objectives_text"))
       }
@@ -4209,7 +4212,8 @@ server <- function(input, output, session) {
       if (length(checked_ids) == 0) {
         dat <- dat[0, ]
       } else {
-         patterns <- sub(".*\\.\\.", "", checked_ids)
+         #patterns <- sub(".*\\.\\.", "", checked_ids)
+        patterns <- sub("^chk_main_", "", checked_ids)
 
          idx <- which(
            Reduce(
@@ -4296,7 +4300,8 @@ server <- function(input, output, session) {
       if (length(checked_ids) == 0) {
         dat <- dat[0, ]
       } else {
-        patterns <- sub(".*\\.\\.", "", checked_ids)
+        #patterns <- sub(".*\\.\\.", "", checked_ids)
+        patterns <- sub("^chk_main_", "", checked_ids)
 
         idx <- which(
           Reduce(
