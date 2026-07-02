@@ -4111,6 +4111,11 @@ server <- function(input, output, session) {
 
          dat <- dat[idx, ]
 
+         if ("Checked" %in% names(dat)) {
+           dat <- dat[which(dat$Checked == "X"),]
+         }
+
+
         for (i in seq_along(names(dat))) {
           message(i)
           NAME_OF_DAT <- names(dat)[i]
@@ -4247,6 +4252,10 @@ server <- function(input, output, session) {
         dat <- dat[, -which(names(dat) == 'Objective_Label')]
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
 
+        if ("Checked" %in% names(dat)) {
+          dat <- dat[which(dat$Checked == "X"),]
+        }
+
         # END NEW
         wb <- createWorkbook()
         addWorksheet(wb, "Checklist")
@@ -4341,6 +4350,11 @@ server <- function(input, output, session) {
         }
 
         names(dat)[which(names(dat) == 'short_label')] <- 'Objective_Label'
+
+        if ("Checked" %in% names(dat)) {
+          dat <- dat[which(dat$Checked == "X"),]
+        }
+
         doc <- read_docx()
         doc <- body_add_par(doc, "EBM Framework Checklist", style = "heading 1")
         doc <- body_add_par(doc, paste("Generated:", Sys.Date()))
