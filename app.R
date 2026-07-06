@@ -867,38 +867,38 @@ ebm_data <- ebm_data %>%
   # 🔴 Pillar code
   mutate(Pillar_code = pillar_prefix[Pillar]) %>%
 
-  # 🔴 MAIN OBJECTIVE (A, B, C) — restart WITHIN Pillar
+  # 🔴 MAIN OBJECTIVE (A, B, C) — ORDER = FIRST APPEARANCE within Pillar
   group_by(Pillar) %>%
   mutate(
-    Main_code = LETTERS[dense_rank(Main_Objective)]
+    Main_code = LETTERS[match(Main_Objective, unique(Main_Objective))]
   ) %>%
 
-  # 🔴 LEVEL 1 (1,2,3) — restart within Pillar + Main
+  # 🔴 LEVEL 1 (1,2,3) — ORDER = FIRST APPEARANCE within Pillar + Main
   group_by(Pillar, Main_Objective) %>%
   mutate(
     L1_code = ifelse(
       !is.na(Level_1) & Level_1 != "",
-      as.character(dense_rank(Level_1)),
+      as.character(match(Level_1, unique(Level_1))),
       NA
     )
   ) %>%
 
-  # 🔴 LEVEL 2 (a,b,c)
+  # 🔴 LEVEL 2 (a,b,c) — ORDER = FIRST APPEARANCE within Pillar + Main + Level_1
   group_by(Pillar, Main_Objective, Level_1) %>%
   mutate(
     L2_code = ifelse(
       !is.na(Level_2) & Level_2 != "",
-      letters[dense_rank(Level_2)],
+      letters[match(Level_2, unique(Level_2))],
       NA
     )
   ) %>%
 
-  # 🔴 LEVEL 3 (i,ii,iii)
+  # 🔴 LEVEL 3 (i,ii,iii) — ORDER = FIRST APPEARANCE within group
   group_by(Pillar, Main_Objective, Level_1, Level_2) %>%
   mutate(
     L3_code = ifelse(
       !is.na(Level_3) & Level_3 != "",
-      to_roman(dense_rank(Level_3)),
+      to_roman(match(Level_3, unique(Level_3))),
       NA
     )
   ) %>%
@@ -3175,6 +3175,10 @@ server <- function(input, output, session) {
     }
 
     if (input$detail_level == "main") {
+
+      ## NEED TO ADJUST SHORT LABELS BECAUSE JUST PILLARS ARE NOT IN EBM_DATA
+      checklist_data$short_label <- sub("^(([^.]+\\.[^.]+)).*$", "\\1", checklist_data$short_label)
+
       checklist_data <- checklist_data[, c(
         "Checked",
         "Pillar",
@@ -3183,6 +3187,12 @@ server <- function(input, output, session) {
         "short_label"
       )]
     } else if (input$detail_level == "main_text") {
+      #browser() # REAL
+
+      ## NEED TO ADJUST SHORT LABELS BECAUSE JUST PILLARS ARE NOT IN EBM_DATA
+      checklist_data$short_label <- sub("^(([^.]+\\.[^.]+)).*$", "\\1", checklist_data$short_label)
+
+
       checklist_data <- checklist_data[, c(
         "Checked",
         "Pillar",
